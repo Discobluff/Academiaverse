@@ -1,0 +1,17 @@
+stages:
+  - test
+
+backend:
+  stage: test
+  image: gradle:8-jdk21
+  cache:
+    key: backend-$CI_COMMIT_REF_SLUG
+    paths:
+      - backend/.gradle/
+  before_script:
+    - cd src/backend
+    - chmod +x gradlew
+  script:
+    - ./gradlew test
+  tags:
+    - tests
