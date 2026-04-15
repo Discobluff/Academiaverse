@@ -4,14 +4,31 @@ stages:
 backend:
   stage: test
   image: gradle:8-jdk21
+  
+  services:
+    - name: mysql:8.0
+      alias: mysql
+  
+  variables:
+    MYSQL_ROOT_PASSWORD: root
+    MYSQL_DATABASE: mydb
+    MYSQL_USER: myuser
+    MYSQL_PASSWORD: pwd
+    SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/mydb?allowPublicKeyRetrieval=true&useSSL=false
+    SPRING_DATASOURCE_USERNAME: myuser
+    SPRING_DATASOURCE_PASSWORD: pwd
+
   cache:
     key: backend-$CI_COMMIT_REF_SLUG
     paths:
       - backend/.gradle/
+
   before_script:
     - cd src/backend
     - chmod +x gradlew
+
   script:
     - ./gradlew test
+
   tags:
     - tests
