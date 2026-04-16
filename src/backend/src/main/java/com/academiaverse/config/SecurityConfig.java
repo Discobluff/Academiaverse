@@ -1,4 +1,3 @@
-// src/main/java/com/academiaverse/config/SecurityConfig.java
 package com.academiaverse.config;
 
 import org.springframework.context.annotation.Bean;
@@ -31,6 +30,7 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/v1/auth/**").permitAll()
+                .requestMatchers("/v1/admin").hasAuthority("ADMIN")
                 .anyRequest().authenticated()
             )
             .sessionManagement(session ->

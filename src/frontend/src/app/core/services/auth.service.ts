@@ -17,4 +17,11 @@ export class AuthService {
     } isAuthenticated(): boolean {
         return !!this.getToken();
     }
+
+    hasRole(role: string): boolean {
+        const token = this.getToken();
+        if (!token) return false;
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        return payload.role == role;
+    }
 }
