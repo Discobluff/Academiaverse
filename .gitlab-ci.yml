@@ -30,5 +30,8 @@ backend:
   script:
     - ./gradlew test
 
-  tags:
-    - tests
+  artifacts:
+    when: always
+    reports:
+      junit: src/backend/build/test-results/test/TEST-*.xml
+    expire_in: 7 days
