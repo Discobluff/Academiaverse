@@ -15,4 +15,9 @@ export const routes: Routes = [
         path: 'register',
         loadComponent: () => import('./register/register').then(m => m.Register)
     },
+    {
+        path: 'logout',
+        loadComponent: () => import('./logout/logout').then(m => m.Logout),
+        canActivate: [AuthGuard]
+    }
 ];
