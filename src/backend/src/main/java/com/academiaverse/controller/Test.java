@@ -17,6 +17,6 @@ public class Test {
     public ResponseEntity<String> getTest(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
-        return  ResponseEntity.ok().body("Hello:  " + user.getEmail());
+        return  ResponseEntity.ok().body(user.getEmail());
     }
 }

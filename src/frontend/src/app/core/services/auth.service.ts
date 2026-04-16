@@ -20,18 +20,6 @@ export class AuthService {
         return !!this.getToken();
     }
 
-    clickLogin() {
-        this.router.navigate(['/login']);
-    }
-
-    clickRegister() {
-        this.router.navigate(['/register']);
-    }
-
-    clickLogout() {
-        this.router.navigate(['/logout']);
-    }
-
     hasRole(role: string): boolean {
         const token = this.getToken();
         if (!token) return false;

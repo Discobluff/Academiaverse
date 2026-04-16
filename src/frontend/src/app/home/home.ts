@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { environment } from '../../environments/environments';
 import { AuthService } from '../core/services/auth.service';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -12,14 +13,26 @@ import { CommonModule } from '@angular/common';
 })
 export class Home {
 
-  constructor(private http: HttpClient, private authService: AuthService) {}
+  constructor(private router: Router, private http: HttpClient, public authService: AuthService) {}
 
-  test: String = "";
+  email: String = "";
   admin: String = "";
 
   ngOnInit(){
     this.getTest();
     this.isAdmin();
+  }
+
+  clickLogin() {
+    this.router.navigate(['/login']);
+  }
+
+  clickRegister() {
+    this.router.navigate(['/register']);
+  }
+
+  clickLogout() {
+    this.router.navigate(['/logout']);
   }
 
   hasAdminRole() {
@@ -29,7 +42,7 @@ export class Home {
   getTest() {
     this.http.get(`${environment.apiUrl}/test`, { responseType: 'text' }).subscribe({
       next: (data) => {
-        this.test = data;
+        this.email = data;
       },
       error: (error) => {
         console.error('Error fetching test:', error);

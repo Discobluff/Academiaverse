@@ -1,5 +1,20 @@
-<p>{{test}}</p>
+@if (!authService.isAuthenticated()){
+    <button (click)="clickLogin()">Login</button>
+    <button (click)="clickRegister()">Register</button>
+}
+@else {
+    <button (click)="clickLogout()">Logout</button>
+}
+
+@if (authService.isAuthenticated()){
+    <p>You are logged in!</p>
+    <p>User email : {{email}}</p>
+}
+@else {
+    <p>You are logged out!</p>
+}
+
 
 @if (hasAdminRole()) {
-    <p>Is admin: {{admin}}</p>
+    <p>You are admin, admin message: {{admin}}</p>
 }
