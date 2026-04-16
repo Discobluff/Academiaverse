@@ -1,19 +1,19 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { Component } from '@angular/core';
 import { environment } from '../../environments/environments';
 
 @Component({
-  selector: 'app-test',
-  imports: [CommonModule],
-  templateUrl: './test.html',
-  styleUrl: './test.css',
+  selector: 'app-home',
+  standalone: true,
+  templateUrl: './home.html'
 })
-export class Test {
-  constructor(private http: HttpClient) {}
-  test: string = "hello";
+export class Home {
 
-  ngOnInit() {
+  constructor(private http: HttpClient) {}
+
+  test: String = "";
+
+  ngOnInit(){
     this.getTest();
   }
 
@@ -27,5 +27,4 @@ export class Test {
       }
     });
   }
-
 }

@@ -1,0 +1,11 @@
+<div class="login-panel">
+    <input class="login-input" placeholder="Firstname" [(ngModel)]="firstname">
+    <input class="login-input" placeholder="Lastname" [(ngModel)]="lastname">
+    <input class="login-input" placeholder="Email" [(ngModel)]="email">
+    <input class="login-input" placeholder="Password" [(ngModel)]="password">
+    <input class="login-input" placeholder="Password confirmation" [(ngModel)]="passwordConfirmation">
+    <button class="login-button" (click)="register()">Register</button>
+    @if (errorMessage != "") {
+        <p class="error-message">{{ errorMessage }}</p>
+    }
+</div>

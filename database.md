@@ -16,7 +16,10 @@ docker exec -it mysql-db mysql -u root -p
 
 Password : `root`
 
-Then you can execute SQL commands. Ex : `SELECT * FROM mydb.user;`
+Either : 
+
+- `USE mydb;` and then `SELECT * FROM user;`
+- `SELECT * FROM mydb.user;`
 
 ### Add a new table
 

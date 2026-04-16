@@ -1,7 +1,10 @@
 package com.academiaverse.controller;
 
+// import com.academiaverse.dto.request.RegisterRequest;
 import com.academiaverse.entity.User;
 import com.academiaverse.service.UserService;
+
+// import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -26,11 +29,10 @@ public class UserController {
         return ResponseEntity.ok().body(userService.getUserById(id));
     }
 
-    @PostMapping
-    public ResponseEntity<User> saveUser(@RequestBody User user)
-    {
-        return ResponseEntity.ok().body(userService.saveUser(user));
-    }
+    // @PostMapping
+    // public ResponseEntity<User> saveUser(@Valid @RequestBody RegisterRequest request) {
+    //     return ResponseEntity.ok().body(userService.saveUser(request));
+    // }
 
     @PutMapping
     public ResponseEntity<User> updateUser(@RequestBody User user)

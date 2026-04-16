@@ -4,6 +4,12 @@ import com.academiaverse.entity.User;
 import com.academiaverse.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -12,9 +18,10 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class UserService {
+public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public Iterable<User> getAllUsers(){
         return userRepository.findAll();
@@ -30,13 +37,32 @@ public class UserService {
     }
 
     public User saveUser (User user){
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+            throw new DataIntegrityViolationException(null);
+        }
         user.setCreatedAt(LocalDateTime.now());
         user.setUpdatedAt(LocalDateTime.now());
+        user.setRole("USER");
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         User savedUser = userRepository.save(user);
 
         log.info("User with id: {} saved successfully", user.getId());
         return savedUser;
     }
+
+    //     public User saveUser (RegisterRequest request){
+    //     User user = new User();
+    //     user.setFirstname(request.getFirstname());
+    //     user.setLastname(request.getLastname());
+    //     user.setEmail(request.getEmail());
+    //     user.setPassword(passwordEncoder.encode(request.getPassword()));
+    //     user.setRole("USER");
+    //     user.setCreatedAt(LocalDateTime.now());
+    //     user.setUpdatedAt(LocalDateTime.now());
+    //     User savedUser = userRepository.save(user);
+    //     log.info("User with id: {} saved successfully", savedUser.getId());
+    //     return savedUser;
+    // }
 
     public User updateUser (User user) {
         Optional<User> existingUser = userRepository.findById(user.getId());
@@ -52,5 +78,11 @@ public class UserService {
     public void deleteUserById (Integer id) {
         userRepository.deleteById(id);
     }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    User user = userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+    return user;
+}
 
 }
