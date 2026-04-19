@@ -1,0 +1,19 @@
+<h2>Add New Item</h2>
+<form (ngSubmit)="onSubmit()">
+  <label>Title:</label>
+  <input [(ngModel)]="item.title" name="title" required />
+
+  <label>Description:</label>
+  <textarea [(ngModel)]="item.description" name="description"></textarea>
+
+  <label>Price:</label>
+  <input type="number" [(ngModel)]="item.price" name="price" required />
+
+  <label>Type:</label>
+  <select [(ngModel)]="item.type" name="type">
+    <option value="sale">For Sale</option>
+    <option value="rent">For Rent</option>
+  </select>
+
+  <button type="submit">Create Item</button>
+</form>
