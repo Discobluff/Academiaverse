@@ -19,7 +19,11 @@ export const routes: Routes = [
         path: 'logout',
         loadComponent: () => import('./logout/logout').then(m => m.Logout),
         canActivate: [AuthGuard]
-    }
+    },   // <-- COMMA HERE
+    {
+        path: 'search',
+        loadComponent: () => import('./search/search').then(m => m.SearchComponent)
+    },
     {
         path: 'add-item',
         loadComponent: () => import('./add-item/add-item').then(m => m.AddItemComponent)

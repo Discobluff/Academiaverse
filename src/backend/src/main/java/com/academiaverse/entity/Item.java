@@ -23,14 +23,6 @@ public class Item {
     @JoinColumn(name = "user_id")
     private User owner;
 
-    @ManyToMany
-    @JoinTable(
-        name = "item_courses",
-        joinColumns = @JoinColumn(name = "item_id"),
-        inverseJoinColumns = @JoinColumn(name = "course_id")
-    )
-    private List<Course> courses;
-
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -51,8 +43,6 @@ public class Item {
     public void setImages(List<String> images) { this.images = images; }
     public User getOwner() { return owner; }
     public void setOwner(User owner) { this.owner = owner; }
-    public List<Course> getCourses() { return courses; }
-    public void setCourses(List<Course> courses) { this.courses = courses; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }
