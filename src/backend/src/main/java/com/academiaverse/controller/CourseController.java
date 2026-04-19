@@ -4,6 +4,7 @@ import com.academiaverse.entity.Course;
 import com.academiaverse.repository.CourseRepository;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/courses")
@@ -17,5 +18,15 @@ public class CourseController {
     @GetMapping("/search")
     public List<Course> search(@RequestParam String q) {
         return courseRepository.findByNameContainingIgnoreCase(q);
+    }
+
+    @GetMapping("/autocomplete")
+    public List<String> autocomplete(@RequestParam String q) {
+        if (q == null || q.length() < 2) return List.of();
+        return courseRepository.findByNameContainingIgnoreCase(q)
+                .stream()
+                .map(Course::getName)
+                .limit(5)
+                .collect(Collectors.toList());
     }
 }
