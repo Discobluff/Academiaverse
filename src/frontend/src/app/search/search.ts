@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { environment } from '../../environments/environments';
+import { AuthService } from '../core/services/auth.service';
 
 @Component({
   selector: 'app-search',
@@ -16,29 +18,40 @@ export class SearchComponent implements OnInit {
   recentSearches: string[] = [];
   suggestions: string[] = [];
 
-  constructor(private http: HttpClient) {}
+  private apiBaseUrl = environment.apiBaseUrl;
+
+  constructor(
+    private http: HttpClient,
+    public authService: AuthService   // <-- inject
+  ) {}
 
   ngOnInit() {
-    this.loadRecentSearches();
+    // Only load recent searches if authenticated
+    if (this.authService.isAuthenticated()) {
+      this.loadRecentSearches();
+    }
   }
 
   search() {
     if (!this.query.trim()) return;
-    this.http.get<any[]>(`/api/courses/search?q=${this.query}`)
+    this.http.get<any[]>(`${this.apiBaseUrl}/api/courses/search?q=${this.query}`)
       .subscribe(data => {
         this.results = data;
-        this.saveRecentSearch(this.query);
+        // Only save search if authenticated
+        if (this.authService.isAuthenticated()) {
+          this.saveRecentSearch(this.query);
+        }
       });
   }
 
   saveRecentSearch(query: string) {
-    this.http.post(`/api/search/recent?query=${query}`, {}, {
+    this.http.post(`${this.apiBaseUrl}/api/search/recent?query=${query}`, {}, {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' })
     }).subscribe(() => this.loadRecentSearches());
   }
 
   loadRecentSearches() {
-    this.http.get<string[]>('/api/search/recent')
+    this.http.get<string[]>(`${this.apiBaseUrl}/api/search/recent`)
       .subscribe(data => this.recentSearches = data);
   }
 
@@ -52,7 +65,7 @@ export class SearchComponent implements OnInit {
       this.suggestions = [];
       return;
     }
-    this.http.get<string[]>(`/api/courses/autocomplete?q=${this.query}`)
+    this.http.get<string[]>(`${this.apiBaseUrl}/api/courses/autocomplete?q=${this.query}`)
       .subscribe(data => this.suggestions = data);
   }
 }

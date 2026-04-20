@@ -19,10 +19,11 @@ export const routes: Routes = [
         path: 'logout',
         loadComponent: () => import('./logout/logout').then(m => m.Logout),
         canActivate: [AuthGuard]
-    },   // <-- COMMA HERE
+    },
     {
         path: 'search',
-        loadComponent: () => import('./search/search').then(m => m.SearchComponent)
+        loadComponent: () => import('./search/search').then(m => m.SearchComponent),
+        canActivate: [AuthGuard]   // <-- Add this line
     },
     {
         path: 'add-item',

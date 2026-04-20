@@ -4,8 +4,8 @@
     <option *ngFor="let suggestion of suggestions" [value]="suggestion"></option>
   </datalist>
   <button (click)="search()">Search</button>
-  
-  <div *ngIf="recentSearches.length">
+
+  <div *ngIf="authService.isAuthenticated() && recentSearches.length">
     <h4>Recent searches:</h4>
     <ul>
       <li *ngFor="let item of recentSearches">
