@@ -30,7 +30,8 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/v1/auth/**").permitAll()
-                .requestMatchers("/api/courses/search").permitAll()
+                .requestMatchers("/api/courses/search", "/api/courses/autocomplete").permitAll()
+                .requestMatchers("/api/search/**").authenticated()   // <-- add this
                 .requestMatchers("/v1/admin").hasAuthority("ADMIN")
                 .anyRequest().authenticated()
             )
