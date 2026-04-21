@@ -4,6 +4,7 @@
 }
 @else {
     <button (click)="clickLogout()">Logout</button>
+    <button (click)="clickSearch()">Search Courses</button>
 }
 
 @if (authService.isAuthenticated()){
@@ -13,7 +14,6 @@
 @else {
     <p>You are logged out!</p>
 }
-
 
 @if (hasAdminRole()) {
     <p>You are admin, admin message: {{admin}}</p>

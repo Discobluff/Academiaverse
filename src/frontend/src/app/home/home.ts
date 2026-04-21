@@ -35,6 +35,10 @@ export class Home {
     this.router.navigate(['/logout']);
   }
 
+  clickSearch() {
+    this.router.navigateByUrl('/search');
+  }
+
   hasAdminRole() {
     return this.authService.hasRole('ADMIN');
   }
