@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { environment } from '../../environments/environments';
 
 @Component({
   selector: 'app-add-item',
@@ -16,14 +17,14 @@ export class AddItemComponent {
     title: '',
     description: '',
     price: null,
-    type: 'sale', // 'sale' or 'rent'
+    type: 'sale',
     images: []
   };
 
   constructor(private http: HttpClient, private router: Router) {}
 
   onSubmit() {
-    this.http.post('/api/items', this.item).subscribe({
+    this.http.post(`${environment.apiBaseUrl}/api/items`, this.item).subscribe({
       next: () => {
         alert('Item created successfully!');
         this.router.navigate(['/']);

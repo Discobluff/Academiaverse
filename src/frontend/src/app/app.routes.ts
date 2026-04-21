@@ -27,6 +27,7 @@ export const routes: Routes = [
     },
     {
         path: 'add-item',
-        loadComponent: () => import('./add-item/add-item').then(m => m.AddItemComponent)
+        loadComponent: () => import('./add-item/add-item').then(m => m.AddItemComponent),
+        canActivate: [AuthGuard]
     }
 ];
