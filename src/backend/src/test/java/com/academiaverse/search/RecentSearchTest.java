@@ -10,7 +10,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -44,7 +44,7 @@ public class RecentSearchTest {
     }
 
     @Test
-    @WithMockUser(username = "searchuser@test.com")
+    @WithUserDetails("searchuser@test.com")   // Use real user, not mock
     void saveAndRetrieveRecentSearches() throws Exception {
         // Save two searches
         mockMvc.perform(post("/api/search/recent")
@@ -65,8 +65,8 @@ public class RecentSearchTest {
     }
 
     @Test
-    void recentEndpointWithoutAuthReturns401() throws Exception {
+    void recentEndpointWithoutAuthReturns403() throws Exception {
         mockMvc.perform(get("/api/search/recent"))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isForbidden());   // 403, not 401
     }
 }
