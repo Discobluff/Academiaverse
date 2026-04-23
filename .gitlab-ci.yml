@@ -9,7 +9,6 @@ static_analysis:backend:
   image: gradle:8-jdk21
   script:
     - ./gradlew check
-    - ./gradlew sonar
   before_script:
     - cd src/backend
     - chmod +x gradlew

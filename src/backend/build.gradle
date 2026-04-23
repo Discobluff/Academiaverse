@@ -5,7 +5,6 @@ plugins {
 	id "checkstyle"
     id "pmd"
     id "com.github.spotbugs" version "6.5.1"
-    id "org.sonarqube" version "7.2.3.7755"
     id "org.owasp.dependencycheck" version "12.2.1"
 }
 
@@ -44,21 +43,21 @@ tasks.named('test') {
 
 // --- Checkstyle ---
 checkstyle {
-    toolVersion = "10.14.2"
+    toolVersion = "13.4.0"
     configFile = file("config/checkstyle/checkstyle.xml")
     ignoreFailures = false
 }
 
 // --- PMD ---
 pmd {
-    toolVersion = "7.0.0"
+    toolVersion = "7.23.0"
     ignoreFailures = false
     ruleSets = ["category/java/bestpractices.xml", "category/java/errorprone.xml"]
 }
 
 // --- SpotBugs ---
 spotbugs {
-    toolVersion = "4.8.3"
+    toolVersion = "4.9.7"
     effort = "max"
     reportLevel = "low"
     ignoreFailures = false
@@ -68,18 +67,6 @@ spotbugsMain {
     reports {
         html { required = true }  // human-readable report
         xml { required = false }
-    }
-}
-
-// --- SonarQube ---
-sonar {
-    properties {
-        property "sonar.projectKey", "my-springboot-app"
-        property "sonar.host.url", "http://localhost:9000"
-        property "sonar.token", System.getenv("SONAR_TOKEN")
-        // point Sonar to SpotBugs/Checkstyle reports so it ingests them
-        property "sonar.java.spotbugs.reportPaths", "build/reports/spotbugs/main.xml"
-        property "sonar.java.checkstyle.reportPaths", "build/reports/checkstyle/main.xml"
     }
 }
 
