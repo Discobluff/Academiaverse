@@ -4,7 +4,7 @@ stages:
   - test
   - deploy
 
-backend:
+static_analysis:backend:
   stage: static_analysis
   image: gradle:8-jdk21
   script:
@@ -14,7 +14,7 @@ backend:
     - cd src/backend
     - chmod +x gradlew
 
-backend:
+test:backend:
   stage: test
   image: gradle:8-jdk21
   
