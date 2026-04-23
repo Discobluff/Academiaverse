@@ -4,12 +4,15 @@ stages:
   - test
   - deploy
 
-static_analysis:backend:
+backend:
   stage: static_analysis
   image: gradle:8-jdk21
   script:
     - ./gradlew check
     - ./gradlew sonar
+  before_script:
+    - cd src/backend
+    - chmod +x gradlew
 
 backend:
   stage: test
