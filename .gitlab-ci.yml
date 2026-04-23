@@ -1,5 +1,15 @@
 stages:
+  - build
+  - static_analysis
   - test
+  - deploy
+
+static_analysis:backend:
+  stage: static_analysis
+  image: gradle:8-jdk21
+  script:
+    - ./gradlew check
+    - ./gradlew sonar
 
 backend:
   stage: test
