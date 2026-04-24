@@ -84,8 +84,8 @@ deploy:backend:
   script:
     - ./gradlew bootJar
     - echo "Deploying backend..."
-    - echo "JAR file ready at backend/build/libs/"
-    - ls backend/build/libs/
+    - echo "JAR file ready at build/libs/"
+    - ls build/libs/
     - echo "Backend deployed successfully ✅"
 
 deploy:frontend:
@@ -95,8 +95,8 @@ deploy:frontend:
     - npm ci
     - npx ng build --configuration production
     - echo "Deploying frontend..."
-    - echo "Build files ready at frontend/dist/"
-    - ls frontend/dist/
+    - echo "Build files ready at dist/"
+    - ls dist/
     - echo "Frontend deployed successfully ✅"
   before_script:
     - cd src/frontend
