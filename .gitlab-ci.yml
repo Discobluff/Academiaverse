@@ -76,7 +76,7 @@ test:backend:
 deploy:backend:
   stage: deploy
   image: gradle:8-jdk21
-    before_script:
+  before_script:
     - cd src/backend
     - chmod +x gradlew
   script:
