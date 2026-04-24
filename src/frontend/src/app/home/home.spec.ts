@@ -1,14 +1,27 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { Home } from './home';
+import { AuthService } from '../core/services/auth.service';
+import { provideRouter } from '@angular/router';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('Home', () => {
   let component: Home;
   let fixture: ComponentFixture<Home>;
 
-  beforeEach(async () => {
+  const mockAuthService = {
+    isAuthenticated: () => false,
+  };
+
+
+beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [Home],
+      providers: [
+        provideHttpClient(),
+        provideRouter([]),
+        { provide: AuthService, useValue: mockAuthService },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(Home);
