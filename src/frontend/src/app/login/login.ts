@@ -1,5 +1,4 @@
-import { HttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { AuthService } from '../core/services/auth.service';
@@ -12,12 +11,15 @@ import { Router } from '@angular/router';
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
-export class Login {
-  constructor(private authService: AuthService, private router: Router) {}
-  email: String = "";
-  password: String = "";
+export class Login implements OnInit{
 
-  errorMessage: String = "";
+  authService: AuthService = inject(AuthService);
+  router: Router = inject(Router);
+
+  email = "";
+  password = "";
+
+  errorMessage = "";
 
   ngOnInit() {
     if (this.authService.isAuthenticated()) {
@@ -25,11 +27,10 @@ export class Login {
     }
   }
 
-
   login() {
     this.authService.login({ username: this.email, password: this.password }).subscribe({
-      next: (response) =>       this.router.navigate(['/home']),
-      error: (err) => this.errorMessage = "Login failed.",
+      next: () => this.router.navigate(['/home']),
+      error: () => this.errorMessage = "Login failed.",
     });
   }
 

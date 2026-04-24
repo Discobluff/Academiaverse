@@ -1,20 +1,28 @@
 <div>
   <input list="courseSuggestions" [(ngModel)]="query" (input)="onInput()" (keyup.enter)="search()" placeholder="Search courses..." />
   <datalist id="courseSuggestions">
-    <option *ngFor="let suggestion of suggestions" [value]="suggestion"></option>
+    @for (suggestion of suggestions; track suggestion) {
+      <option [value]="suggestion"></option>
+    }
   </datalist>
   <button (click)="search()">Search</button>
 
-  <div *ngIf="authService.isAuthenticated() && recentSearches.length">
-    <h4>Recent searches:</h4>
-    <ul>
-      <li *ngFor="let item of recentSearches">
-        <a href="#" (click)="useRecentSearch(item); $event.preventDefault()">{{ item }}</a>
-      </li>
-    </ul>
-  </div>
+  @if (authService.isAuthenticated() && recentSearches.length){
+    <div>
+      <h4>Recent searches:</h4>
+      <ul>
+        @for (item of recentSearches; track item){
+          <li>
+            <a href="#" (click)="useRecentSearch(item); $event.preventDefault()">{{ item }}</a>
+          </li>
+        }
+      </ul>
+    </div>
+  }
 
   <ul>
-    <li *ngFor="let course of results">{{ course.name }} ({{ course.code }})</li>
+    @for (course of results; track course.name){
+      <li >{{ course.name }} ({{ course.code }})</li>
+    }
   </ul>
 </div>

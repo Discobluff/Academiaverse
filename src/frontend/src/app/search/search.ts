@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -14,16 +14,14 @@ import { AuthService } from '../core/services/auth.service';
 })
 export class SearchComponent implements OnInit {
   query = '';
-  results: any[] = [];
+  results: unknown[] = [];
   recentSearches: string[] = [];
   suggestions: string[] = [];
 
   private apiBaseUrl = environment.apiBaseUrl;
 
-  constructor(
-    private http: HttpClient,
-    public authService: AuthService   // <-- inject
-  ) {}
+  http: HttpClient = inject(HttpClient);
+  authService: AuthService = inject(AuthService);
 
   ngOnInit() {
     // Only load recent searches if authenticated
@@ -34,7 +32,7 @@ export class SearchComponent implements OnInit {
 
   search() {
     if (!this.query.trim()) return;
-    this.http.get<any[]>(`${this.apiBaseUrl}/api/courses/search?q=${this.query}`)
+    this.http.get<unknown[]>(`${this.apiBaseUrl}/api/courses/search?q=${this.query}`)
       .subscribe(data => {
         this.results = data;
         // Only save search if authenticated

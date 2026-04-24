@@ -2,7 +2,7 @@
     <input class="login-input" placeholder="Email" [(ngModel)]="email">
     <input class="login-input" placeholder="Password" [(ngModel)]="password">
     <button class="login-button" (click)="login()">Login</button>
-    @if (errorMessage != "") {
+    @if (errorMessage !== "") {
         <p class="error-message">{{ errorMessage }}</p>
     }
 </div>

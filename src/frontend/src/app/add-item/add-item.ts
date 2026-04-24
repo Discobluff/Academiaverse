@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -21,7 +21,8 @@ export class AddItemComponent {
     images: []
   };
 
-  constructor(private http: HttpClient, private router: Router) {}
+  private http = inject(HttpClient);
+  private router = inject(Router);
 
   onSubmit() {
     this.http.post(`${environment.apiBaseUrl}/api/items`, this.item).subscribe({

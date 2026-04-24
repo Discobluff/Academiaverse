@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../environments/environments';
 import { Router } from '@angular/router';
@@ -11,16 +11,19 @@ import { AuthService } from '../core/services/auth.service';
   templateUrl: './register.html',
   styleUrl: './register.css',
 })
-export class Register {
-  constructor(private authService: AuthService, private router: Router, private http: HttpClient) {}
+export class Register implements OnInit {
+  
+  authService: AuthService = inject(AuthService);
+  router: Router = inject(Router);
+  http: HttpClient = inject(HttpClient);
 
-  firstname: String = "";
-  lastname: String = "";
-  email: String = "";
-  password: String = "";
+  firstname = "";
+  lastname = "";
+  email = "";
+  password = "";
   passwordConfirmation = "";
 
-  errorMessage: String = "";
+  errorMessage = "";
 
   ngOnInit() {
     if (this.authService.isAuthenticated()) {
@@ -41,10 +44,10 @@ export class Register {
     };
 
   this.http.post(`${environment.apiUrl}/auth/register`, body, { responseType: 'text' }).subscribe({
-    next: (data) => {
+    next: () => {
       this.router.navigate(['/login']);
     },
-    error: (error) => {
+    error: () => {
       this.errorMessage = "Error with the registration.";
     }
   });

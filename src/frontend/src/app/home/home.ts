@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { environment } from '../../environments/environments';
 import { AuthService } from '../core/services/auth.service';
 import { CommonModule } from '@angular/common';
@@ -11,12 +11,14 @@ import { Router } from '@angular/router';
   imports: [CommonModule],
   templateUrl: './home.html'
 })
-export class Home {
+export class Home implements OnInit {
 
-  constructor(private router: Router, private http: HttpClient, public authService: AuthService) {}
+  private http: HttpClient = inject(HttpClient);
+  private router: Router = inject(Router);
+  public authService: AuthService = inject(AuthService);
 
-  email: String = "";
-  admin: String = "";
+  email = "";
+  admin = "";
 
   ngOnInit(){
     this.getTest();
