@@ -8,7 +8,7 @@ build:backend:
   stage: build
   image: gradle:8-jdk21
   script:
-    - ./gradlew build -x test -x checkstyleMain -x checkstyleTest -x spotbugsMain -x spotbugsTest -x pmdMain -x pmdTest
+    - ./gradlew build -x test -x check
   before_script:
     - cd src/backend
     - chmod +x gradlew
