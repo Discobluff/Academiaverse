@@ -14,7 +14,7 @@ import { AuthService } from '../core/services/auth.service';
 })
 export class SearchComponent implements OnInit {
   query = '';
-  results: unknown[] = [];
+  results: { name: string; code: string }[] = [];
   recentSearches: string[] = [];
   suggestions: string[] = [];
 
@@ -32,7 +32,7 @@ export class SearchComponent implements OnInit {
 
   search() {
     if (!this.query.trim()) return;
-    this.http.get<unknown[]>(`${this.apiBaseUrl}/api/courses/search?q=${this.query}`)
+    this.http.get<{ name: string; code: string }[]>(`${this.apiBaseUrl}/api/courses/search?q=${this.query}`)
       .subscribe(data => {
         this.results = data;
         // Only save search if authenticated

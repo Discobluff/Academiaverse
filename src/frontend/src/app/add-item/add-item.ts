@@ -12,7 +12,7 @@ import { environment } from '../../environments/environments';
   templateUrl: './add-item.html',
   styleUrls: ['./add-item.css']
 })
-export class AddItemComponent {
+export class AddItem {
   item = {
     title: '',
     description: '',

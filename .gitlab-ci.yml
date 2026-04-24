@@ -19,7 +19,15 @@ static_analysis:frontend:
   script:
     - npm ci
     - npx ng lint
-    - ng lint
+  before_script:
+    - cd src/frontend
+
+test:frontend:
+  stage: test
+  image: node:trixie
+  script:
+    - npm ci
+    - npx ng test
   before_script:
     - cd src/frontend
 
