@@ -13,10 +13,12 @@ static_analysis:backend:
     - cd src/backend
     - chmod +x gradlew
 
-staticèanalysis:frontend:
+static_analysis:frontend:
   stage: static_analysis
   image: node:trixie
   script:
+    - npm ci
+    - npx ng lint
     - ng lint
   before_script:
     - cd src/frontend
