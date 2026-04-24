@@ -45,7 +45,7 @@ test:frontend:
   image: node:trixie
   script:
     - npm ci
-    - npx vitest run --coverage
+    - npx ng test
   before_script:
     - cd src/frontend
   coverage: '/Lines\s*:\s*([0-9.]+)%/'
