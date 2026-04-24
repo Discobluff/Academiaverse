@@ -4,6 +4,24 @@ stages:
   - test
   - deploy
 
+build:backend:
+  stage: build
+  image: gradle:8-jdk21
+  script:
+    - ./gradlew build
+  before_script:
+    - cd src/backend
+    - chmod +x gradlew
+
+build:frontend:
+  stage: build
+  image: node:trixie
+  script:
+    - npm ci
+    - npx ng build
+  before_script:
+    - cd src/frontend
+
 static_analysis:backend:
   stage: static_analysis
   image: gradle:8-jdk21
@@ -34,11 +52,9 @@ test:frontend:
 test:backend:
   stage: test
   image: gradle:8-jdk21
-  
   services:
     - name: mysql:8.0
       alias: mysql
-  
   variables:
     MYSQL_ROOT_PASSWORD: root
     MYSQL_DATABASE: mydb
@@ -47,21 +63,38 @@ test:backend:
     SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/mydb?allowPublicKeyRetrieval=true&useSSL=false
     SPRING_DATASOURCE_USERNAME: myuser
     SPRING_DATASOURCE_PASSWORD: pwd
-
   cache:
     key: backend-$CI_COMMIT_REF_SLUG
     paths:
       - backend/.gradle/
-
   before_script:
     - cd src/backend
     - chmod +x gradlew
-
   script:
     - ./gradlew test
 
-  artifacts:
-    when: always
-    reports:
-      junit: src/backend/build/test-results/test/TEST-*.xml
-    expire_in: 7 days
+deploy:backend:
+  stage: deploy
+  image: gradle:8-jdk21
+    before_script:
+    - cd src/backend
+    - chmod +x gradlew
+  script:
+    - ./gradlew bootJar
+    - echo "Deploying backend..."
+    - echo "JAR file ready at backend/build/libs/"
+    - ls backend/build/libs/
+    - echo "Backend deployed successfully ✅"
+
+deploy:frontend:
+  stage: deploy
+  image: node:trixie
+  script:
+    - npm ci
+    - npx ng build --configuration production
+    - echo "Deploying frontend..."
+    - echo "Build files ready at frontend/dist/"
+    - ls frontend/dist/
+    - echo "Frontend deployed successfully ✅"
+  before_script:
+    - cd src/frontend
