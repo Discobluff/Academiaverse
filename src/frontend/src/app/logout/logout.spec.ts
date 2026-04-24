@@ -11,6 +11,7 @@ describe('Logout', () => {
 
   const mockAuthService = {
     isAuthenticated: () => false,
+    logout:() => {},
   };
 
 beforeEach(async () => {
