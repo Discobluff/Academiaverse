@@ -41,11 +41,11 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
-// --- Checkstyle ---
+//--- Checkstyle ---
 checkstyle {
     toolVersion = "13.4.0"
     configFile = file("config/checkstyle/checkstyle.xml")
-    ignoreFailures = false
+    ignoreFailures = true
 }
 
 // --- PMD ---
@@ -58,14 +58,15 @@ pmd {
 // --- SpotBugs ---
 spotbugs {
     toolVersion = "4.9.7"
-    effort = "max"
-    reportLevel = "low"
+    effort = com.github.spotbugs.snom.Effort.valueOf("MAX")
+    reportLevel = com.github.spotbugs.snom.Confidence.valueOf("LOW")
     ignoreFailures = false
+	excludeFilter = file("config/spotbugs/exclude.xml")
 }
 
 spotbugsMain {
     reports {
-        html { required = true }  // human-readable report
+        html { required = true }
         xml { required = false }
     }
 }

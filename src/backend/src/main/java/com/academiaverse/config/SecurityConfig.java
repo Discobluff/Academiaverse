@@ -1,5 +1,6 @@
 package com.academiaverse.config;
 
+import com.academiaverse.security.JwtAuthFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -9,13 +10,11 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfigurationSource;
 
-import com.academiaverse.security.JwtAuthFilter;
-
 @Configuration
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private final JwtAuthFilter jwtAuthFilter;
+    public final JwtAuthFilter jwtAuthFilter;
     private final CorsConfigurationSource corsConfigurationSource;
 
     public SecurityConfig(JwtAuthFilter jwtAuthFilter, CorsConfigurationSource corsConfigurationSource) {

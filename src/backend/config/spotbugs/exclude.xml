@@ -1,0 +1,10 @@
+<FindBugsFilter>
+    <Match>
+        <Class name="~.*Test.*"/>
+        <Bug pattern="VA_FORMAT_STRING_USES_NEWLINE"/>
+    </Match>
+    <Match>
+        <Class name="~.*Test.*"/>
+        <Bug pattern="THROWS_METHOD_THROWS_CLAUSE_BASIC_EXCEPTION"/>
+</Match>
+</FindBugsFilter>

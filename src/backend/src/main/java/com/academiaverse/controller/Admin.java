@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class Admin {
 
     @GetMapping
-    public ResponseEntity<String> getTest(){
+    public ResponseEntity<String> getTest() {
         return ResponseEntity.ok().body("admin");
     }
 }

@@ -1,5 +1,11 @@
 package com.academiaverse.search;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.academiaverse.entity.User;
 import com.academiaverse.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,13 +18,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
 @SpringBootTest
 @AutoConfigureMockMvc
-public class RecentSearchTest {
+class RecentSearchTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -28,6 +30,8 @@ public class RecentSearchTest {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    private String url = "/api/search/recent";
 
     @BeforeEach
     void setUp() {
@@ -47,26 +51,26 @@ public class RecentSearchTest {
     @WithMockUser(username = "searchuser@test.com")
     void saveAndRetrieveRecentSearches() throws Exception {
         // Save two searches
-        mockMvc.perform(post("/api/search/recent")
+        mockMvc.perform(post(url)
                 .param("query", "Software Engineering")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(post("/api/search/recent")
+        mockMvc.perform(post(url)
                 .param("query", "Algorithms")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
         // Retrieve recent searches
-        mockMvc.perform(get("/api/search/recent"))
+        assertDoesNotThrow(() -> mockMvc.perform(get(url))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0]").value("Algorithms"))
-                .andExpect(jsonPath("$[1]").value("Software Engineering"));
+                .andExpect(jsonPath("$[1]").value("Software Engineering")));
     }
 
     @Test
     void recentEndpointWithoutAuthReturns403() throws Exception {
-        mockMvc.perform(get("/api/search/recent"))
-                .andExpect(status().isForbidden());
+        assertDoesNotThrow(() -> mockMvc.perform(get(url))
+                .andExpect(status().isForbidden()));
     }
 }

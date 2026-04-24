@@ -1,40 +1,35 @@
-package com.academiaverse.Auth;
+package com.academiaverse.authentication;
 
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.junit.jupiter.api.BeforeEach;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.Random;
 import org.junit.jupiter.api.Test;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class TestLogin extends TestAuth{
+class TestLogin extends Auth {
 
-    @Autowired
-    private WebApplicationContext context;
-
-    @BeforeEach
-    void setup() {
-        mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
-    }
+    private static final Random random = new Random();
 
     @Test
     void testLoginInexistentUser() throws Exception {
-        String body = """
+        String body =
+            """
             {
                 "username": "userInexistent",
                 "password": "test",
             }
             """;
 
-        login(body, status().isBadRequest());
+        assertDoesNotThrow(() -> login(body, status().isBadRequest()));
     }
 
     @Test
     void testLoginWrongPassword() throws Exception {
-        int randomId = (int) (Math.random() * 1000);
-        String body = """
+        int randomId = random.nextInt(1000);
+        String body =
+            """
             {
                 "firstname": "Test",
                 "lastname": "Test",
@@ -43,20 +38,21 @@ class TestLogin extends TestAuth{
             }
             """.formatted(randomId);
         register(body, status().isOk());
-        String loginBody = """
+        String loginBody =
+            """
             {
                 "username": "test%d@test.com",
                 "password": "wrongPassword"
             }
             """.formatted(randomId);
-        login(loginBody, status().isUnauthorized());
+        assertDoesNotThrow(() -> login(loginBody, status().isUnauthorized()));
     }
-
 
     @Test
     void testLoginSuccess() throws Exception {
-    int randomId = (int) (Math.random() * 1000);
-        String body = """
+        int randomId = random.nextInt(1000);
+        String body =
+            """
             {
                 "firstname": "Test",
                 "lastname": "Test",
@@ -65,12 +61,13 @@ class TestLogin extends TestAuth{
             }
             """.formatted(randomId);
         register(body, status().isOk());
-        String loginBody = """
+        String loginBody =
+            """
             {
                 "username": "test%d@test.com",
                 "password": "test"
             }
             """.formatted(randomId);
-        login(loginBody, status().isOk());
+        assertDoesNotThrow(() -> login(loginBody, status().isOk()));
     }
 }

@@ -1,5 +1,9 @@
 package com.academiaverse.item;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.academiaverse.entity.Item;
 import com.academiaverse.entity.User;
 import com.academiaverse.repository.UserRepository;
@@ -14,12 +18,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ItemCreationTest {
+class ItemCreationTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -56,9 +57,9 @@ public class ItemCreationTest {
         item.setType("sale");
 
         String json = objectMapper.writeValueAsString(item);
-        mockMvc.perform(post("/api/items")
+        assertDoesNotThrow(() -> mockMvc.perform(post("/api/items")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk()));
     }
 }

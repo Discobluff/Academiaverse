@@ -1,5 +1,11 @@
 package com.academiaverse.controller;
 
+import com.academiaverse.dto.AuthResponse;
+import com.academiaverse.dto.request.AuthRequest;
+import com.academiaverse.entity.User;
+import com.academiaverse.security.JwtService;
+import com.academiaverse.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -9,21 +15,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.academiaverse.dto.AuthResponse;
-import com.academiaverse.dto.request.AuthRequest;
-import com.academiaverse.entity.User;
-import com.academiaverse.security.JwtService;
-import com.academiaverse.service.UserService;
-
-import jakarta.validation.Valid;
-
 @RestController
 @RequestMapping("/v1/auth")
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
-    private final UserService userService;
+    public final UserService userService;
 
     public AuthController(AuthenticationManager authenticationManager,
                           JwtService jwtService,
@@ -50,8 +48,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> saveUser(@Valid @RequestBody User user)
-    {
+    public ResponseEntity<User> saveUser(@Valid @RequestBody User user) {
         return ResponseEntity.ok().body(userService.saveUser(user));
     }
 }
