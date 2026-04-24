@@ -11,6 +11,7 @@ describe('Logout', () => {
 
   const mockAuthService = {
     isAuthenticated: () => false,
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     logout:() => {},
   };
 
