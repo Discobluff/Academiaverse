@@ -6,6 +6,7 @@ plugins {
     id "pmd"
     id "com.github.spotbugs" version "6.5.1"
     id "org.owasp.dependencycheck" version "12.2.1"
+	id 'jacoco'
 }
 
 group = 'com.academiaverse'
@@ -39,6 +40,22 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+jacoco {
+    toolVersion = "0.8.14"
+}
+
+test {
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.required = true
+        html.required = true
+    }
 }
 
 //--- Checkstyle ---

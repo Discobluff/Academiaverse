@@ -45,9 +45,10 @@ test:frontend:
   image: node:trixie
   script:
     - npm ci
-    - npx ng test
+    - npx vitest run --coverage
   before_script:
     - cd src/frontend
+  coverage: '/Lines\s*:\s*([0-9.]+)%/'
 
 test:backend:
   stage: test
@@ -71,7 +72,8 @@ test:backend:
     - cd src/backend
     - chmod +x gradlew
   script:
-    - ./gradlew test
+    - ./gradlew test jacocoTestReport
+  coverage: '/Total.*?([0-9]{1,3})%/'
 
 deploy:backend:
   stage: deploy
