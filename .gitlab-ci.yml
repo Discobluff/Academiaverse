@@ -8,7 +8,7 @@ static_analysis:backend:
   stage: static_analysis
   image: gradle:8-jdk21
   script:
-    - ./gradlew check
+    - ./gradlew check -x test
   before_script:
     - cd src/backend
     - chmod +x gradlew
