@@ -24,7 +24,7 @@ export class Register implements OnInit {
   passwordConfirmation = "";
   acceptedTerms = false;
   errorMessage = "";
-
+  
   ngOnInit() {
     if (this.authService.isAuthenticated()) {
       this.router.navigate(['/home']);

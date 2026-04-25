@@ -11,7 +11,7 @@
         I have read & accept the <a href="/terms" target="_blank">terms of service</a>
     </label>
     
-    <button class="login-button" (click)="register()" [disabled]="!acceptedTerms">Register</button>
+    <button class="login-button" (click)="register()" >Register</button>
     
     @if (errorMessage != "") {
         <p class="error-message">{{ errorMessage }}</p>
