@@ -22,7 +22,7 @@ export class Register implements OnInit {
   email = "";
   password = "";
   passwordConfirmation = "";
-
+  acceptedTerms = false;
   errorMessage = "";
 
   ngOnInit() {
@@ -34,6 +34,9 @@ export class Register implements OnInit {
   register() {
     if (this.password != this.passwordConfirmation) {
       this.errorMessage = "The passwords are differents."
+      return;
+    }else if (!this.acceptedTerms) {
+      this.errorMessage = "You must accept the terms of service to register."
       return;
     }
     const body = {

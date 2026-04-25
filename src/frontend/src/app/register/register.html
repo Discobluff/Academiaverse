@@ -4,8 +4,16 @@
     <input class="login-input" placeholder="Email" [(ngModel)]="email">
     <input class="login-input" placeholder="Password" [(ngModel)]="password">
     <input class="login-input" placeholder="Password confirmation" [(ngModel)]="passwordConfirmation">
-    <button class="login-button" (click)="register()">Register</button>
-    @if (errorMessage !== "") {
+    
+    <!-- Terms of Service checkbox -->
+    <label class="terms-label">
+        <input type="checkbox" [(ngModel)]="acceptedTerms">
+        I have read & accept the <a href="/terms" target="_blank">terms of service</a>
+    </label>
+    
+    <button class="login-button" (click)="register()" [disabled]="!acceptedTerms">Register</button>
+    
+    @if (errorMessage != "") {
         <p class="error-message">{{ errorMessage }}</p>
     }
 </div>
