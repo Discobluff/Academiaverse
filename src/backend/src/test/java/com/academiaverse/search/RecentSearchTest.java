@@ -35,10 +35,9 @@ class RecentSearchTest {
 
     @BeforeEach
     void setUp() {
-        // Ensure the test user exists in the database for the service layer
-        if (userRepository.findByEmail("searchuser@test.com").isEmpty()) {
+        if (userRepository.findByEmail("searchuser@student.tugraz.at").isEmpty()) {
             User user = new User();
-            user.setEmail("searchuser@test.com");
+            user.setEmail("searchuser@student.tugraz.at");
             user.setPassword(passwordEncoder.encode("password"));
             user.setRole("USER");
             user.setFirstname("Search");
@@ -48,7 +47,7 @@ class RecentSearchTest {
     }
 
     @Test
-    @WithMockUser(username = "searchuser@test.com")
+    @WithMockUser(username = "searchuser@student.tugraz.at")
     void saveAndRetrieveRecentSearches() throws Exception {
         // Save two searches
         mockMvc.perform(post(url)
