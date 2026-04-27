@@ -33,7 +33,7 @@ class TestLogin extends Auth {
             {
                 "firstname": "Test",
                 "lastname": "Test",
-                "email": "test%d@test.com",
+                "email": "test%d@student.tugraz.at",
                 "password": "test"
             }
             """.formatted(randomId);
@@ -41,7 +41,7 @@ class TestLogin extends Auth {
         String loginBody =
             """
             {
-                "username": "test%d@test.com",
+                "username": "test%d@student.tugraz.at",
                 "password": "wrongPassword"
             }
             """.formatted(randomId);
@@ -56,7 +56,7 @@ class TestLogin extends Auth {
             {
                 "firstname": "Test",
                 "lastname": "Test",
-                "email": "test%d@test.com",
+                "email": "test%d@student.tugraz.at",
                 "password": "test"
             }
             """.formatted(randomId);
@@ -64,7 +64,7 @@ class TestLogin extends Auth {
         String loginBody =
             """
             {
-                "username": "test%d@test.com",
+                "username": "test%d@student.tugraz.at",
                 "password": "test"
             }
             """.formatted(randomId);
