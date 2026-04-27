@@ -6,7 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.academiaverse.entity.Chat;
+import com.academiaverse.dto.request.ChatRequest;
 import com.academiaverse.entity.Item;
 import com.academiaverse.entity.User;
 import com.academiaverse.repository.ItemRepository;
@@ -74,11 +74,11 @@ class TestChat {
         item.setPrice(10.0);
         item.setType("sale");
         item.setOwner(seller);
-        itemRepository.save(item);
+        item = itemRepository.save(item);
     }
 
-    void sendMessage(Chat chat, ResultMatcher status) throws Exception {
-        String json = objectMapper.writeValueAsString(chat);
+    void sendMessage(ChatRequest chatRequest, ResultMatcher status) throws Exception {
+        String json = objectMapper.writeValueAsString(chatRequest);
         mockMvc.perform(post("/api/chat")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json))
@@ -88,26 +88,24 @@ class TestChat {
     @Test
     @WithMockUser(username = "buyer@example.com")
     void testSendMessage() throws Exception {
-        Chat chat = new Chat();
+        ChatRequest chat = new ChatRequest();
         chat.setMessage("Hello, I'm interested in your item.");
-        chat.setItem(item);
-        chat.setSender(buyer);
-        chat.setBuyer(buyer);
+        chat.setItemId(item.getId());
+        chat.setBuyerId(buyer.getId());
         assertDoesNotThrow(() -> sendMessage(chat, status().isOk()));
     }
 
     @Test
     @WithMockUser(username = "buyer@example.com")
     void testGetMessageBuyer() throws Exception {
-        Chat chat = new Chat();
-        chat.setMessage("Hello, I'm interested in your item.");
-        chat.setItem(item);
-        chat.setSender(buyer);
-        chat.setBuyer(buyer);
-        assertDoesNotThrow(() -> sendMessage(chat, status().isOk()));
+        ChatRequest chatRequest = new ChatRequest();
+        chatRequest.setMessage("Hello, I'm interested in your item.");
+        chatRequest.setItemId(item.getId());
+        chatRequest.setBuyerId(buyer.getId());
+        assertDoesNotThrow(() -> sendMessage(chatRequest, status().isOk()));
         assertDoesNotThrow(() -> mockMvc.perform(get("/api/chat"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$[0]").value(chat)));
+            .andExpect(jsonPath("$[0].message").value("Hello, I'm interested in your item.")));
     }
 
 }

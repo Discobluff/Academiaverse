@@ -50,7 +50,7 @@ class TestLogin extends Auth {
 
     @Test
     void testLoginSuccess() throws Exception {
-        int randomId = random.nextInt(1000);
+        int randomId = random.nextInt(100000);
         String body =
             """
             {
