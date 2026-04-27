@@ -29,6 +29,11 @@ public class Item {
     private Double price;
     private String type; // "sale" or "rent"
 
+    // Digital product fields
+    private Boolean isDigital = false;
+    private String digitalFileName;
+    private String digitalFilePath;
+
     @ElementCollection
     private List<String> images;
 

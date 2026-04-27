@@ -12,7 +12,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
@@ -28,6 +30,26 @@ public class ItemController {
         User user = userRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
         Item saved = itemService.createItem(item, user);
+        return ResponseEntity.ok(saved);
+    }
+
+    @PostMapping("/upload")
+    public ResponseEntity<Item> uploadDigitalItem(@RequestParam("title") String title,
+                                                  @RequestParam("description") String description,
+                                                  @RequestParam("price") Double price,
+                                                  @RequestParam("type") String type,
+                                                  @RequestParam("file") MultipartFile file,
+                                                  @AuthenticationPrincipal UserDetails userDetails) {
+        User user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+
+        Item item = new Item();
+        item.setTitle(title);
+        item.setDescription(description);
+        item.setPrice(price);
+        item.setType(type);
+
+        Item saved = itemService.createDigitalItem(item, user, file);
         return ResponseEntity.ok(saved);
     }
 }
