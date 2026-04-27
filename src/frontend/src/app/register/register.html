@@ -13,7 +13,7 @@
     
     <button class="login-button" (click)="register()" >Register</button>
     
-    @if (errorMessage != "") {
+    @if (errorMessage !== "") {
         <p class="error-message">{{ errorMessage }}</p>
     }
 </div>
