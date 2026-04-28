@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -33,10 +34,12 @@ public class User implements UserDetails {
     private Integer id;
     private String firstname;
     private String lastname;
+
     @NotBlank(message = "Email is required")
+    @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@student\\.tugraz\\.at$", message = "Must be a TU Graz student email address")
     @Column(unique = true)
     private String email;
-    
+
     private String password;
     private String role;
 
@@ -49,7 +52,7 @@ public class User implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role));
     }
-    
+
     @Override
     public String getUsername() {
         return email;
