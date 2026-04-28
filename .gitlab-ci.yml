@@ -4,6 +4,10 @@ stages:
   - test
   - deploy
 
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
 build:backend:
   stage: build
   image: gradle:8-jdk21
