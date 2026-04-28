@@ -16,24 +16,56 @@ export class AddItem {
   item = {
     title: '',
     description: '',
-    price: null,
+    price: null as number | null,
     type: 'sale',
-    images: []
+    images: [] as string[]
   };
+
+  isDigital = false;
+  selectedFile: File | null = null;
 
   private http = inject(HttpClient);
   private router = inject(Router);
 
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.selectedFile = input.files[0];
+    }
+  }
+
   onSubmit() {
-    this.http.post(`${environment.apiBaseUrl}/api/items`, this.item).subscribe({
-      next: () => {
-        alert('Item created successfully!');
-        this.router.navigate(['/']);
-      },
-      error: (err) => {
-        console.error(err);
-        alert('Failed to create item. Make sure you are logged in.');
-      }
-    });
+    if (this.isDigital && this.selectedFile) {
+      // Multipart upload for digital product
+      const formData = new FormData();
+      formData.append('title', this.item.title);
+      formData.append('description', this.item.description);
+      formData.append('price', String(this.item.price));
+      formData.append('type', this.item.type);
+      formData.append('file', this.selectedFile);
+
+      this.http.post(`${environment.apiBaseUrl}/api/items/upload`, formData).subscribe({
+        next: () => {
+          alert('Digital item created successfully!');
+          this.router.navigate(['/']);
+        },
+        error: (err) => {
+          console.error(err);
+          alert('Failed to create digital item.');
+        }
+      });
+    } else {
+      // JSON for non-digital items
+      this.http.post(`${environment.apiBaseUrl}/api/items`, this.item).subscribe({
+        next: () => {
+          alert('Item created successfully!');
+          this.router.navigate(['/']);
+        },
+        error: (err) => {
+          console.error(err);
+          alert('Failed to create item. Make sure you are logged in.');
+        }
+      });
+    }
   }
 }
