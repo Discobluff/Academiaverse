@@ -10,14 +10,17 @@
   <input type="number" [(ngModel)]="item.price" name="price" required />
 
   <p>Type:</p>
-  <select [(ngModel)]="item.type" name="type">
+  <select [(ngModel)]="item.type" name="type" [disabled]="isDigital">
     <option value="sale">For Sale</option>
-    <option value="rent">For Rent</option>
+    <option value="rent" [disabled]="isDigital">For Rent</option>
   </select>
+  @if (isDigital) {
+    <small style="color: gray; margin-left: 8px;">Digital products are for sale only.</small>
+  }
 
   <p>
     <label>
-      <input type="checkbox" [(ngModel)]="isDigital" name="isDigital" />
+      <input type="checkbox" [(ngModel)]="isDigital" name="isDigital" (change)="onDigitalChange()" />
       This is a digital product (upload a file)
     </label>
   </p>
