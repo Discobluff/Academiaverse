@@ -34,9 +34,14 @@ export class AddItem {
     }
   }
 
+  onDigitalChange() {
+    if (this.isDigital) {
+      this.item.type = 'sale';   // force sale when digital
+    }
+  }
+
   onSubmit() {
     if (this.isDigital && this.selectedFile) {
-      // Multipart upload for digital product
       const formData = new FormData();
       formData.append('title', this.item.title);
       formData.append('description', this.item.description);
@@ -55,7 +60,6 @@ export class AddItem {
         }
       });
     } else {
-      // JSON for non-digital items
       this.http.post(`${environment.apiBaseUrl}/api/items`, this.item).subscribe({
         next: () => {
           alert('Item created successfully!');
