@@ -15,5 +15,17 @@
     <option value="rent">For Rent</option>
   </select>
 
+  <p>
+    <label>
+      <input type="checkbox" [(ngModel)]="isDigital" name="isDigital" />
+      This is a digital product (upload a file)
+    </label>
+  </p>
+
+  @if (isDigital) {
+    <p>Upload file:</p>
+    <input type="file" (change)="onFileSelected($event)" name="file" />
+  }
+
   <button type="submit">Create Item</button>
 </form>
