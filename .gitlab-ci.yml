@@ -12,6 +12,8 @@ build:backend:
   before_script:
     - cd src/backend
     - chmod +x gradlew
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
 
 build:frontend:
   stage: build
@@ -21,6 +23,8 @@ build:frontend:
     - npx ng build
   before_script:
     - cd src/frontend
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
 
 static_analysis:backend:
   stage: static_analysis
@@ -30,6 +34,8 @@ static_analysis:backend:
   before_script:
     - cd src/backend
     - chmod +x gradlew
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
 
 static_analysis:frontend:
   stage: static_analysis
@@ -39,6 +45,8 @@ static_analysis:frontend:
     - npx ng lint
   before_script:
     - cd src/frontend
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
 
 test:frontend:
   stage: test
@@ -49,6 +57,8 @@ test:frontend:
   before_script:
     - cd src/frontend
   coverage: '/Lines\s*:\s*([0-9.]+)%/'
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
 
 test:backend:
   stage: test
@@ -74,6 +84,8 @@ test:backend:
   script:
     - ./gradlew test jacocoTestReport
   coverage: '/Total.*?([0-9]{1,3})%/'
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
 
 deploy:backend:
   stage: deploy
@@ -100,3 +112,5 @@ deploy:frontend:
     - echo "Frontend deployed successfully ✅"
   before_script:
     - cd src/frontend
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
