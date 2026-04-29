@@ -6,8 +6,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -36,7 +36,7 @@ public class User implements UserDetails {
     private String lastname;
 
     @NotBlank(message = "Email is required")
-    @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@student\\.tugraz\\.at$", message = "Must be a TU Graz student email address")
+    @Email(message = "Must be a valid email address")
     @Column(unique = true)
     private String email;
 
