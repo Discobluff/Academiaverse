@@ -36,9 +36,9 @@ class ItemCreationTest {
 
     @BeforeEach
     void setUp() {
-        if (userRepository.findByEmail("test@student.tugraz.at").isEmpty()) {
+        if (userRepository.findByEmail("test@example.com").isEmpty()) {
             User user = new User();
-            user.setEmail("test@student.tugraz.at");
+            user.setEmail("test@example.com");
             user.setPassword(passwordEncoder.encode("password"));
             user.setRole("ROLE_USER");
             user.setFirstname("Test");
@@ -48,7 +48,7 @@ class ItemCreationTest {
     }
 
     @Test
-    @WithMockUser(username = "test@student.tugraz.at")
+    @WithMockUser(username = "test@example.com")
     void createItemShouldReturnOk() throws Exception {
         Item item = new Item();
         item.setTitle("Test Item");

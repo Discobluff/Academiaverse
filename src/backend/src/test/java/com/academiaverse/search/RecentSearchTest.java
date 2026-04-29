@@ -35,9 +35,9 @@ class RecentSearchTest {
 
     @BeforeEach
     void setUp() {
-        if (userRepository.findByEmail("searchuser@student.tugraz.at").isEmpty()) {
+        if (userRepository.findByEmail("searchuser@example.com").isEmpty()) {
             User user = new User();
-            user.setEmail("searchuser@student.tugraz.at");
+            user.setEmail("searchuser@example.com");
             user.setPassword(passwordEncoder.encode("password"));
             user.setRole("USER");
             user.setFirstname("Search");
@@ -47,9 +47,8 @@ class RecentSearchTest {
     }
 
     @Test
-    @WithMockUser(username = "searchuser@student.tugraz.at")
+    @WithMockUser(username = "searchuser@example.com")
     void saveAndRetrieveRecentSearches() throws Exception {
-        // Save two searches
         mockMvc.perform(post(url)
                 .param("query", "Software Engineering")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -60,7 +59,6 @@ class RecentSearchTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        // Retrieve recent searches
         assertDoesNotThrow(() -> mockMvc.perform(get(url))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0]").value("Algorithms"))

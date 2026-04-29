@@ -34,9 +34,9 @@ class DigitalProductUploadTest {
 
     @BeforeEach
     void setUp() {
-        if (userRepository.findByEmail("digital@student.tugraz.at").isEmpty()) {
+        if (userRepository.findByEmail("digital@example.com").isEmpty()) {
             User user = new User();
-            user.setEmail("digital@student.tugraz.at");
+            user.setEmail("digital@example.com");
             user.setPassword(passwordEncoder.encode("password"));
             user.setRole("USER");
             user.setFirstname("Digital");
@@ -46,7 +46,7 @@ class DigitalProductUploadTest {
     }
 
     @Test
-    @WithMockUser(username = "digital@student.tugraz.at")
+    @WithMockUser(username = "digital@example.com")
     void shouldUploadDigitalProduct() throws Exception {
         MockMultipartFile file = new MockMultipartFile(
                 "file",

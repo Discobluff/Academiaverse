@@ -40,13 +40,6 @@ export class Register implements OnInit {
       return;
     }
 
-    // TU Graz student email check
-    const emailPattern = /^[a-zA-Z0-9._%+-]+@student\.tugraz\.at$/;
-    if (!emailPattern.test(this.email)) {
-      this.errorMessage = "Only TU Graz student email addresses are allowed (e.g., name@student.tugraz.at).";
-      return;
-    }
-
     const body = {
       firstname: this.firstname,
       lastname: this.lastname,
