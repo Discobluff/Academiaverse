@@ -4,6 +4,7 @@ import com.academiaverse.entity.Item;
 import com.academiaverse.entity.User;
 import com.academiaverse.repository.UserRepository;
 import com.academiaverse.service.ItemService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,7 @@ public class ItemController {
     private final UserRepository userRepository;
 
     @PostMapping
-    public ResponseEntity<Item> createItem(@RequestBody Item item,
+    public ResponseEntity<Item> createItem(@Valid @RequestBody Item item,
                                            @AuthenticationPrincipal UserDetails userDetails) {
         User user = userRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
