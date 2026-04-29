@@ -27,6 +27,11 @@ export class AddItem {
   private http = inject(HttpClient);
   private router = inject(Router);
 
+  // New validation method
+  isFormValid(): boolean {
+    return this.item.title.trim().length > 0 && this.item.price !== null && this.item.price > 0;
+  }
+
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
@@ -36,11 +41,15 @@ export class AddItem {
 
   onDigitalChange() {
     if (this.isDigital) {
-      this.item.type = 'sale';   // force sale when digital
+      this.item.type = 'sale';
     }
   }
 
   onSubmit() {
+    if (!this.isFormValid()) {
+      return;
+    }
+
     if (this.isDigital && this.selectedFile) {
       const formData = new FormData();
       formData.append('title', this.item.title);
