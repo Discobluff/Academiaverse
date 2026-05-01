@@ -6,14 +6,15 @@ import com.academiaverse.entity.User;
 import com.academiaverse.security.JwtService;
 import com.academiaverse.service.UserService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/v1/auth")
@@ -21,7 +22,7 @@ public class AuthController {
 
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
-    public final UserService userService;
+    private final UserService userService;
 
     public AuthController(AuthenticationManager authenticationManager,
                           JwtService jwtService,
@@ -41,8 +42,9 @@ public class AuthController {
             )
         );
 
-        UserDetails userDetails = userService.loadUserByUsername(request.getUsername());
-        String token = jwtService.generateToken(userDetails);
+        User user = userService.findByEmail(request.getUsername())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials"));
+        String token = jwtService.generateToken(user);
 
         return ResponseEntity.ok(new AuthResponse(token));
     }
