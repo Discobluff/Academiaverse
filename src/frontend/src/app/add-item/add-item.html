@@ -6,10 +6,13 @@
   <p>Description:</p>
   <textarea [(ngModel)]="item.description" name="description"></textarea>
 
+  <p>Notes:</p>
+  <textarea [(ngModel)]="item.notes" name="notes"></textarea>
+
   <p>Payment Method:</p>
   <select [(ngModel)]="item.paymentMethod" name="paymentMethod">
-  <option value="cash">Cash</option>
-  <option value="points">Points</option>
+    <option value="cash">Cash</option>
+    <option value="points">Points</option>
   </select>
 
   <p>Price ({{ item.paymentMethod === 'points' ? 'points' : '€' }}):</p>

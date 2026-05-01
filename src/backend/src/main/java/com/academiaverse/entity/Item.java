@@ -1,5 +1,6 @@
 package com.academiaverse.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -30,6 +31,7 @@ public class Item {
     private String title;
 
     private String description;
+    private String notes;
 
     @NotNull(message = "Price is required")
     private Double price;
