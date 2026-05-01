@@ -18,7 +18,8 @@ export class AddItem {
     description: '',
     price: null as number | null,
     type: 'sale',
-    images: [] as string[]
+    images: [] as string[],
+    paymentMethod: "points" as "cash" | "points"
   };
 
   isDigital = false;
@@ -57,6 +58,7 @@ export class AddItem {
       formData.append('price', String(this.item.price));
       formData.append('type', this.item.type);
       formData.append('file', this.selectedFile);
+      formData.append('paymentMethod', this.item.paymentMethod);
 
       this.http.post(`${environment.apiBaseUrl}/api/items/upload`, formData).subscribe({
         next: () => {
