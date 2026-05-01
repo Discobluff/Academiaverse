@@ -35,6 +35,7 @@ public class Item {
     private Double price;
 
     private String type; // "sale" or "rent"
+    private String paymentMethod; // "cash" or "points"
 
     private Boolean isDigital = false;
     private String digitalFileName;

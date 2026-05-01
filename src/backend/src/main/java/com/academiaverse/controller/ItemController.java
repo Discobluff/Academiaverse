@@ -39,6 +39,7 @@ public class ItemController {
                                                   @RequestParam("description") String description,
                                                   @RequestParam("price") Double price,
                                                   @RequestParam("type") String type,
+                                                  @RequestParam("paymentMethod") String paymentMethod,
                                                   @RequestParam("file") MultipartFile file,
                                                   @AuthenticationPrincipal UserDetails userDetails) {
         User user = userRepository.findByEmail(userDetails.getUsername())
@@ -49,6 +50,7 @@ public class ItemController {
         item.setDescription(description);
         item.setPrice(price);
         item.setType(type);
+        item.setPaymentMethod(paymentMethod);
 
         Item saved = itemService.createDigitalItem(item, user, file);
         return ResponseEntity.ok(saved);
