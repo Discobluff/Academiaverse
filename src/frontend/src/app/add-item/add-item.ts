@@ -11,6 +11,7 @@ type PaymentMethod = 'cash' | 'points';
 interface AddItemForm {
   title: string;
   description: string;
+  notes: string;
   price: number | null;
   type: ItemType;
   images: string[];
@@ -28,6 +29,7 @@ export class AddItem {
   item: AddItemForm = {
     title: '',
     description: '',
+    notes: '',
     price: null,
     type: 'sale',
     images: [],
@@ -67,6 +69,7 @@ export class AddItem {
       const formData = new FormData();
       formData.append('title', this.item.title);
       formData.append('description', this.item.description);
+      formData.append('notes', this.item.notes);
       formData.append('price', String(this.item.price));
       formData.append('type', this.item.type);
       formData.append('file', this.selectedFile);

@@ -37,6 +37,7 @@ public class ItemController {
     @PostMapping("/upload")
     public ResponseEntity<Item> uploadDigitalItem(@RequestParam("title") String title,
                                                   @RequestParam("description") String description,
+                                                  @RequestParam("notes") String notes,
                                                   @RequestParam("price") Double price,
                                                   @RequestParam("type") String type,
                                                   @RequestParam("paymentMethod") String paymentMethod,
@@ -48,6 +49,7 @@ public class ItemController {
         Item item = new Item();
         item.setTitle(title);
         item.setDescription(description);
+        item.setNotes(notes);
         item.setPrice(price);
         item.setType(type);
         item.setPaymentMethod(paymentMethod);

@@ -55,6 +55,7 @@ class ItemCreationTest {
         item.setDescription("Test Description");
         item.setPrice(10.0);
         item.setType("sale");
+        item.setNotes("Test notes");
         item.setPaymentMethod("points");
 
         String json = objectMapper.writeValueAsString(item);
