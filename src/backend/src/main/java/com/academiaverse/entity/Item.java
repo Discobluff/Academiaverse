@@ -35,6 +35,8 @@ public class Item {
     private Double price;
 
     private String type; // "sale" or "rent"
+
+    @Column(name = "payment_method")
     private String paymentMethod; // "cash" or "points"
 
     private Boolean isDigital = false;
