@@ -2,6 +2,7 @@ package com.academiaverse.controller;
 
 import com.academiaverse.entity.Item;
 import com.academiaverse.entity.User;
+import com.academiaverse.repository.ItemRepository;
 import com.academiaverse.repository.UserRepository;
 import com.academiaverse.service.ItemService;
 import jakarta.validation.Valid;
@@ -10,11 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -23,6 +20,7 @@ import org.springframework.web.server.ResponseStatusException;
 @RequiredArgsConstructor
 public class ItemController {
     private final ItemService itemService;
+    private final ItemRepository itemRepository;
     private final UserRepository userRepository;
 
     @PostMapping
@@ -52,5 +50,12 @@ public class ItemController {
 
         Item saved = itemService.createDigitalItem(item, user, file);
         return ResponseEntity.ok(saved);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Item> getItem(@PathVariable Long id) {
+        Item item = itemRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Item not found"));
+        return ResponseEntity.ok(item);
     }
 }

@@ -1,0 +1,44 @@
+<div class="chat-container">
+  <div class="chat-header">
+    <button class="back-btn" (click)="goBack()">← Back</button>
+    <span class="header-title">CHAT</span>
+  </div>
+
+  <div class="item-info-panel">
+    <div class="info-row">
+      <span class="info-label">Item:</span>
+      <span class="info-value">{{ itemTitle }}</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">Course:</span>
+      <span class="info-value">{{ courseName }}</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">Seller:</span>
+      <span class="info-value">{{ sellerName }}</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">Buyer:</span>
+      <span class="info-value">{{ buyerName }}</span>
+    </div>
+  </div>
+
+  <div class="messages-panel">
+    @if (messages.length === 0) {
+      <div class="no-messages">No messages yet. Start the conversation!</div>
+    }
+    @for (msg of messages; track msg.id) {
+      <div class="message-row" [class.my-message]="isMine(msg)" [class.other-message]="!isMine(msg)">
+        <div class="bubble">
+          <div class="message-text">{{ msg.message }}</div>
+          <div class="message-time">{{ msg.createdAt | date:'shortTime' }}</div>
+        </div>
+      </div>
+    }
+  </div>
+
+  <div class="input-area">
+    <input [(ngModel)]="newMessage" placeholder="Type a message..." (keyup.enter)="sendMessage()" class="message-input" />
+    <button (click)="sendMessage()" class="send-btn">Send</button>
+  </div>
+</div>
