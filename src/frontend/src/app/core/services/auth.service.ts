@@ -37,7 +37,7 @@ export class AuthService {
       try {
         const payload = JSON.parse(atob(token.split('.')[1]));
         return payload.userId ?? null;
-      } catch (e) {
+      } catch {
         return null;
       }
     }

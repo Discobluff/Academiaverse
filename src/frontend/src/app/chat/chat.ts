@@ -44,7 +44,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   messages: ChatMessage[] = [];
   newMessage = '';
   currentUserId: number | null = null;
-  private polling: any = null;
+  private polling: ReturnType<typeof setInterval> | null = null;
 
   itemTitle = 'Loading...';
   sellerName = '';

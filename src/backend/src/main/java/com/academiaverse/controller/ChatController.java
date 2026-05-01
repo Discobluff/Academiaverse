@@ -6,12 +6,8 @@ import com.academiaverse.entity.User;
 import com.academiaverse.repository.ItemRepository;
 import com.academiaverse.repository.UserRepository;
 import com.academiaverse.service.ChatService;
-import com.academiaverse.service.ItemService;
-
-import lombok.RequiredArgsConstructor;
-
 import java.util.List;
-
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -37,13 +33,16 @@ public class ChatController {
     }
 
     @PostMapping
-    public ResponseEntity<Chat> sendMessage(@RequestBody ChatRequest chatRequest, @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<Chat> sendMessage(@RequestBody ChatRequest chatRequest,
+                                            @AuthenticationPrincipal UserDetails userDetails) {
         User user = userRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("User not found"));
         Chat chat = new Chat();
         chat.setMessage(chatRequest.getMessage());
-        chat.setItem(itemRepository.findById(chatRequest.getItemId()).orElseThrow(() -> new RuntimeException("Item not found")));
-        chat.setBuyer(userRepository.findById(chatRequest.getBuyerId()).orElseThrow(() -> new RuntimeException("Buyer not found")));
+        chat.setItem(itemRepository.findById(chatRequest.getItemId())
+                .orElseThrow(() -> new RuntimeException("Item not found")));
+        chat.setBuyer(userRepository.findById(chatRequest.getBuyerId())
+                .orElseThrow(() -> new RuntimeException("Buyer not found")));
         chat.setSender(user);
         return ResponseEntity.ok(chatService.createChat(chat));
     }

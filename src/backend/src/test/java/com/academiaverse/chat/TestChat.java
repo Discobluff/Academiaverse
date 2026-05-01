@@ -2,8 +2,8 @@ package com.academiaverse.chat;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.academiaverse.dto.request.ChatRequest;
@@ -27,6 +27,8 @@ import org.springframework.test.web.servlet.ResultMatcher;
 @AutoConfigureMockMvc
 class TestChat {
 
+    private static final String BUYER_EMAIL = "buyer@example.com";
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -37,7 +39,7 @@ class TestChat {
     private UserRepository userRepository;
 
     @Autowired
-    private ItemRepository itemRepository;  
+    private ItemRepository itemRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -48,9 +50,9 @@ class TestChat {
 
     @BeforeEach
     void setUp() {
-        buyer = userRepository.findByEmail("buyer@example.com").orElseGet(() -> {
+        buyer = userRepository.findByEmail(BUYER_EMAIL).orElseGet(() -> {
             User newBuyer = new User();
-            newBuyer.setEmail("buyer@example.com");
+            newBuyer.setEmail(BUYER_EMAIL);
             newBuyer.setPassword(passwordEncoder.encode("password"));
             newBuyer.setRole("ROLE_USER");
             newBuyer.setFirstname("Buyer");
@@ -86,7 +88,7 @@ class TestChat {
     }
 
     @Test
-    @WithMockUser(username = "buyer@example.com")
+    @WithMockUser(username = BUYER_EMAIL)
     void testSendMessage() throws Exception {
         ChatRequest chat = new ChatRequest();
         chat.setMessage("Hello, I'm interested in your item.");
@@ -96,16 +98,15 @@ class TestChat {
     }
 
     @Test
-    @WithMockUser(username = "buyer@example.com")
+    @WithMockUser(username = BUYER_EMAIL)
     void testGetMessageBuyer() throws Exception {
         ChatRequest chatRequest = new ChatRequest();
         chatRequest.setMessage("Hello, I'm interested in your item.");
         chatRequest.setItemId(item.getId());
         chatRequest.setBuyerId(buyer.getId());
-        assertDoesNotThrow(() -> sendMessage(chatRequest, status().isOk()));
+        sendMessage(chatRequest, status().isOk());
         assertDoesNotThrow(() -> mockMvc.perform(get("/api/chat"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$[0].message").value("Hello, I'm interested in your item.")));
     }
-
 }
