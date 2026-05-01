@@ -41,6 +41,10 @@ export class Home implements OnInit {
     this.router.navigateByUrl('/search');
   }
 
+  clickAddItem() {
+    this.router.navigate(['/add-item']);
+  }
+
   hasAdminRole() {
     return this.authService.hasRole('ADMIN');
   }
