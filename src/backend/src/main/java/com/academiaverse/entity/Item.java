@@ -8,6 +8,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -24,10 +26,19 @@ public class Item {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Title is required")
     private String title;
+
     private String description;
+
+    @NotNull(message = "Price is required")
     private Double price;
+
     private String type; // "sale" or "rent"
+
+    private Boolean isDigital = false;
+    private String digitalFileName;
+    private String digitalFilePath;
 
     @ElementCollection
     private List<String> images;

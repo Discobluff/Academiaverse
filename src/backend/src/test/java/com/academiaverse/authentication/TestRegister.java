@@ -20,7 +20,7 @@ class TestRegister extends Auth {
             {
                 "firstname": "Test",
                 "lastname": "Test",
-                "email": "test%d@test.com",
+                "email": "test%d@example.com",
                 "password": "test"
             }
             """.formatted(randomId);
@@ -49,7 +49,7 @@ class TestRegister extends Auth {
             {
                 "firstname": "",
                 "lastname": "",
-                "email": "test@test.com",
+                "email": "test@example.com",
                 "password": ""
             """;
 
@@ -64,7 +64,7 @@ class TestRegister extends Auth {
             {
                 "firstname": "Test",
                 "lastname": "Test",
-                "email": "test%d@test.com",
+                "email": "test%d@example.com",
                 "password": "test"
             }
             """.formatted(randomId);

@@ -12,7 +12,7 @@ import { AuthService } from '../core/services/auth.service';
   styleUrl: './register.css',
 })
 export class Register implements OnInit {
-  
+
   authService: AuthService = inject(AuthService);
   router: Router = inject(Router);
   http: HttpClient = inject(HttpClient);
@@ -24,7 +24,7 @@ export class Register implements OnInit {
   passwordConfirmation = "";
   acceptedTerms = false;
   errorMessage = "";
-  
+
   ngOnInit() {
     if (this.authService.isAuthenticated()) {
       this.router.navigate(['/home']);
@@ -35,10 +35,11 @@ export class Register implements OnInit {
     if (this.password != this.passwordConfirmation) {
       this.errorMessage = "The passwords are differents."
       return;
-    }else if (!this.acceptedTerms) {
+    } else if (!this.acceptedTerms) {
       this.errorMessage = "You must accept the terms of service to register."
       return;
     }
+
     const body = {
       firstname: this.firstname,
       lastname: this.lastname,
@@ -46,13 +47,13 @@ export class Register implements OnInit {
       password: this.password,
     };
 
-  this.http.post(`${environment.apiUrl}/auth/register`, body, { responseType: 'text' }).subscribe({
-    next: () => {
-      this.router.navigate(['/login']);
-    },
-    error: () => {
-      this.errorMessage = "Error with the registration.";
-    }
-  });
+    this.http.post(`${environment.apiUrl}/auth/register`, body, { responseType: 'text' }).subscribe({
+      next: () => {
+        this.router.navigate(['/login']);
+      },
+      error: () => {
+        this.errorMessage = "Error with the registration.";
+      }
+    });
   }
 }
