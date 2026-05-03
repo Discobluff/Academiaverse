@@ -81,12 +81,12 @@ class TestSellerListings {
         Item item = createItem();
         assertDoesNotThrow(() -> mockMvc.perform(get("/api/items/seller_listings"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$[0].title").value(item.getTitle()))
-            .andExpect(jsonPath("$[0].description").value(item.getDescription()))
-            .andExpect(jsonPath("$[0].price").value(item.getPrice()))
-            .andExpect(jsonPath("$[0].type").value(item.getType()))
-            .andExpect(jsonPath("$[0].notes").value(item.getNotes()))
-            .andExpect(jsonPath("$[0].paymentMethod").value(item.getPaymentMethod()))
+            .andExpect(jsonPath("$[1].title").value(item.getTitle()))
+            .andExpect(jsonPath("$[1].description").value(item.getDescription()))
+            .andExpect(jsonPath("$[1].price").value(item.getPrice()))
+            .andExpect(jsonPath("$[1].type").value(item.getType()))
+            .andExpect(jsonPath("$[1].notes").value(item.getNotes()))
+            .andExpect(jsonPath("$[1].paymentMethod").value(item.getPaymentMethod()))
         );;
     }
 }
