@@ -1,0 +1,25 @@
+<div class="listings-container">
+    <h2>My Listings</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Item</th>
+                <th>Price</th>
+                <th>Type</th>
+                <th>Status</th>
+                <th>Payment</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (item of items; track item) {
+            <tr>
+                <td>{{ item.title }}</td>
+                <td>{{ item.price }}</td>
+                <td>{{ item.type }}</td>
+                <td></td>
+                <td>{{ item.paymentMethod }}</td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>

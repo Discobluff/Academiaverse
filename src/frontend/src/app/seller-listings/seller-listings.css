@@ -1,0 +1,48 @@
+.listings-container {
+  border: 2px solid #2e7d32;
+  border-radius: 4px;
+  padding: 1rem;
+}
+
+h2 {
+  font-size: 1.25rem;
+  font-weight: normal;
+  margin-bottom: 1rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead tr {
+  background-color: #2e7d32;
+  color: white;
+}
+
+th, td {
+  padding: 10px 12px;
+  text-align: left;
+  font-size: 0.9rem;
+}
+
+tbody tr:nth-child(odd) {
+  background-color: #c8d5c8;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #dde8dd;
+}
+
+.chat-btn {
+  border: 1.5px solid #2e7d32;
+  background: white;
+  padding: 4px 12px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  border-radius: 2px;
+}
+
+.chat-btn:hover {
+  background-color: #f0f7f0;
+}
