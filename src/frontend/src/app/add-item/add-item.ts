@@ -5,6 +5,19 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environments';
 
+type ItemType = 'sale' | 'rent';
+type PaymentMethod = 'cash' | 'points';
+
+interface AddItemForm {
+  title: string;
+  description: string;
+  notes: string;
+  price: number | null;
+  type: ItemType;
+  images: string[];
+  paymentMethod: PaymentMethod;
+}
+
 @Component({
   selector: 'app-add-item',
   standalone: true,
@@ -13,12 +26,14 @@ import { environment } from '../../environments/environments';
   styleUrls: ['./add-item.css']
 })
 export class AddItem {
-  item = {
+  item: AddItemForm = {
     title: '',
     description: '',
-    price: null as number | null,
+    notes: '',
+    price: null,
     type: 'sale',
-    images: [] as string[]
+    images: [],
+    paymentMethod: 'points'
   };
 
   isDigital = false;
@@ -54,9 +69,11 @@ export class AddItem {
       const formData = new FormData();
       formData.append('title', this.item.title);
       formData.append('description', this.item.description);
+      formData.append('notes', this.item.notes);
       formData.append('price', String(this.item.price));
       formData.append('type', this.item.type);
       formData.append('file', this.selectedFile);
+      formData.append('paymentMethod', this.item.paymentMethod);
 
       this.http.post(`${environment.apiBaseUrl}/api/items/upload`, formData).subscribe({
         next: () => {

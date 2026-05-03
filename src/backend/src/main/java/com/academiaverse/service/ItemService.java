@@ -33,4 +33,8 @@ public class ItemService {
         item.setDigitalFilePath("/uploads/" + file.getOriginalFilename());
         return itemRepository.save(item);
     }
+
+    public Iterable<Item> getSellerListings(User seller) {
+        return itemRepository.findByOwner(seller);
+    }
 }

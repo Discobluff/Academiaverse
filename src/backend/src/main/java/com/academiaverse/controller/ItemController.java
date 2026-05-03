@@ -41,8 +41,10 @@ public class ItemController {
     @PostMapping("/upload")
     public ResponseEntity<Item> uploadDigitalItem(@RequestParam("title") String title,
                                                   @RequestParam("description") String description,
+                                                  @RequestParam("notes") String notes,
                                                   @RequestParam("price") Double price,
                                                   @RequestParam("type") String type,
+                                                  @RequestParam("paymentMethod") String paymentMethod,
                                                   @RequestParam("file") MultipartFile file,
                                                   @AuthenticationPrincipal UserDetails userDetails) {
         User user = userRepository.findByEmail(userDetails.getUsername())
@@ -51,8 +53,10 @@ public class ItemController {
         Item item = new Item();
         item.setTitle(title);
         item.setDescription(description);
+        item.setNotes(notes);
         item.setPrice(price);
         item.setType(type);
+        item.setPaymentMethod(paymentMethod);
 
         Item saved = itemService.createDigitalItem(item, user, file);
         return ResponseEntity.ok(saved);
@@ -63,5 +67,13 @@ public class ItemController {
         Item item = itemRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Item not found"));
         return ResponseEntity.ok(item);
+    }
+
+    @GetMapping("/seller_listings")
+    public ResponseEntity<Iterable<Item>> getSellerListings(@AuthenticationPrincipal UserDetails userDetails) {
+        User user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+        Iterable<Item> listings = itemService.getSellerListings(user);
+        return ResponseEntity.ok(listings);
     }
 }
