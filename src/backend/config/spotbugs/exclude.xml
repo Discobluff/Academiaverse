@@ -1,4 +1,5 @@
 <FindBugsFilter>
+    <!-- Exclude test classes from certain warnings -->
     <Match>
         <Class name="~.*Test.*"/>
         <Bug pattern="VA_FORMAT_STRING_USES_NEWLINE"/>
@@ -6,5 +7,17 @@
     <Match>
         <Class name="~.*Test.*"/>
         <Bug pattern="THROWS_METHOD_THROWS_CLAUSE_BASIC_EXCEPTION"/>
-</Match>
+    </Match>
+
+    <!-- Exclude Spring constructor injection from EI_EXPOSE_REP2 warning -->
+    <!-- Storing references to injected Spring beans is safe and intentional -->
+    <Match>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+        <Or>
+            <Class name="com.academiaverse.controller.AuthController"/>
+            <Class name="com.academiaverse.controller.ChatController"/>
+            <Class name="com.academiaverse.controller.ItemController"/>
+            <Class name="com.academiaverse.security.JwtAuthFilter"/>
+        </Or>
+    </Match>
 </FindBugsFilter>

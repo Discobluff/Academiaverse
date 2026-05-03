@@ -14,16 +14,16 @@ class TestRegister extends Auth {
 
     @Test
     void testRegisterEndpoint() throws Exception {
-        int randomId = random.nextInt(1000);
+        int randomId = random.nextInt(100000);
         String body =
             """
             {
                 "firstname": "Test",
                 "lastname": "Test",
-                "email": "test%d@example.com",
+                "email": "test_%d_%d@example.com",
                 "password": "test"
             }
-            """.formatted(randomId);
+            """.formatted(randomId, System.currentTimeMillis());
         assertDoesNotThrow(() -> register(body, status().isOk()));
     }
 
@@ -58,16 +58,16 @@ class TestRegister extends Auth {
 
     @Test
     void testRegisterWithExistingEmail() throws Exception {
-        int randomId = random.nextInt(1000);
+        int randomId = random.nextInt(100000);
         String body =
             """
             {
                 "firstname": "Test",
                 "lastname": "Test",
-                "email": "test%d@example.com",
+                "email": "testdup_%d_%d@example.com",
                 "password": "test"
             }
-            """.formatted(randomId);
+            """.formatted(randomId, System.currentTimeMillis());
 
         register(body, status().isOk());
         assertDoesNotThrow(() -> register(body, status().isConflict()));
