@@ -1,5 +1,6 @@
 package com.academiaverse.security;
 
+import com.academiaverse.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -46,6 +47,18 @@ public class JwtService {
             .setExpiration(Date.from(now.plus(1, ChronoUnit.HOURS)))
             .signWith(secretKey, SignatureAlgorithm.HS256)
             .claim("role", userDetails.getAuthorities().iterator().next().getAuthority())
+            .compact();
+    }
+
+    public String generateToken(User user) {
+        Instant now = Instant.now();
+        return Jwts.builder()
+            .setSubject(user.getUsername())
+            .setIssuedAt(Date.from(now))
+            .setExpiration(Date.from(now.plus(1, ChronoUnit.HOURS)))
+            .signWith(secretKey, SignatureAlgorithm.HS256)
+            .claim("role", user.getRole())
+            .claim("userId", user.getId())
             .compact();
     }
 }
