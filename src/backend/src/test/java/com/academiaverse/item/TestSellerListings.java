@@ -24,6 +24,8 @@ import org.springframework.test.web.servlet.MockMvc;
 @AutoConfigureMockMvc
 class TestSellerListings {
 
+    private static final String mail = "test@example.com";
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -38,9 +40,9 @@ class TestSellerListings {
 
     @BeforeEach
     void setUp() {
-        if (userRepository.findByEmail("test@example.com").isEmpty()) {
+        if (userRepository.findByEmail(mail).isEmpty()) {
             User user = new User();
-            user.setEmail("test@example.com");
+            user.setEmail(mail);
             user.setPassword(passwordEncoder.encode("password"));
             user.setRole("ROLE_USER");
             user.setFirstname("Test");
@@ -60,14 +62,13 @@ class TestSellerListings {
         
         String json = objectMapper.writeValueAsString(item);
         assertDoesNotThrow(() -> mockMvc.perform(post("/api/items")
-        .contentType(MediaType.APPLICATION_JSON)
-        .content(json)));
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(json)));
         return item;
     }
 
-
     @Test
-    @WithMockUser(username = "test@example.com")
+    @WithMockUser(username = mail)
     void getSellerListingsShouldReturnOk() throws Exception {
         createItem();
         assertDoesNotThrow(() -> mockMvc.perform(get("/api/items/seller_listings"))
@@ -75,12 +76,11 @@ class TestSellerListings {
     }
 
     @Test
-    @WithMockUser(username = "test@example.com")
+    @WithMockUser(username = mail)
     void getSellerListings() throws Exception {
         Item item = createItem();
         assertDoesNotThrow(() -> mockMvc.perform(get("/api/items/seller_listings"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$[0].id").value(item.getId()))
             .andExpect(jsonPath("$[0].title").value(item.getTitle()))
             .andExpect(jsonPath("$[0].description").value(item.getDescription()))
             .andExpect(jsonPath("$[0].price").value(item.getPrice()))

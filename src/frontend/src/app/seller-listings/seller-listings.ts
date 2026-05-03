@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { environment } from '../../environments/environments';
 
-type item = { id: number; title: string; description: string; price: number; type: string; notes: string; paymentMethod: string };
+interface item { id: number; title: string; description: string; price: number; type: string; notes: string; paymentMethod: string };
 
 @Component({
   selector: 'app-seller-listings',
@@ -10,7 +10,7 @@ type item = { id: number; title: string; description: string; price: number; typ
   templateUrl: './seller-listings.html',
   styleUrl: './seller-listings.css',
 })
-export class SellerListings {
+export class SellerListings implements OnInit{
 
   http: HttpClient = inject(HttpClient);
 
