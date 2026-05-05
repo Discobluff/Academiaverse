@@ -24,7 +24,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @AutoConfigureMockMvc
 class TestSellerListings {
 
-    private static final String mail = "test@example.com";
+    private static final String mail = "sellerlistings@example.com";
 
     @Autowired
     private MockMvc mockMvc;
@@ -45,8 +45,8 @@ class TestSellerListings {
             user.setEmail(mail);
             user.setPassword(passwordEncoder.encode("password"));
             user.setRole("ROLE_USER");
-            user.setFirstname("Test");
-            user.setLastname("User");
+            user.setFirstname("Seller");
+            user.setLastname("Listings");
             userRepository.save(user);
         }
     }
@@ -59,7 +59,7 @@ class TestSellerListings {
         item.setType("sale");
         item.setNotes("Test notes");
         item.setPaymentMethod("points");
-        
+
         String json = objectMapper.writeValueAsString(item);
         assertDoesNotThrow(() -> mockMvc.perform(post("/api/items")
             .contentType(MediaType.APPLICATION_JSON)
@@ -81,12 +81,12 @@ class TestSellerListings {
         Item item = createItem();
         assertDoesNotThrow(() -> mockMvc.perform(get("/api/items/seller_listings"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$[1].title").value(item.getTitle()))
-            .andExpect(jsonPath("$[1].description").value(item.getDescription()))
-            .andExpect(jsonPath("$[1].price").value(item.getPrice()))
-            .andExpect(jsonPath("$[1].type").value(item.getType()))
-            .andExpect(jsonPath("$[1].notes").value(item.getNotes()))
-            .andExpect(jsonPath("$[1].paymentMethod").value(item.getPaymentMethod()))
-        );;
+            .andExpect(jsonPath("$[0].title").value(item.getTitle()))
+            .andExpect(jsonPath("$[0].description").value(item.getDescription()))
+            .andExpect(jsonPath("$[0].price").value(item.getPrice()))
+            .andExpect(jsonPath("$[0].type").value(item.getType()))
+            .andExpect(jsonPath("$[0].notes").value(item.getNotes()))
+            .andExpect(jsonPath("$[0].paymentMethod").value(item.getPaymentMethod()))
+        );
     }
 }
