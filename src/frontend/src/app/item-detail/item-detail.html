@@ -1,0 +1,22 @@
+@if (item) {
+  <div class="item-detail-container">
+    <h2 class="item-title">{{ item.title }}</h2>
+    <p class="item-description"><strong>Description:</strong> {{ item.description }}</p>
+    <p class="item-notes"><strong>Notes:</strong> {{ item.notes }}</p>
+    <p class="item-price"><strong>Price:</strong> {{ item.price }} {{ item.paymentMethod === 'points' ? 'points' : '€' }}</p>
+    <p class="item-type"><strong>Type:</strong> {{ item.type }}</p>
+    <p class="item-payment"><strong>Payment Method:</strong> {{ item.paymentMethod }}</p>
+    <p class="item-status"><strong>Status:</strong> Available</p>
+
+    @if (item.isDigital) {
+      <div class="digital-info">
+        <p><strong>File:</strong> {{ item.digitalFileName }}</p>
+        <p><em>Available after purchase</em></p>
+      </div>
+    }
+  </div>
+} @else {
+  <div class="not-found">
+    Item not found.
+  </div>
+}
