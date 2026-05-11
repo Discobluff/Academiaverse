@@ -8,6 +8,7 @@
                 <th>Type</th>
                 <th>Status</th>
                 <th>Payment</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -18,6 +19,7 @@
                 <td>{{ item.type }}</td>
                 <td></td>
                 <td>{{ item.paymentMethod }}</td>
+                <td><button class="view-btn" (click)="viewItem(item.id)">View</button></td>
             </tr>
             }
         </tbody>
