@@ -14,7 +14,7 @@ interface item { id: number; title: string; description: string; price: number; 
 export class SellerListings implements OnInit{
 
   http: HttpClient = inject(HttpClient);
-  router: Router = inject(Router);   // new
+  router: Router = inject(Router);
 
   items: item[] = [];
 
@@ -27,8 +27,26 @@ export class SellerListings implements OnInit{
     .subscribe(data => this.items = data);
   }
 
-  viewItem(id: number) {              // new
+  viewItem(id: number) {
     this.router.navigate(['/item', id]);
   }
 
+  editItem(id: number) {
+    this.router.navigate(['/edit-item', id]);
+  }
+
+  deleteItem(id: number) {
+    if (confirm('Are you sure you want to delete this item?')) {
+      this.http.delete(`${environment.apiBaseUrl}/api/items/${id}`)
+      .subscribe({
+        next: () => {
+          this.items = this.items.filter(i => i.id !== id);
+        },
+        error: (err) => {
+          console.error('Delete failed', err);
+          alert('Could not delete item.');
+        }
+      });
+    }
+  }
 }

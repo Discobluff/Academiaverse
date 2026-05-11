@@ -1,5 +1,6 @@
 package com.academiaverse.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
@@ -50,6 +51,7 @@ public class Item {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private User owner;
 
     private LocalDateTime createdAt;
