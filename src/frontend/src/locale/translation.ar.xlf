@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="en-US" datatype="plaintext" original="ng2.template">
+    <body>
+      <trans-unit id="translation_logged_out" datatype="html">
+        <!-- <source>You are logged out!</source> -->
+        <target>تم تسجيل خروجك!</target>
+      </trans-unit>
+      <trans-unit id="translation_log_out">
+        <target>تسجيل الخروج</target>
+      </trans-unit>
+      <trans-unit id="translation_login">
+        <target>تسجيل الدخول</target>
+      </trans-unit>
+      <trans-unit id="translation_register">
+        <target>التسجيل</target>
+      </trans-unit>
+      <trans-unit id="translation_firstname">
+        <target>الاسم الأول</target>
+      </trans-unit>
+      <trans-unit id="translation_lastname">
+        <target>اللقب</target>
+      </trans-unit>
+      <trans-unit id="translation_email">
+        <target>البريد الإلكتروني</target>
+      </trans-unit>
+      <trans-unit id="translation_password">
+        <target>كلمة المرور</target>
+      </trans-unit>
+      <trans-unit id="translation_password_confirmation">
+        <target>تأكيد كلمة المرور</target>
+      </trans-unit>
+      <trans-unit id="translation_read_accept">
+        <target>لقد قرأت الشروط وأوافق عليها</target>
+      </trans-unit>
+      <trans-unit id="translation_terms">
+        <target>شروط الخدمة</target>
+      </trans-unit>
+
+
+      <trans-unit id="translation_">
+        <target></target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

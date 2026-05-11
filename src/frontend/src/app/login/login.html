@@ -1,7 +1,7 @@
 <div class="login-panel">
-    <input class="login-input" placeholder="Email" [(ngModel)]="email">
-    <input class="login-input" type="password" placeholder="Password" [(ngModel)]="password">
-    <button class="login-button" (click)="login()">Login</button>
+    <input i18n-placeholder="@@translation_email" class="login-input" placeholder="Email" [(ngModel)]="email">
+    <input i18n-placeholder="@@translation_password" class="login-input" type="password" placeholder="Password" [(ngModel)]="password">
+    <button i18n="@@translation_login" class="login-button" (click)="login()">Login</button>
     @if (errorMessage !== "") {
         <p class="error-message">{{ errorMessage }}</p>
     }
