@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { LanguageService } from '../services/language.service';
 import { HostListener } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
@@ -12,12 +12,11 @@ import { MatIconModule } from '@angular/material/icon';
 
 
 export class LanguageSwitcher {
-  currentLocale: string;
   isOpen = false;
 
-  constructor(private langService: LanguageService) {
-    this.currentLocale = langService.getCurrentLocale();
-  }
+  langService = inject(LanguageService);
+  currentLocale = this.langService.getCurrentLocale();
+  
 
   switchLanguage(locale: string): void {
     this.isOpen = false;
