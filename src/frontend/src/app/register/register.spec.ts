@@ -1,3 +1,4 @@
+import '@angular/localize/init';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Register } from './register';
 import { provideHttpClient } from '@angular/common/http';
