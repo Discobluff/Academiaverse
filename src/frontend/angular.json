@@ -14,6 +14,14 @@
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
+      "i18n": {
+        "sourceLocale": "en-US",
+        "locales": {
+          "ar": {
+            "translation": "src/locale/translation.ar.xlf"
+          }
+        }
+      },
       "architect": {
         "build": {
           "builder": "@angular/build:application",
@@ -30,7 +38,14 @@
             "styles": ["src/styles.css"]
           },
           "configurations": {
+            "ar": {
+              "localize": ["ar"]
+            },
+            "en": {
+              "localize": ["en-US"]
+            },
             "production": {
+              "localize": true,
               "budgets": [
                 {
                   "type": "initial",
@@ -61,6 +76,9 @@
             },
             "development": {
               "buildTarget": "frontend:build:development"
+            },
+            "ar": {
+              "buildTarget": "frontend:build:development,ar"
             }
           },
           "defaultConfiguration": "development"

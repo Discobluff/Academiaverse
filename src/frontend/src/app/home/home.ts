@@ -4,11 +4,12 @@ import { environment } from '../../environments/environments';
 import { AuthService } from '../core/services/auth.service';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { LanguageSwitcher } from '../language-switcher/language-switcher';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, LanguageSwitcher],
   templateUrl: './home.html'
 })
 export class Home implements OnInit {
