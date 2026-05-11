@@ -13,6 +13,7 @@ Go to `src/frontend`
 
 ```
 ng serve
+ng serve --configuration=ar --port 4201
 ```
 
 ### Components
