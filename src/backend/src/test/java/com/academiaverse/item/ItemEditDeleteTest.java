@@ -39,6 +39,7 @@ class ItemEditDeleteTest {
     private PasswordEncoder passwordEncoder;
 
     private User seller;
+    private User other;
     private Item item;
 
     @BeforeEach
@@ -50,6 +51,16 @@ class ItemEditDeleteTest {
             u.setRole("ROLE_USER");
             u.setFirstname("Seller");
             u.setLastname("Test");
+            return userRepository.save(u);
+        });
+
+        other = userRepository.findByEmail("other@example.com").orElseGet(() -> {
+            User u = new User();
+            u.setEmail("other@example.com");
+            u.setPassword(passwordEncoder.encode("password"));
+            u.setRole("ROLE_USER");
+            u.setFirstname("Other");
+            u.setLastname("User");
             return userRepository.save(u);
         });
 
@@ -91,8 +102,8 @@ class ItemEditDeleteTest {
     @Test
     @WithMockUser(username = "other@example.com")
     void shouldNotDeleteIfNotOwner() throws Exception {
-        // Create another user who doesn't own the item
+        // other is a valid user but not the owner -> should get 403
         mockMvc.perform(delete("/api/items/" + item.getId()))
-                .andExpect(status().isForbidden()); // or 404 depending on implementation
+                .andExpect(status().isForbidden());
     }
 }
