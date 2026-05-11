@@ -1,9 +1,9 @@
 @if (!authService.isAuthenticated()){
-    <button (click)="clickLogin()">Login</button>
-    <button (click)="clickRegister()">Register</button>
+    <button i18n="@@translation_login" (click)="clickLogin()">Login</button>
+    <button i18n="@@translation_register" (click)="clickRegister()">Register</button>
 }
 @else {
-    <button (click)="clickLogout()">Logout</button>
+    <button i18n="@@translation_log_out" (click)="clickLogout()">Logout</button>
     <button (click)="clickSearch()">Search Courses</button>
     <button (click)="clickAddItem()">Add Item</button>
     <button (click)="clickSellerListings()">Seller Listings</button>
@@ -14,9 +14,11 @@
     <p>User email : {{email}}</p>
 }
 @else {
-    <p>You are logged out!</p>
+    <p i18n="@@translation_logged_out">You are logged out!</p>
 }
 
 @if (hasAdminRole()) {
     <p>You are admin, admin message: {{admin}}</p>
 }
+
+<app-language-switcher></app-language-switcher>
