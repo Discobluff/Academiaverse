@@ -46,3 +46,16 @@ tbody tr:nth-child(even) {
 .chat-btn:hover {
   background-color: #f0f7f0;
 }
+
+.view-btn {
+  border: 1.5px solid #2e7d32;
+  background: white;
+  padding: 4px 12px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  border-radius: 2px;
+}
+
+.view-btn:hover {
+  background-color: #f0f7f0;
+}
