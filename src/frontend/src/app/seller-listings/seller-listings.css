@@ -59,3 +59,17 @@ tbody tr:nth-child(even) {
 .view-btn:hover {
   background-color: #f0f7f0;
 }
+
+.edit-btn, .delete-btn {
+  border: 1.5px solid #2e7d32;
+  background: white;
+  padding: 4px 12px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  border-radius: 2px;
+  margin-left: 4px;
+}
+
+.edit-btn:hover, .delete-btn:hover {
+  background-color: #f0f7f0;
+}

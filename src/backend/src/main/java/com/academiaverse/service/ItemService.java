@@ -37,4 +37,32 @@ public class ItemService {
     public Iterable<Item> getSellerListings(User seller) {
         return itemRepository.findByOwner(seller);
     }
+
+    @Transactional
+    public Item updateItem(Long id, Item updated, User owner) {
+        Item existing = itemRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Item not found"));
+        if (!existing.getOwner().getId().equals(owner.getId())) {
+            throw new RuntimeException("You can only edit your own items");
+        }
+        // Update fields
+        existing.setTitle(updated.getTitle());
+        existing.setDescription(updated.getDescription());
+        existing.setNotes(updated.getNotes());
+        existing.setPrice(updated.getPrice());
+        existing.setType(updated.getType());
+        existing.setPaymentMethod(updated.getPaymentMethod());
+        existing.setUpdatedAt(LocalDateTime.now());
+        return itemRepository.save(existing);
+    }
+
+    @Transactional
+    public void deleteItem(Long id, User owner) {
+        Item existing = itemRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Item not found"));
+        if (!existing.getOwner().getId().equals(owner.getId())) {
+            throw new RuntimeException("You can only delete your own items");
+        }
+        itemRepository.delete(existing);
+    }
 }

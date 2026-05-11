@@ -15,11 +15,15 @@
             @for (item of items; track item) {
             <tr>
                 <td>{{ item.title }}</td>
-                <td>{{ item.price }}</td>
+                <td>{{ item.price }} {{ item.paymentMethod === 'points' ? 'points' : '€' }}</td>
                 <td>{{ item.type }}</td>
                 <td></td>
                 <td>{{ item.paymentMethod }}</td>
-                <td><button class="view-btn" (click)="viewItem(item.id)">View</button></td>
+                <td>
+                    <button class="view-btn" (click)="viewItem(item.id)">View</button>
+                    <button class="edit-btn" (click)="editItem(item.id)">Edit</button>
+                    <button class="delete-btn" (click)="deleteItem(item.id)">Delete</button>
+                </td>
             </tr>
             }
         </tbody>
