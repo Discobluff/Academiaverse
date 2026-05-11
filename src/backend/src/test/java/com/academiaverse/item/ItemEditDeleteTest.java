@@ -1,5 +1,6 @@
 package com.academiaverse.item;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -23,6 +24,8 @@ import org.springframework.test.web.servlet.MockMvc;
 @AutoConfigureMockMvc
 class ItemEditDeleteTest {
 
+    private static final String SELLER_EMAIL = "seller@example.com";
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -39,14 +42,13 @@ class ItemEditDeleteTest {
     private PasswordEncoder passwordEncoder;
 
     private User seller;
-    private User other;
     private Item item;
 
     @BeforeEach
     void setUp() {
-        seller = userRepository.findByEmail("seller@example.com").orElseGet(() -> {
+        seller = userRepository.findByEmail(SELLER_EMAIL).orElseGet(() -> {
             User u = new User();
-            u.setEmail("seller@example.com");
+            u.setEmail(SELLER_EMAIL);
             u.setPassword(passwordEncoder.encode("password"));
             u.setRole("ROLE_USER");
             u.setFirstname("Seller");
@@ -54,15 +56,16 @@ class ItemEditDeleteTest {
             return userRepository.save(u);
         });
 
-        other = userRepository.findByEmail("other@example.com").orElseGet(() -> {
-            User u = new User();
-            u.setEmail("other@example.com");
-            u.setPassword(passwordEncoder.encode("password"));
-            u.setRole("ROLE_USER");
-            u.setFirstname("Other");
-            u.setLastname("User");
-            return userRepository.save(u);
-        });
+        // Create the "other" user needed for the 403 test
+        if (userRepository.findByEmail("other@example.com").isEmpty()) {
+            User other = new User();
+            other.setEmail("other@example.com");
+            other.setPassword(passwordEncoder.encode("password"));
+            other.setRole("ROLE_USER");
+            other.setFirstname("Other");
+            other.setLastname("User");
+            userRepository.save(other);
+        }
 
         item = new Item();
         item.setTitle("Original Title");
@@ -76,7 +79,7 @@ class ItemEditDeleteTest {
     }
 
     @Test
-    @WithMockUser(username = "seller@example.com")
+    @WithMockUser(username = SELLER_EMAIL)
     void shouldUpdateItem() throws Exception {
         Item updated = new Item();
         updated.setTitle("Updated Title");
@@ -86,24 +89,23 @@ class ItemEditDeleteTest {
         updated.setNotes("Updated notes");
         updated.setPaymentMethod("points");
 
-        mockMvc.perform(put("/api/items/" + item.getId())
+        assertDoesNotThrow(() -> mockMvc.perform(put("/api/items/" + item.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updated)))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk()));
     }
 
     @Test
-    @WithMockUser(username = "seller@example.com")
+    @WithMockUser(username = SELLER_EMAIL)
     void shouldDeleteItem() throws Exception {
-        mockMvc.perform(delete("/api/items/" + item.getId()))
-                .andExpect(status().isOk());
+        assertDoesNotThrow(() -> mockMvc.perform(delete("/api/items/" + item.getId()))
+                .andExpect(status().isOk()));
     }
 
     @Test
     @WithMockUser(username = "other@example.com")
     void shouldNotDeleteIfNotOwner() throws Exception {
-        // other is a valid user but not the owner -> should get 403
-        mockMvc.perform(delete("/api/items/" + item.getId()))
-                .andExpect(status().isForbidden());
+        assertDoesNotThrow(() -> mockMvc.perform(delete("/api/items/" + item.getId()))
+                .andExpect(status().isForbidden()));
     }
 }

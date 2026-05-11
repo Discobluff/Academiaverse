@@ -20,4 +20,10 @@
             <Class name="com.academiaverse.security.JwtAuthFilter"/>
         </Or>
     </Match>
+
+    <!-- Exclude RuntimeException in service methods (they are re-thrown in controllers) -->
+    <Match>
+        <Bug pattern="THROWS_METHOD_THROWS_RUNTIMEEXCEPTION"/>
+        <Class name="com.academiaverse.service.ItemService"/>
+    </Match>
 </FindBugsFilter>

@@ -27,6 +27,8 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping("/api/items")
 @RequiredArgsConstructor
 public class ItemController {
+    private static final String USER_NOT_FOUND = "User not found";
+
     private final ItemService itemService;
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
@@ -35,7 +37,7 @@ public class ItemController {
     public ResponseEntity<Item> createItem(@Valid @RequestBody Item item,
                                            @AuthenticationPrincipal UserDetails userDetails) {
         User user = userRepository.findByEmail(userDetails.getUsername())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, USER_NOT_FOUND));
         Item saved = itemService.createItem(item, user);
         return ResponseEntity.ok(saved);
     }
@@ -50,7 +52,7 @@ public class ItemController {
                                                   @RequestParam("file") MultipartFile file,
                                                   @AuthenticationPrincipal UserDetails userDetails) {
         User user = userRepository.findByEmail(userDetails.getUsername())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, USER_NOT_FOUND));
 
         Item item = new Item();
         item.setTitle(title);
@@ -74,7 +76,7 @@ public class ItemController {
     @GetMapping("/seller_listings")
     public ResponseEntity<Iterable<Item>> getSellerListings(@AuthenticationPrincipal UserDetails userDetails) {
         User user = userRepository.findByEmail(userDetails.getUsername())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, USER_NOT_FOUND));
         Iterable<Item> listings = itemService.getSellerListings(user);
         return ResponseEntity.ok(listings);
     }
@@ -84,7 +86,7 @@ public class ItemController {
                                            @Valid @RequestBody Item updatedItem,
                                            @AuthenticationPrincipal UserDetails userDetails) {
         User user = userRepository.findByEmail(userDetails.getUsername())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, USER_NOT_FOUND));
         Item saved = itemService.updateItem(id, updatedItem, user);
         return ResponseEntity.ok(saved);
     }
@@ -93,7 +95,7 @@ public class ItemController {
     public ResponseEntity<Void> deleteItem(@PathVariable Long id,
                                            @AuthenticationPrincipal UserDetails userDetails) {
         User user = userRepository.findByEmail(userDetails.getUsername())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, USER_NOT_FOUND));
         Item item = itemRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Item not found"));
         if (!item.getOwner().getId().equals(user.getId())) {
