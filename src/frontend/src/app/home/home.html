@@ -1,14 +1,3 @@
-@if (!authService.isAuthenticated()){
-    <button i18n="@@translation_login" (click)="clickLogin()">Login</button>
-    <button i18n="@@translation_register" (click)="clickRegister()">Register</button>
-}
-@else {
-    <button i18n="@@translation_log_out" (click)="clickLogout()">Logout</button>
-    <button (click)="clickSearch()">Search Courses</button>
-    <button (click)="clickAddItem()">Add Item</button>
-    <button (click)="clickSellerListings()">Seller Listings</button>
-}
-
 @if (authService.isAuthenticated()){
     <p>You are logged in!</p>
     <p>User email : {{email}}</p>
@@ -20,5 +9,3 @@
 @if (hasAdminRole()) {
     <p>You are admin, admin message: {{admin}}</p>
 }
-
-<app-language-switcher></app-language-switcher>

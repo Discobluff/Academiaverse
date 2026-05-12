@@ -1,0 +1,63 @@
+<nav class="navbar">
+    <a routerLink="/" class="navbar__brand">
+        <i class="ti ti-hexagon-filled"></i>
+        Academiaverse
+    </a>
+
+    <ul class="navbar__links">
+        <li>
+            <a i18n="@@translation_home" routerLink="/home" routerLinkActive="active">
+                Home
+            </a>
+        </li>
+        @if (authService.isAuthenticated()){
+            <li>
+                <a i18n="@@translation_search_courses" routerLink="/search" routerLinkActive="active">
+                    Search Courses
+                </a>
+            </li>
+            <li>
+                <a i18n="@@translation_list_item" routerLink="/add-item" routerLinkActive="active">
+                    List item
+                </a>
+            </li>
+            <li>
+                <a i18n="@@translation_seller_listings" routerLink="/seller-listings" routerLinkActive="active">
+                    Seller Listings
+                </a>
+            </li>
+            <li>
+                <a i18n="@@translation_buyer_listings" routerLink="/buyer-listings" routerLinkActive="active">
+                    Buyer Listings
+                </a>
+            </li>
+        }
+    </ul>
+    <ul class="navbar__links">
+        @if (!authService.isAuthenticated()) {
+            <li>
+                <a i18n="@@translation_login" routerLink="/login" routerLinkActive="active">
+                    Login
+                </a>
+            </li>
+            <li>
+                <a i18n="@@translation_register" routerLink="/register" routerLinkActive="active">
+                    Register
+                </a>
+            </li>
+        }
+        @if (authService.isAuthenticated()) {
+            <li>
+                <a i18n="@@translation_log_out" routerLink="/logout" routerLinkActive="active">
+                    Logout
+                </a>
+            </li>
+        }
+        <app-language-switcher></app-language-switcher>
+    </ul>
+
+    <!-- <div class="navbar__actions">
+    <button aria-label="Search"><i class="ti ti-search"></i></button>
+    <div class="navbar__avatar">JD</div>
+  </div> -->
+</nav>

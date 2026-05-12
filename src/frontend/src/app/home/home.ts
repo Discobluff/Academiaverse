@@ -4,12 +4,11 @@ import { environment } from '../../environments/environments';
 import { AuthService } from '../core/services/auth.service';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { LanguageSwitcher } from '../language-switcher/language-switcher';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, LanguageSwitcher],
+  imports: [CommonModule],
   templateUrl: './home.html'
 })
 export class Home implements OnInit {
@@ -26,35 +25,12 @@ export class Home implements OnInit {
     this.isAdmin();
   }
 
-  clickLogin() {
-    this.router.navigate(['/login']);
-  }
-
-  clickRegister() {
-    this.router.navigate(['/register']);
-  }
-
-  clickLogout() {
-    this.router.navigate(['/logout']);
-  }
-
-  clickSearch() {
-    this.router.navigateByUrl('/search');
-  }
-
-  clickAddItem() {
-    this.router.navigate(['/add-item']);
-  }
-
-  clickSellerListings() {
-    this.router.navigate(['/seller-listings']);
-  }
-
   hasAdminRole() {
     return this.authService.hasRole('ADMIN');
   }
 
   getTest() {
+    console.log(this.authService.getUserId());
     this.http.get(`${environment.apiUrl}/test`, { responseType: 'text' }).subscribe({
       next: (data) => {
         this.email = data;

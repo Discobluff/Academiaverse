@@ -2,10 +2,13 @@ import { Component, inject } from '@angular/core';
 import { LanguageService } from '../services/language.service';
 import { HostListener } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
+import { NgStyle } from '@angular/common';
+
 
 @Component({
   selector: 'app-language-switcher',
-  imports: [MatIconModule],
+  standalone: true,
+  imports: [MatIconModule, NgStyle],
   templateUrl: './language-switcher.html',
   styleUrl: './language-switcher.css',
 })

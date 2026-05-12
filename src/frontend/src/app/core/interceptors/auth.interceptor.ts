@@ -13,7 +13,7 @@ export class AuthInterceptor implements HttpInterceptor {
     req: HttpRequest<unknown>,
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
-    const token = localStorage.getItem('token');
+    const token = this.getTokenFromCookie();
     if (token) {
       req = req.clone({
         setHeaders: {
@@ -22,5 +22,10 @@ export class AuthInterceptor implements HttpInterceptor {
       });
     }
     return next.handle(req);
+  }
+
+  private getTokenFromCookie(): string | null {
+    const match = document.cookie.match(/(?:^|;\s*)token=([^;]*)/);
+    return match ? decodeURIComponent(match[1]) : null;
   }
 }
