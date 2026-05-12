@@ -1,11 +1,11 @@
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <div class="dropdown" (clickOutside)="isOpen = false">
     <button class="dropdown-toggle" type="button" (click)="isOpen = !isOpen">
-        <i class="fas fa-language"></i>
-        <!-- <span>Change language</span> -->
         <mat-icon>language</mat-icon>
     </button>
-    <ul class="dropdown-menu" [class.show]="isOpen">
+    <ul class="dropdown-menu" [class.show]="isOpen"
+        [ngStyle]="currentLocale === 'en-US' ? {'right': '0'} : {'left': '0'}"
+        >
         <li>
             <button class="dropdown-item" [class.active]="currentLocale === 'en-US'" (click)="switchLanguage('en-US')">
                 🇺🇸 English
