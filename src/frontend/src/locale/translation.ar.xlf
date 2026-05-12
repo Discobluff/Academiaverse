@@ -36,6 +36,22 @@
       <trans-unit id="translation_terms">
         <target>شروط الخدمة</target>
       </trans-unit>
+      <trans-unit id="translation_home">
+        <target>الصفحة الرئيسية</target>
+      </trans-unit>
+      <trans-unit id="translation_search_courses">
+        <target>البحث عن الدورات</target>
+      </trans-unit>
+      <trans-unit id="translation_list_item">
+        <target>عنصر في القائمة</target>
+      </trans-unit>
+      <trans-unit id="translation_seller_listings">
+        <target>قوائم البائعين</target>
+      </trans-unit>
+      <trans-unit id="translation_buyer_listings">
+        <target>قوائم المشترين</target>
+      </trans-unit>
+
 
 
       <trans-unit id="translation_">
