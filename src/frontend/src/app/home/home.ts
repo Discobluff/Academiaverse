@@ -24,12 +24,13 @@ export class Home implements OnInit {
     this.getTest();
     this.isAdmin();
   }
-  
+
   hasAdminRole() {
     return this.authService.hasRole('ADMIN');
   }
 
   getTest() {
+    console.log(this.authService.getUserId());
     this.http.get(`${environment.apiUrl}/test`, { responseType: 'text' }).subscribe({
       next: (data) => {
         this.email = data;
