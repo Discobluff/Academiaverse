@@ -12,6 +12,7 @@ describe('Home', () => {
 
   const mockAuthService = {
     isAuthenticated: () => false,
+    getUserId: () => null,
     hasRole: () => false,
   };
 
