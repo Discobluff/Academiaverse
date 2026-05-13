@@ -1,5 +1,6 @@
 package com.academiaverse.item;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -9,6 +10,7 @@ import com.academiaverse.entity.User;
 import com.academiaverse.repository.CourseRepository;
 import com.academiaverse.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +20,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.Map;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -40,20 +40,20 @@ class ItemCourseAssociationTest {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    private User seller;
     private Course course;
 
     @BeforeEach
     void setUp() {
-        seller = userRepository.findByEmail("seller@example.com").orElseGet(() -> {
-            User u = new User();
-            u.setEmail("seller@example.com");
-            u.setPassword(passwordEncoder.encode("password"));
-            u.setRole("ROLE_USER");
-            u.setFirstname("Seller");
-            u.setLastname("User");
-            return userRepository.save(u);
-        });
+        // Create seller user (needed for the mock authentication)
+        if (userRepository.findByEmail("seller@example.com").isEmpty()) {
+            User seller = new User();
+            seller.setEmail("seller@example.com");
+            seller.setPassword(passwordEncoder.encode("password"));
+            seller.setRole("ROLE_USER");
+            seller.setFirstname("Seller");
+            seller.setLastname("User");
+            userRepository.save(seller);
+        }
 
         course = new Course();
         course.setName("Software Engineering");
@@ -73,11 +73,11 @@ class ItemCourseAssociationTest {
             "course", Map.of("id", course.getId())
         );
 
-        mockMvc.perform(post("/api/items")
+        assertDoesNotThrow(() -> mockMvc.perform(post("/api/items")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(body)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.course.id").value(course.getId().intValue()))
-                .andExpect(jsonPath("$.course.name").value("Software Engineering"));
+                .andExpect(jsonPath("$.course.name").value("Software Engineering")));
     }
 }
