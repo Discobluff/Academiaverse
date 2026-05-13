@@ -54,6 +54,10 @@ public class Item {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private User owner;
 
+    @ManyToOne
+    @JoinColumn(name = "course_id")
+    private Course course;
+
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }
