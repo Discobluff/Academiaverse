@@ -1,7 +1,9 @@
 package com.academiaverse.controller;
 
+import com.academiaverse.entity.Course;
 import com.academiaverse.entity.Item;
 import com.academiaverse.entity.User;
+import com.academiaverse.repository.CourseRepository;
 import com.academiaverse.repository.ItemRepository;
 import com.academiaverse.repository.UserRepository;
 import com.academiaverse.service.ItemService;
@@ -32,12 +34,18 @@ public class ItemController {
     private final ItemService itemService;
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
+    private final CourseRepository courseRepository;
 
     @PostMapping
     public ResponseEntity<Item> createItem(@Valid @RequestBody Item item,
                                            @AuthenticationPrincipal UserDetails userDetails) {
         User user = userRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, USER_NOT_FOUND));
+        if (item.getCourse() != null && item.getCourse().getId() != null) {
+            Course course = courseRepository.findById(item.getCourse().getId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Course not found"));
+            item.setCourse(course);
+        }
         Item saved = itemService.createItem(item, user);
         return ResponseEntity.ok(saved);
     }
