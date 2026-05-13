@@ -23,6 +23,10 @@ interface AddItemForm {
   paymentMethod: PaymentMethod;
 }
 
+interface CreateItemPayload extends AddItemForm {
+  course?: { id: number };
+}
+
 @Component({
   selector: 'app-add-item',
   standalone: true,
@@ -83,7 +87,7 @@ export class AddItem implements OnInit {
       return;
     }
 
-    const body: any = { ...this.item };
+    const body: CreateItemPayload = { ...this.item };
     if (this.selectedCourseId) {
       body.course = { id: this.selectedCourseId };
     }
