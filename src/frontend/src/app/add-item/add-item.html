@@ -9,6 +9,14 @@
   <p>Notes:</p>
   <textarea [(ngModel)]="item.notes" name="notes"></textarea>
 
+  <p>Course:</p>
+  <select [(ngModel)]="selectedCourseId" name="course">
+    <option [ngValue]="null">-- Select a course (optional) --</option>
+    @for (course of courses; track course.id) {
+      <option [ngValue]="course.id">{{ course.name }}</option>
+    }
+  </select>
+
   <p>Payment Method:</p>
   <select [(ngModel)]="item.paymentMethod" name="paymentMethod">
     <option value="cash">Cash</option>

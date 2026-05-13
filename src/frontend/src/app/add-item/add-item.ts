@@ -1,9 +1,14 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environments';
+
+interface CourseOption {
+  id: number;
+  name: string;
+}
 
 type ItemType = 'sale' | 'rent';
 type PaymentMethod = 'cash' | 'points';
@@ -25,7 +30,7 @@ interface AddItemForm {
   templateUrl: './add-item.html',
   styleUrls: ['./add-item.css']
 })
-export class AddItem {
+export class AddItem implements OnInit {
   item: AddItemForm = {
     title: '',
     description: '',
@@ -38,11 +43,24 @@ export class AddItem {
 
   isDigital = false;
   selectedFile: File | null = null;
+  courses: CourseOption[] = [];
+  selectedCourseId: number | null = null;
 
   private http = inject(HttpClient);
   private router = inject(Router);
 
-  // New validation method
+  ngOnInit() {
+    this.loadCourses();
+  }
+
+  loadCourses() {
+    this.http.get<CourseOption[]>(`${environment.apiBaseUrl}/api/courses/search?q=`)
+      .subscribe({
+        next: (data) => this.courses = data,
+        error: (err) => console.error('Failed to load courses', err)
+      });
+  }
+
   isFormValid(): boolean {
     return this.item.title.trim().length > 0 && this.item.price !== null && this.item.price > 0;
   }
@@ -65,6 +83,11 @@ export class AddItem {
       return;
     }
 
+    const body: any = { ...this.item };
+    if (this.selectedCourseId) {
+      body.course = { id: this.selectedCourseId };
+    }
+
     if (this.isDigital && this.selectedFile) {
       const formData = new FormData();
       formData.append('title', this.item.title);
@@ -74,6 +97,9 @@ export class AddItem {
       formData.append('type', this.item.type);
       formData.append('file', this.selectedFile);
       formData.append('paymentMethod', this.item.paymentMethod);
+      if (this.selectedCourseId) {
+        formData.append('courseId', String(this.selectedCourseId));
+      }
 
       this.http.post(`${environment.apiBaseUrl}/api/items/upload`, formData).subscribe({
         next: () => {
@@ -86,7 +112,7 @@ export class AddItem {
         }
       });
     } else {
-      this.http.post(`${environment.apiBaseUrl}/api/items`, this.item).subscribe({
+      this.http.post(`${environment.apiBaseUrl}/api/items`, body).subscribe({
         next: () => {
           alert('Item created successfully!');
           this.router.navigate(['/']);
