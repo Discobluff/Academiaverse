@@ -3,6 +3,7 @@ package com.academiaverse.interest;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import com.academiaverse.entity.Interest;
 import com.academiaverse.entity.Item;
@@ -53,7 +54,14 @@ class InterestListTest {
             return userRepository.save(u);
         });
 
-        User seller = userRepository.findByEmail("seller@example.com").orElseGet(() -> {
+        // Seller is only needed for the item owner – create it inline
+        item = new Item();
+        item.setTitle("Interesting Item");
+        item.setDescription("An item");
+        item.setPrice(10.0);
+        item.setType("sale");
+        item.setPaymentMethod("cash");
+        item.setOwner(userRepository.findByEmail("seller@example.com").orElseGet(() -> {
             User s = new User();
             s.setEmail("seller@example.com");
             s.setPassword(passwordEncoder.encode("password"));
@@ -61,18 +69,9 @@ class InterestListTest {
             s.setFirstname("Seller");
             s.setLastname("User");
             return userRepository.save(s);
-        });
-
-        item = new Item();
-        item.setTitle("Interesting Item");
-        item.setDescription("An item");
-        item.setPrice(10.0);
-        item.setType("sale");
-        item.setPaymentMethod("cash");
-        item.setOwner(seller);
+        }));
         item = itemRepository.save(item);
 
-        // Create an interest for the buyer
         Interest interest = new Interest();
         interest.setItem(item);
         interest.setUser(buyer);
@@ -82,8 +81,8 @@ class InterestListTest {
     @Test
     @WithMockUser(username = "buyer@example.com")
     void shouldReturnBuyerInterests() throws Exception {
-        mockMvc.perform(get("/api/interests"))
+        assertDoesNotThrow(() -> mockMvc.perform(get("/api/interests"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].item.title").value("Interesting Item"));
+                .andExpect(jsonPath("$[0].item.title").value("Interesting Item")));
     }
 }
