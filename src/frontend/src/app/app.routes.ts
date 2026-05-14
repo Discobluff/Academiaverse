@@ -57,5 +57,10 @@ export const routes: Routes = [
       path: 'edit-item/:id',
       loadComponent: () => import('./edit-item/edit-item').then(m => m.EditItemComponent),
       canActivate: [AuthGuard]
+    },
+    {
+        path: 'buyer-interests',
+        loadComponent: () => import('./buyer-interests/buyer-interests').then(m => m.BuyerInterestsComponent),
+        canActivate: [AuthGuard]
     }
 ];

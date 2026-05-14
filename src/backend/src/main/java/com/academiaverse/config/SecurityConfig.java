@@ -30,7 +30,8 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/v1/auth/**").permitAll()
                 .requestMatchers("/api/courses/**").permitAll()
-                .requestMatchers("/api/search/**").authenticated()   // <-- add this
+                .requestMatchers("/api/search/**").authenticated()
+                .requestMatchers("/api/interests/**").authenticated()
                 .requestMatchers("/v1/admin").hasAuthority("ADMIN")
                 .anyRequest().authenticated()
             )

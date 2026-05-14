@@ -1,0 +1,26 @@
+<div class="interests-container">
+  <h2>My Interests</h2>
+
+  @if (interests.length === 0) {
+    <p class="no-interests">You haven't expressed interest in any items yet.</p>
+  }
+
+  <div class="interests-list">
+    @for (interest of interests; track interest.id) {
+      <div class="interest-card"
+           tabindex="0"
+           role="button"
+           (click)="viewItem(interest.item.id)"
+           (keydown.enter)="viewItem(interest.item.id)">
+        <h3>{{ interest.item.title }}</h3>
+        <p>{{ interest.item.description }}</p>
+        <p><strong>Price:</strong> {{ interest.item.price }} {{ interest.item.paymentMethod === 'points' ? 'points' : '€' }}</p>
+        <p><strong>Type:</strong> {{ interest.item.type }}</p>
+        <p><strong>Payment:</strong> {{ interest.item.paymentMethod }}</p>
+        @if (interest.item.isDigital) {
+          <span class="digital-badge">Digital</span>
+        }
+      </div>
+    }
+  </div>
+</div>
