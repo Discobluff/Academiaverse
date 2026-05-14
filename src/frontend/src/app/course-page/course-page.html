@@ -1,0 +1,22 @@
+<div class="course-page-container">
+    <h2>{{ courseName || 'Course Items' }}</h2>
+
+    @if (items.length === 0) {
+    <p class="no-items">No items available for this course.</p>
+    }
+
+    <div class="items-grid">
+        @for (item of items; track item.id) {
+        <div class="item-card" (click)="viewItem(item.id)">
+            <h3>{{ item.title }}</h3>
+            <p class="description">{{ item.description }}</p>
+            <p><strong>Price:</strong> {{ item.price }} {{ item.paymentMethod === 'points' ? 'points' : '€' }}</p>
+            <p><strong>Type:</strong> {{ item.type }}</p>
+            <p><strong>Payment:</strong> {{ item.paymentMethod }}</p>
+            @if (item.isDigital) {
+            <p class="digital-badge">Digital</p>
+            }
+        </div>
+        }
+    </div>
+</div>
