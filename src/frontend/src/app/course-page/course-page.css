@@ -1,0 +1,63 @@
+.course-page-container {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.no-items {
+    text-align: center;
+    color: #666;
+    margin-top: 2rem;
+}
+
+.items-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.item-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 1.25rem;
+    cursor: pointer;
+    transition: box-shadow 0.2s;
+}
+
+.item-card:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.item-card h3 {
+    margin: 0 0 0.5rem;
+    font-size: 1.1rem;
+}
+
+.description {
+    color: #555;
+    margin-bottom: 0.75rem;
+}
+
+.item-card p {
+    margin: 0.25rem 0;
+    font-size: 0.9rem;
+}
+
+.digital-badge {
+    display: inline-block;
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+}
+.item-card:focus {
+    outline: 2px solid #2e7d32;
+    outline-offset: 2px;
+}

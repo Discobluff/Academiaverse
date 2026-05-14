@@ -50,6 +50,10 @@ export const routes: Routes = [
       canActivate: [AuthGuard]
     },
     {
+        path: 'course/:id',
+        loadComponent: () => import('./course-page/course-page').then(m => m.CoursePageComponent)
+    },
+    {
       path: 'edit-item/:id',
       loadComponent: () => import('./edit-item/edit-item').then(m => m.EditItemComponent),
       canActivate: [AuthGuard]
