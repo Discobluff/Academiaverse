@@ -8,5 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ItemRepository extends JpaRepository<Item, Long> {
     Iterable<Item> findByOwner(User owner);
+
     List<Item> findByCourse(Course course);
 }

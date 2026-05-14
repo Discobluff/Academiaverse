@@ -1,5 +1,6 @@
 package com.academiaverse.course;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -42,7 +43,7 @@ class CourseItemsTest {
 
     @BeforeEach
     void setUp() {
-        User owner = userRepository.findByEmail("owner@example.com").orElseGet(() -> {
+        final User owner = userRepository.findByEmail("owner@example.com").orElseGet(() -> {
             User u = new User();
             u.setEmail("owner@example.com");
             u.setPassword(passwordEncoder.encode("password"));
@@ -70,9 +71,9 @@ class CourseItemsTest {
 
     @Test
     void shouldReturnItemsForCourse() throws Exception {
-        mockMvc.perform(get("/api/courses/" + course.getId() + "/items"))
+        assertDoesNotThrow(() -> mockMvc.perform(get("/api/courses/" + course.getId() + "/items"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].title").value("Algorithm Book"))
-                .andExpect(jsonPath("$[0].course.id").value(course.getId().intValue()));
+                .andExpect(jsonPath("$[0].course.id").value(course.getId().intValue())));
     }
 }
