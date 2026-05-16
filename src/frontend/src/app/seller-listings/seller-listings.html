@@ -17,7 +17,7 @@
                 <td>{{ item.title }}</td>
                 <td>{{ item.price }} {{ item.paymentMethod === 'points' ? 'points' : '€' }}</td>
                 <td>{{ item.type }}</td>
-                <td></td>
+                <td>{{ item.status || 'Available' }}</td>
                 <td>{{ item.paymentMethod }}</td>
                 <td>
                     <button class="view-btn" (click)="viewItem(item.id)">View</button>

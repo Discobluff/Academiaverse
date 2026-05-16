@@ -6,13 +6,20 @@
     <p class="item-price"><strong>Price:</strong> {{ item.price }} {{ item.paymentMethod === 'points' ? 'points' : '€' }}</p>
     <p class="item-type"><strong>Type:</strong> {{ item.type }}</p>
     <p class="item-payment"><strong>Payment Method:</strong> {{ item.paymentMethod }}</p>
-    <p class="item-status"><strong>Status:</strong> Available</p>
+    <p class="item-status"><strong>Status:</strong> {{ item.status || 'Available' }}</p>
 
     @if (item.isDigital) {
       <div class="digital-info">
         <p><strong>File:</strong> {{ item.digitalFileName }}</p>
         <p><em>Available after purchase</em></p>
       </div>
+    }
+
+    <!-- Show Interest button only if the user is not the owner -->
+    @if (!isOwner()) {
+      <button class="interest-btn" (click)="expressInterest()" [disabled]="alreadyInterested">
+        {{ alreadyInterested ? 'Already Interested' : 'Interested' }}
+      </button>
     }
   </div>
 } @else {
