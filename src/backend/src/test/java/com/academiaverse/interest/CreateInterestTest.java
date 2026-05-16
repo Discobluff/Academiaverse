@@ -1,5 +1,6 @@
 package com.academiaverse.interest;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -39,23 +40,23 @@ class CreateInterestTest {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    private User buyer;
-    private User seller;
     private Item item;
 
     @BeforeEach
     void setUp() {
-        buyer = userRepository.findByEmail("buyer14@example.com").orElseGet(() -> {
-            User b = new User();
-            b.setEmail("buyer14@example.com");
-            b.setPassword(passwordEncoder.encode("password"));
-            b.setRole("ROLE_USER");
-            b.setFirstname("Buyer14");
-            b.setLastname("Test");
-            return userRepository.save(b);
-        });
+        // Create buyer (needed for the mock authentication)
+        if (userRepository.findByEmail("buyer14@example.com").isEmpty()) {
+            User buyer = new User();
+            buyer.setEmail("buyer14@example.com");
+            buyer.setPassword(passwordEncoder.encode("password"));
+            buyer.setRole("ROLE_USER");
+            buyer.setFirstname("Buyer14");
+            buyer.setLastname("Test");
+            userRepository.save(buyer);
+        }
 
-        seller = userRepository.findByEmail("seller14@example.com").orElseGet(() -> {
+        // Create seller and item
+        final User seller = userRepository.findByEmail("seller14@example.com").orElseGet(() -> {
             User s = new User();
             s.setEmail("seller14@example.com");
             s.setPassword(passwordEncoder.encode("password"));
@@ -80,11 +81,11 @@ class CreateInterestTest {
     void shouldCreateInterestAndChangeItemStatus() throws Exception {
         Map<String, Long> body = Map.of("itemId", item.getId());
 
-        mockMvc.perform(post("/api/interests")
+        assertDoesNotThrow(() -> mockMvc.perform(post("/api/interests")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(body)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.item.status").value("Interest"))
-                .andExpect(jsonPath("$.item.id").value(item.getId().intValue()));
+                .andExpect(jsonPath("$.item.id").value(item.getId().intValue())));
     }
 }

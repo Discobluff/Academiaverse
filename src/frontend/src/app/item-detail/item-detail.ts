@@ -21,6 +21,11 @@ interface Item {
   owner: { id: number };
 }
 
+interface InterestItem {
+  id: number;
+  item: { id: number };
+}
+
 @Component({
   selector: 'app-item-detail',
   standalone: true,
@@ -63,11 +68,11 @@ export class ItemDetailComponent implements OnInit {
 
   checkIfAlreadyInterested() {
     if (!this.item) return;
-    this.http.get<any[]>(`${environment.apiBaseUrl}/api/interests`)
+    this.http.get<InterestItem[]>(`${environment.apiBaseUrl}/api/interests`)
       .subscribe({
         next: (interests) => {
           this.alreadyInterested = interests.some(
-            (interest: any) => interest.item?.id === this.item?.id
+            (interest) => interest.item?.id === this.item?.id
           );
         },
         error: () => this.alreadyInterested = false
