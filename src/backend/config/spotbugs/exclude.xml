@@ -24,6 +24,9 @@
     <!-- Exclude RuntimeException in service methods (they are re-thrown in controllers) -->
     <Match>
         <Bug pattern="THROWS_METHOD_THROWS_RUNTIMEEXCEPTION"/>
-        <Class name="com.academiaverse.service.ItemService"/>
+        <Or>
+            <Class name="com.academiaverse.service.ItemService"/>
+            <Class name="com.academiaverse.service.InterestService"/>
+        </Or>
     </Match>
 </FindBugsFilter>

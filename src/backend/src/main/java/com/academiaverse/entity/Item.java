@@ -58,6 +58,8 @@ public class Item {
     @JoinColumn(name = "course_id")
     private Course course;
 
+    private String status;   // Added – shows "Interest" when buyer expresses interest
+
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

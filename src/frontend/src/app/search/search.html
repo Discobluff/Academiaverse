@@ -21,8 +21,10 @@
   }
 
   <ul>
-    @for (course of results; track course.name){
-      <li >{{ course.name }} ({{ course.code }})</li>
+    @for (course of results; track course.id) {
+      <li>
+        <a href="#" (click)="goToCourse(course.id); $event.preventDefault()">{{ course.name }} ({{ course.code }})</a>
+      </li>
     }
   </ul>
 </div>
