@@ -21,6 +21,9 @@
         {{ alreadyInterested ? 'Already Interested' : 'Interested' }}
       </button>
     }
+
+    <!-- Report button – always visible to any logged-in user -->
+    <button class="report-btn" (click)="reportItem()">Report</button>
   </div>
 } @else {
   <div class="not-found">

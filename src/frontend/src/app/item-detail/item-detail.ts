@@ -86,7 +86,7 @@ export class ItemDetailComponent implements OnInit {
         next: () => {
           alert('Interest expressed successfully!');
           this.alreadyInterested = true;
-          this.loadItem(); // refresh status
+          this.loadItem();
         },
         error: (err) => {
           console.error(err);
@@ -98,5 +98,22 @@ export class ItemDetailComponent implements OnInit {
           }
         }
       });
+  }
+
+  reportItem() {
+    if (!this.item) return;
+    const reason = prompt('Please describe the issue with this item:');
+    if (!reason || !reason.trim()) return;
+
+    this.http.post(`${environment.apiBaseUrl}/api/reports`, {
+      itemId: this.item.id,
+      reason: reason.trim()
+    }).subscribe({
+      next: () => alert('Report submitted. Thank you.'),
+      error: (err) => {
+        console.error('Report failed', err);
+        alert('Could not submit report.');
+      }
+    });
   }
 }
