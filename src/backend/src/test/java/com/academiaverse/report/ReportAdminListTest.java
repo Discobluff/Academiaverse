@@ -1,5 +1,6 @@
 package com.academiaverse.report;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -27,7 +28,6 @@ class ReportAdminListTest {
 
     @BeforeEach
     void setUp() {
-        // Ensure an admin user exists
         if (userRepository.findByEmail("admin@example.com").isEmpty()) {
             com.academiaverse.entity.User admin = new com.academiaverse.entity.User();
             admin.setEmail("admin@example.com");
@@ -42,7 +42,7 @@ class ReportAdminListTest {
     @Test
     @WithMockUser(username = "admin@example.com", authorities = "ADMIN")
     void shouldReturnReportsForAdmin() throws Exception {
-        mockMvc.perform(get("/api/reports"))
-                .andExpect(status().isOk());
+        assertDoesNotThrow(() -> mockMvc.perform(get("/api/reports"))
+                .andExpect(status().isOk()));
     }
 }

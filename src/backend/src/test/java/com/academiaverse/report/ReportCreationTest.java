@@ -1,5 +1,6 @@
 package com.academiaverse.report;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -38,22 +39,21 @@ class ReportCreationTest {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    private User reporter;
     private Item item;
 
     @BeforeEach
     void setUp() {
-        reporter = userRepository.findByEmail("reporter@example.com").orElseGet(() -> {
-            User u = new User();
-            u.setEmail("reporter@example.com");
-            u.setPassword(passwordEncoder.encode("password"));
-            u.setRole("ROLE_USER");
-            u.setFirstname("Reporter");
-            u.setLastname("User");
-            return userRepository.save(u);
-        });
+        if (userRepository.findByEmail("reporter@example.com").isEmpty()) {
+            User reporter = new User();
+            reporter.setEmail("reporter@example.com");
+            reporter.setPassword(passwordEncoder.encode("password"));
+            reporter.setRole("ROLE_USER");
+            reporter.setFirstname("Reporter");
+            reporter.setLastname("User");
+            userRepository.save(reporter);
+        }
 
-        User owner = userRepository.findByEmail("owner@example.com").orElseGet(() -> {
+        final User owner = userRepository.findByEmail("owner@example.com").orElseGet(() -> {
             User o = new User();
             o.setEmail("owner@example.com");
             o.setPassword(passwordEncoder.encode("password"));
@@ -81,9 +81,9 @@ class ReportCreationTest {
                 "reason", "Inappropriate content"
         );
 
-        mockMvc.perform(post("/api/reports")
+        assertDoesNotThrow(() -> mockMvc.perform(post("/api/reports")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(body)))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk()));
     }
 }
