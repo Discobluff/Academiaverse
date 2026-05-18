@@ -42,6 +42,7 @@ public class UserService implements UserDetailsService {
         user.setUpdatedAt(LocalDateTime.now());
         user.setRole("USER");
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPoints(10);              // <-- new user gets 10 points
         User savedUser = userRepository.save(user);
 
         if (log.isDebugEnabled()) {

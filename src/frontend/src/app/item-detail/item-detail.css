@@ -61,3 +61,19 @@
 .report-btn:hover {
   background-color: #b71c1c;
 }
+
+.buy-points-btn {
+  padding: 8px 16px;
+  font-size: 14px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 8px;
+  margin-top: 12px;
+  background-color: #f57c00;  /* orange */
+  color: white;
+}
+
+.buy-points-btn:hover {
+  background-color: #e65100;
+}

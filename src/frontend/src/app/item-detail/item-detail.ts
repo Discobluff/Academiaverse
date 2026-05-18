@@ -100,6 +100,21 @@ export class ItemDetailComponent implements OnInit {
       });
   }
 
+  buyWithPoints() {
+    if (!this.item) return;
+    this.http.post(`${environment.apiBaseUrl}/api/items/${this.item.id}/buy-with-points`, {})
+      .subscribe({
+        next: () => {
+          alert('Item purchased with points!');
+          this.loadItem(); // refresh status
+        },
+        error: (err) => {
+          console.error(err);
+          alert('Purchase failed. You may not have enough points.');
+        }
+      });
+  }
+
   reportItem() {
     if (!this.item) return;
     const reason = prompt('Please describe the issue with this item:');
