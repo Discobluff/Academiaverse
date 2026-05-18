@@ -22,6 +22,11 @@
       </button>
     }
 
+    <!-- Show Buy-with-Points button only for points items, and not the owner -->
+    @if (!isOwner() && item.paymentMethod === 'points') {
+      <button class="buy-points-btn" (click)="buyWithPoints()">Buy with Points</button>
+    }
+
     <!-- Report button – always visible to any logged-in user -->
     <button class="report-btn" (click)="reportItem()">Report</button>
   </div>

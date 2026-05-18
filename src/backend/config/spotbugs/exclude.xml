@@ -27,6 +27,7 @@
         <Or>
             <Class name="com.academiaverse.service.ItemService"/>
             <Class name="com.academiaverse.service.InterestService"/>
+            <Class name="com.academiaverse.service.PointsService"/>
         </Or>
     </Match>
 </FindBugsFilter>
