@@ -6,7 +6,6 @@ import com.academiaverse.entity.User;
 import com.academiaverse.repository.InterestRepository;
 import com.academiaverse.repository.ItemRepository;
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,8 +25,8 @@ public class InterestService {
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new RuntimeException("Item not found"));
 
-        Optional<Interest> existing = interestRepository.findByUserAndItem(buyer, item);
-        if (existing.isPresent()) {
+        List<Interest> existing = interestRepository.findByUserAndItem(buyer, item);
+        if (!existing.isEmpty()) {
             throw new RuntimeException("You already expressed interest in this item.");
         }
 
@@ -39,5 +38,26 @@ public class InterestService {
         interest.setItem(item);
         interest.setUser(buyer);
         return interestRepository.save(interest);
+    }
+
+    @Transactional
+    public void removeInterest(User buyer, Long itemId) {
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(() -> new RuntimeException("Item not found"));
+
+        List<Interest> existing = interestRepository.findByUserAndItem(buyer, item);
+        if (existing.isEmpty()) {
+            throw new RuntimeException("No interest found for this item.");
+        }
+
+        // Delete all matching interests (clean duplicates)
+        interestRepository.deleteAll(existing);
+
+        // If no other interests for this item, reset its status
+        long remaining = interestRepository.countByItem(item);
+        if (remaining == 0) {
+            item.setStatus(null);
+            itemRepository.save(item);
+        }
     }
 }
