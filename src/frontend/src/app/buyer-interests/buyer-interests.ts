@@ -46,4 +46,20 @@ export class BuyerInterestsComponent implements OnInit {
   viewItem(id: number) {
     this.router.navigate(['/item', id]);
   }
+
+  removeInterest(itemId: number, event: MouseEvent) {
+    event.stopPropagation(); // prevent card click navigation
+    if (confirm('Remove this interest?')) {
+      this.http.delete(`${environment.apiBaseUrl}/api/interests/${itemId}`)
+        .subscribe({
+          next: () => {
+            this.interests = this.interests.filter(i => i.item.id !== itemId);
+          },
+          error: (err) => {
+            console.error('Failed to remove interest', err);
+            alert('Could not remove interest.');
+          }
+        });
+    }
+  }
 }

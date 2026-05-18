@@ -20,6 +20,7 @@
         @if (interest.item.isDigital) {
           <span class="digital-badge">Digital</span>
         }
+        <button class="remove-btn" (click)="removeInterest(interest.item.id, $event)">Remove</button>
       </div>
     }
   </div>
