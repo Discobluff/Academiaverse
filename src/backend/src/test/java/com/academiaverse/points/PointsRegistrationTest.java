@@ -1,5 +1,6 @@
 package com.academiaverse.points;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -31,12 +32,12 @@ class PointsRegistrationTest {
         user.setLastname("Tester");
         user.setEmail("points_" + timestamp + "@example.com");
         user.setPassword("test");
-        user.setRole("USER");  // required for serialization
+        user.setRole("USER");
 
-        mockMvc.perform(post("/v1/auth/register")
+        assertDoesNotThrow(() -> mockMvc.perform(post("/v1/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(user)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.points").value(10));
+                .andExpect(jsonPath("$.points").value(10)));
     }
 }

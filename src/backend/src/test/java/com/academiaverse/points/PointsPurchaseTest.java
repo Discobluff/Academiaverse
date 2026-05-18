@@ -1,5 +1,6 @@
 package com.academiaverse.points;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -22,6 +23,9 @@ import org.springframework.test.web.servlet.MockMvc;
 @AutoConfigureMockMvc
 class PointsPurchaseTest {
 
+    private static final String BUYER_EMAIL = "buyerpoints@example.com";
+    private static final String PAYMENT_METHOD_POINTS = "points";
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -38,10 +42,9 @@ class PointsPurchaseTest {
 
     @BeforeEach
     void setUp() {
-        // Buyer: ensure they exist with 20 points
-        User buyer = userRepository.findByEmail("buyerpoints@example.com").orElseGet(() -> {
+        User buyer = userRepository.findByEmail(BUYER_EMAIL).orElseGet(() -> {
             User b = new User();
-            b.setEmail("buyerpoints@example.com");
+            b.setEmail(BUYER_EMAIL);
             b.setPassword(passwordEncoder.encode("password"));
             b.setRole("ROLE_USER");
             b.setFirstname("Buyer");
@@ -54,7 +57,6 @@ class PointsPurchaseTest {
             userRepository.save(buyer);
         }
 
-        // Seller: ensure they exist with 5 points
         User seller = userRepository.findByEmail("sellerpoints@example.com").orElseGet(() -> {
             User s = new User();
             s.setEmail("sellerpoints@example.com");
@@ -70,10 +72,9 @@ class PointsPurchaseTest {
             userRepository.save(seller);
         }
 
-        // Find an existing points item or create one
         Item existing = null;
         for (Item i : itemRepository.findByOwner(seller)) {
-            if ("points".equals(i.getPaymentMethod())) {
+            if (PAYMENT_METHOD_POINTS.equals(i.getPaymentMethod())) {
                 existing = i;
                 break;
             }
@@ -86,19 +87,33 @@ class PointsPurchaseTest {
             item.setDescription("Buy with points");
             item.setPrice(10.0);
             item.setType("sale");
-            item.setPaymentMethod("points");
+            item.setPaymentMethod(PAYMENT_METHOD_POINTS);
             item.setOwner(seller);
             item = itemRepository.save(item);
         }
     }
 
     @Test
-    @WithMockUser(username = "buyerpoints@example.com")
-    void shouldBuyWithPoints() throws Exception {
-        mockMvc.perform(post("/api/items/" + item.getId() + "/buy-with-points")
+    @WithMockUser(username = BUYER_EMAIL)
+    void shouldBuyWithPointsReturnsOk() throws Exception {
+        assertDoesNotThrow(() -> mockMvc.perform(post("/api/items/" + item.getId() + "/buy-with-points")
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.buyerPoints").value(10))   // 20 - 10
-                .andExpect(jsonPath("$.sellerPoints").value(15)); // 5 + 10
+                .andExpect(status().isOk()));
+    }
+
+    @Test
+    @WithMockUser(username = BUYER_EMAIL)
+    void shouldDeductBuyerPoints() throws Exception {
+        assertDoesNotThrow(() -> mockMvc.perform(post("/api/items/" + item.getId() + "/buy-with-points")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.buyerPoints").value(10)));
+    }
+
+    @Test
+    @WithMockUser(username = BUYER_EMAIL)
+    void shouldCreditSellerPoints() throws Exception {
+        assertDoesNotThrow(() -> mockMvc.perform(post("/api/items/" + item.getId() + "/buy-with-points")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.sellerPoints").value(15)));
     }
 }
