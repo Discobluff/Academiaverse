@@ -22,8 +22,8 @@
       </button>
     }
 
-    <!-- Show Buy-with-Points button only for points items, and not the owner -->
-    @if (!isOwner() && item.paymentMethod === 'points') {
+    <!-- Show Buy-with-Points button only for points items, not the owner, and not already sold -->
+    @if (!isOwner() && item.paymentMethod === 'points' && item.status !== 'Sold') {
       <button class="buy-points-btn" (click)="buyWithPoints()">Buy with Points</button>
     }
 
