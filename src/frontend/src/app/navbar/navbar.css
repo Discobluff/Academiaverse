@@ -80,3 +80,11 @@
   font-weight: 500;
   cursor: pointer;
 }
+
+.navbar__points {
+  display: flex;
+  align-items: center;
+  margin-right: 1rem;
+  font-weight: 500;
+  color: #f9a825;
+}
