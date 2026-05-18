@@ -38,8 +38,8 @@ class PointsPurchaseTest {
 
     @BeforeEach
     void setUp() {
-        // Create buyer with 20 points
-        userRepository.findByEmail("buyerpoints@example.com").orElseGet(() -> {
+        // Buyer: ensure they exist with 20 points
+        User buyer = userRepository.findByEmail("buyerpoints@example.com").orElseGet(() -> {
             User b = new User();
             b.setEmail("buyerpoints@example.com");
             b.setPassword(passwordEncoder.encode("password"));
@@ -49,8 +49,12 @@ class PointsPurchaseTest {
             b.setPoints(20);
             return userRepository.save(b);
         });
+        if (buyer.getPoints() == null || buyer.getPoints() != 20) {
+            buyer.setPoints(20);
+            userRepository.save(buyer);
+        }
 
-        // Create seller with 5 points
+        // Seller: ensure they exist with 5 points
         User seller = userRepository.findByEmail("sellerpoints@example.com").orElseGet(() -> {
             User s = new User();
             s.setEmail("sellerpoints@example.com");
@@ -61,11 +65,22 @@ class PointsPurchaseTest {
             s.setPoints(5);
             return userRepository.save(s);
         });
+        if (seller.getPoints() == null || seller.getPoints() != 5) {
+            seller.setPoints(5);
+            userRepository.save(seller);
+        }
 
-        // Create an item priced at 10 points, payment method "points", owned by seller
-        item = itemRepository.findByOwner(seller).iterator().hasNext() ?
-                itemRepository.findByOwner(seller).iterator().next() : null;
-        if (item == null || !"points".equals(item.getPaymentMethod())) {
+        // Find an existing points item or create one
+        Item existing = null;
+        for (Item i : itemRepository.findByOwner(seller)) {
+            if ("points".equals(i.getPaymentMethod())) {
+                existing = i;
+                break;
+            }
+        }
+        if (existing != null) {
+            item = existing;
+        } else {
             item = new Item();
             item.setTitle("Points Item");
             item.setDescription("Buy with points");
@@ -73,7 +88,7 @@ class PointsPurchaseTest {
             item.setType("sale");
             item.setPaymentMethod("points");
             item.setOwner(seller);
-            itemRepository.save(item);
+            item = itemRepository.save(item);
         }
     }
 

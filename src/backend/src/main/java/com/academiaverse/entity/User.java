@@ -1,5 +1,6 @@
 package com.academiaverse.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -25,6 +26,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Data
 @Entity
 @Table(name = "user")
+@JsonIgnoreProperties({"authorities", "enabled", "accountNonExpired",
+                       "accountNonLocked", "credentialsNonExpired"})
 public class User implements UserDetails {
 
     private static final long serialVersionUID = 1L;
@@ -42,6 +45,8 @@ public class User implements UserDetails {
 
     private String password;
     private String role;
+
+    private Integer points = 10;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

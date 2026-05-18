@@ -31,6 +31,7 @@ class PointsRegistrationTest {
         user.setLastname("Tester");
         user.setEmail("points_" + timestamp + "@example.com");
         user.setPassword("test");
+        user.setRole("USER");  // required for serialization
 
         mockMvc.perform(post("/v1/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
