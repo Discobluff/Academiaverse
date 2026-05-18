@@ -81,20 +81,22 @@ class RemoveInterestTest {
     @Test
     @WithMockUser(username = "buyerremove@example.com")
     void shouldRemoveInterest() throws Exception {
-        // First create an interest
-        Map<String, Long> body = Map.of("itemId", item.getId());
-        mockMvc.perform(post("/api/interests")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(body)))
-                .andExpect(status().isOk());
+        assertDoesNotThrow(() -> {
+            // Create an interest
+            Map<String, Long> body = Map.of("itemId", item.getId());
+            mockMvc.perform(post("/api/interests")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(body)))
+                    .andExpect(status().isOk());
 
-        // Now remove it
-        assertDoesNotThrow(() -> mockMvc.perform(delete("/api/interests/" + item.getId()))
-                .andExpect(status().isOk()));
+            // Remove the interest
+            mockMvc.perform(delete("/api/interests/" + item.getId()))
+                    .andExpect(status().isOk());
 
-        // Verify the user now has zero interests
-        assertDoesNotThrow(() -> mockMvc.perform(get("/api/interests"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(0)));
+            // Verify the user now has zero interests
+            mockMvc.perform(get("/api/interests"))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.length()").value(0));
+        });
     }
 }
