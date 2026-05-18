@@ -11,7 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,5 +43,14 @@ public class InterestController {
         Long itemId = body.get("itemId");
         Interest interest = interestService.createInterest(buyer, itemId);
         return ResponseEntity.ok(interest);
+    }
+
+    @DeleteMapping("/{itemId}")
+    public ResponseEntity<Void> removeInterest(@PathVariable Long itemId,
+                                               @AuthenticationPrincipal UserDetails userDetails) {
+        User buyer = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+        interestService.removeInterest(buyer, itemId);
+        return ResponseEntity.ok().build();
     }
 }
