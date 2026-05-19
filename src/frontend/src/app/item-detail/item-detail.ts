@@ -41,10 +41,38 @@ export class ItemDetailComponent implements OnInit {
   item: Item | null = null;
   alreadyInterested = false;
 
+  starsNumber = 5;
+  starsSelected = 0;
+  starsHovered = 0;
+  hasBought = false;
+  starsAverage = 0.0;
+
   ngOnInit() {
     this.route.params.subscribe(params => {
       const id = +params['id'];
       this.loadItem(id);
+    });
+  }
+
+  getStarsAverage(itemId: number) {
+    this.http.get<number>(`${environment.apiBaseUrl}/api/ratings`, {
+      params: { itemId: itemId }
+    }).subscribe({
+      next: (average) => {
+        this.starsAverage = average;
+      },
+      error: (err) => console.error(err)
+    });
+  }
+
+  checkIfBought(itemId: number): void {
+    this.http.get<boolean>(`${environment.apiBaseUrl}/api/items/bought`, {
+      params: { itemId: itemId }
+    }).subscribe({
+      next: (hasBought) => {
+        this.hasBought = hasBought;
+      },
+      error: (err) => console.error(err)
     });
   }
 
@@ -56,8 +84,40 @@ export class ItemDetailComponent implements OnInit {
         next: (data) => {
           this.item = data;
           this.checkIfAlreadyInterested();
+          this.checkIfBought(data.id);
+          this.getStarsAverage(data.id);
+          if (this.hasBought) {
+            this.getItemRating(data.id);
+          }
         },
         error: () => this.item = null
+      });
+  }
+
+  range(n: number): number[] {
+    return Array.from({ length: n }, (_, i) => i);
+  }
+
+  getItemRating(itemId: number) {
+    this.http.get<{ rating: number }>(`${environment.apiBaseUrl}/api/ratings/user`, { params: { itemId: itemId } })
+      .subscribe({
+        next: (data) => this.starsSelected = data.rating,
+        error: () => this.starsSelected = 0
+      });
+  }
+
+  rateItem(stars: number) {
+    if (!this.item) return;
+    this.http.post(`${environment.apiBaseUrl}/api/ratings`, { itemId: this.item.id, ratingValue: stars })
+      .subscribe({
+        next: () => {
+          console.log(stars, this.starsSelected);
+          this.starsSelected = stars;
+        },
+        error: (err) => {
+          console.error(err);
+          alert('Could not submit rating.');
+        }
       });
   }
 
