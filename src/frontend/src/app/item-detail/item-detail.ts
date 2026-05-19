@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { environment } from '../../environments/environments';
 import { AuthService } from '../core/services/auth.service';
@@ -36,6 +36,7 @@ interface InterestItem {
 export class ItemDetailComponent implements OnInit {
   http = inject(HttpClient);
   route = inject(ActivatedRoute);
+  router = inject(Router);
   authService = inject(AuthService);
 
   item: Item | null = null;
@@ -158,6 +159,16 @@ export class ItemDetailComponent implements OnInit {
           }
         }
       });
+  }
+
+  startChat() {
+    if (!this.item) return;
+    const buyerId = this.authService.getUserId();
+    if (!buyerId) {
+      alert('You must be logged in to start a chat.');
+      return;
+    }
+    this.router.navigate(['/chat', this.item.id, buyerId]);
   }
 
   buyWithPoints() {

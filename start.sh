@@ -7,6 +7,13 @@ FRONTEND_AR_PID=""
 cleanup() {
     echo ""
     echo "Stopping all services..."
+    # On Git Bash for Windows, 'kill' might not work; try 'taskkill' first
+    if command -v taskkill &>/dev/null; then
+        [ -n "$BACKEND_PID" ] && taskkill //PID "$BACKEND_PID" //F 2>/dev/null
+        [ -n "$FRONTEND_EN_PID" ] && taskkill //PID "$FRONTEND_EN_PID" //F 2>/dev/null
+        [ -n "$FRONTEND_AR_PID" ] && taskkill //PID "$FRONTEND_AR_PID" //F 2>/dev/null
+    fi
+    # Fallback to standard kill for Linux/WSL
     [ -n "$BACKEND_PID" ] && kill "$BACKEND_PID" 2>/dev/null
     [ -n "$FRONTEND_EN_PID" ] && kill "$FRONTEND_EN_PID" 2>/dev/null
     [ -n "$FRONTEND_AR_PID" ] && kill "$FRONTEND_AR_PID" 2>/dev/null
@@ -17,20 +24,20 @@ cleanup() {
 
 trap cleanup SIGINT SIGTERM
 
-# echo "Starting MySQL..."
-# docker-compose up -d
-# sleep 3
+echo "Starting MySQL..."
+docker-compose up -d
+sleep 3
 
 echo "Starting backend..."
 (cd src/backend && ./gradlew bootRun) &
 BACKEND_PID=$!
 
 echo "Starting frontend (English) on http://localhost:4200 ..."
-(cd src/frontend && ng serve --configuration=en --port=4200) &
+(cd src/frontend && npm start) &
 FRONTEND_EN_PID=$!
 
 echo "Starting frontend (Arabic) on http://localhost:4201 ..."
-(cd src/frontend && ng serve --configuration=ar --port=4201) &
+(cd src/frontend && npx ng serve --configuration=ar --port=4201) &
 FRONTEND_AR_PID=$!
 
 echo ""

@@ -87,6 +87,12 @@ export class AddItem implements OnInit {
       return;
     }
 
+    // Prevent digital item without a file
+    if (this.isDigital && !this.selectedFile) {
+      alert('Please select a file for the digital product.');
+      return;
+    }
+
     const body: CreateItemPayload = { ...this.item };
     if (this.selectedCourseId) {
       body.course = { id: this.selectedCourseId };
