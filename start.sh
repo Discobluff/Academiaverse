@@ -7,16 +7,19 @@ FRONTEND_AR_PID=""
 cleanup() {
     echo ""
     echo "Stopping all services..."
-    # On Git Bash for Windows, 'kill' might not work; try 'taskkill' first
-    if command -v taskkill &>/dev/null; then
+    if [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]]; then
+        # Windows Git Bash – use taskkill
         [ -n "$BACKEND_PID" ] && taskkill //PID "$BACKEND_PID" //F 2>/dev/null
         [ -n "$FRONTEND_EN_PID" ] && taskkill //PID "$FRONTEND_EN_PID" //F 2>/dev/null
         [ -n "$FRONTEND_AR_PID" ] && taskkill //PID "$FRONTEND_AR_PID" //F 2>/dev/null
+        taskkill //IM "java.exe" //F 2>/dev/null
+        taskkill //IM "node.exe" //F 2>/dev/null
+    else
+        [ -n "$BACKEND_PID" ] && kill "$BACKEND_PID" 2>/dev/null
+        [ -n "$FRONTEND_EN_PID" ] && kill "$FRONTEND_EN_PID" 2>/dev/null
+        [ -n "$FRONTEND_AR_PID" ] && kill "$FRONTEND_AR_PID" 2>/dev/null
+        pkill -P $$ 2>/dev/null
     fi
-    # Fallback to standard kill for Linux/WSL
-    [ -n "$BACKEND_PID" ] && kill "$BACKEND_PID" 2>/dev/null
-    [ -n "$FRONTEND_EN_PID" ] && kill "$FRONTEND_EN_PID" 2>/dev/null
-    [ -n "$FRONTEND_AR_PID" ] && kill "$FRONTEND_AR_PID" 2>/dev/null
     wait 2>/dev/null
     echo "All services stopped."
     exit 0
@@ -29,15 +32,24 @@ docker-compose up -d
 sleep 3
 
 echo "Starting backend..."
-(cd src/backend && ./gradlew bootRun) &
+(
+    cd src/backend || exit
+    ./gradlew bootRun
+) &
 BACKEND_PID=$!
 
 echo "Starting frontend (English) on http://localhost:4200 ..."
-(cd src/frontend && npm start) &
+(
+    cd src/frontend || exit
+    npx ng serve --configuration=en --port=4200
+) &
 FRONTEND_EN_PID=$!
 
 echo "Starting frontend (Arabic) on http://localhost:4201 ..."
-(cd src/frontend && npx ng serve --configuration=ar --port=4201) &
+(
+    cd src/frontend || exit
+    npx ng serve --configuration=ar --port=4201
+) &
 FRONTEND_AR_PID=$!
 
 echo ""
