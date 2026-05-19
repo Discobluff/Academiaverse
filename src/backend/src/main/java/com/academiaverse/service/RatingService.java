@@ -26,7 +26,7 @@ public class RatingService {
             return 0.0;
         }
         return ratings.stream()
-                .mapToInt(Rating::getRating)
+                .mapToInt(Rating::getRatingValue)
                 .average()
                 .orElse(0.0);
     }
@@ -38,14 +38,14 @@ public class RatingService {
 
         Rating existing = ratingRepository.findByUserAndItem(user, item);
         if (existing != null) {
-            existing.setRating(rating);
+            existing.setRatingValue(rating);
             return ratingRepository.save(existing);
         }
 
         Rating ratingEnt = new Rating();
         ratingEnt.setItem(item);
         ratingEnt.setUser(user);
-        ratingEnt.setRating(rating);
+        ratingEnt.setRatingValue(rating);
         return ratingRepository.save(ratingEnt);
     }
 }

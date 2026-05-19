@@ -58,10 +58,10 @@ public class RatingsController {
         if (!item.getBuyers().contains(user)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User has not bought this item");
         }
-        if (request.rating() < 1 || request.rating() > 5) {
+        if (request.ratingValue() < 1 || request.ratingValue() > 5) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Rating must be between 1 and 5");
         }
-        Rating createdRating = ratingService.createRating(user, item.getId(), request.rating());
+        Rating createdRating = ratingService.createRating(user, item.getId(), request.ratingValue());
         return ResponseEntity.ok(createdRating);
     }
 

@@ -1,8 +1,11 @@
 package com.academiaverse.item;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.academiaverse.dto.request.RatingRequest;
@@ -102,10 +105,10 @@ class TestRatings {
     void rateItemWithoutBought() throws Exception {
         RatingRequest request = new RatingRequest(item.getId(), 5);
 
-        mockMvc.perform(post("/api/ratings")
+        assertDoesNotThrow(() -> mockMvc.perform(post("/api/ratings")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isForbidden()));
     }
 
     @Test
@@ -116,18 +119,18 @@ class TestRatings {
 
         RatingRequest request = new RatingRequest(item.getId(), 5);
 
-        mockMvc.perform(post("/api/ratings")
+        assertDoesNotThrow(() ->mockMvc.perform(post("/api/ratings")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk()));
     }
 
     @Test
     @WithMockUser(username = mailBuyer)
     void getUserRatingEmpty() throws Exception {
-        mockMvc.perform(get("/api/ratings/user")
+        assertDoesNotThrow(() ->mockMvc.perform(get("/api/ratings/user")
                 .param("itemId", String.valueOf(item.getId())))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound()));
     }
 
     @Test
@@ -139,17 +142,17 @@ class TestRatings {
         Rating rating = new Rating();
         rating.setItem(item);
         rating.setUser(buyer);
-        rating.setRating(5);
+        rating.setRatingValue(5);
         ratingRepository.save(rating);
 
-        mockMvc.perform(get("/api/ratings/user")
+        assertDoesNotThrow(() ->mockMvc.perform(get("/api/ratings/user")
             .param("itemId", String.valueOf(item.getId())))
             .andExpect(status().isOk())
             .andExpect(result -> {
                 String json = result.getResponse().getContentAsString();
                 Rating responseRating = objectMapper.readValue(json, Rating.class);
-                assertTrue(responseRating.getRating() == 5);
-            });
+                assertEquals(responseRating.getRatingValue(), 5, "Rating value should be 5");
+            }));
     }
 
 }

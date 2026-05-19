@@ -108,7 +108,7 @@ export class ItemDetailComponent implements OnInit {
 
   rateItem(stars: number) {
     if (!this.item) return;
-    this.http.post(`${environment.apiBaseUrl}/api/ratings`, { itemId: this.item.id, rating: stars })
+    this.http.post(`${environment.apiBaseUrl}/api/ratings`, { itemId: this.item.id, ratingValue: stars })
       .subscribe({
         next: () => {
           console.log(stars, this.starsSelected);

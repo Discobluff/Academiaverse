@@ -1,3 +1,3 @@
 package com.academiaverse.dto.request;
 
-public record RatingRequest(Long itemId, int rating) {}
+public record RatingRequest(Long itemId, int ratingValue) {}
