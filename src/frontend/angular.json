@@ -79,6 +79,9 @@
             },
             "ar": {
               "buildTarget": "frontend:build:development,ar"
+            },
+            "en": {
+              "buildTarget": "frontend:build:development,en"
             }
           },
           "defaultConfiguration": "development"

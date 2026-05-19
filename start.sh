@@ -17,20 +17,20 @@ cleanup() {
 
 trap cleanup SIGINT SIGTERM
 
-echo "Starting MySQL..."
-docker-compose up -d
-sleep 3
+# echo "Starting MySQL..."
+# docker-compose up -d
+# sleep 3
 
 echo "Starting backend..."
 (cd src/backend && ./gradlew bootRun) &
 BACKEND_PID=$!
 
 echo "Starting frontend (English) on http://localhost:4200 ..."
-(cd src/frontend && npm start) &
+(cd src/frontend && ng serve --configuration=en --port=4200) &
 FRONTEND_EN_PID=$!
 
 echo "Starting frontend (Arabic) on http://localhost:4201 ..."
-(cd src/frontend && npx ng serve --configuration=ar --port=4201) &
+(cd src/frontend && ng serve --configuration=ar --port=4201) &
 FRONTEND_AR_PID=$!
 
 echo ""
