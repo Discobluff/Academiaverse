@@ -35,6 +35,8 @@ public class PointsService {
         buyer.setPoints(buyerPoints - price);
         seller.setPoints(sellerPoints + price);
 
+        item.getBuyers().add(buyer);
+
         // Mark the item as Sold
         item.setStatus("Sold");
         itemRepository.save(item);

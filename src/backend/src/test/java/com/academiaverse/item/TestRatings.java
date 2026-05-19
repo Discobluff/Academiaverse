@@ -7,9 +7,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.academiaverse.dto.request.RatingRequest;
 import com.academiaverse.entity.Item;
+import com.academiaverse.entity.Rating;
 import com.academiaverse.entity.User;
+import com.academiaverse.repository.ItemRepository;
+import com.academiaverse.repository.RatingRepository;
 import com.academiaverse.repository.UserRepository;
 import com.academiaverse.service.ItemService;
+import com.academiaverse.service.RatingService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -31,6 +35,12 @@ class TestRatings {
 
     @Autowired
     private ItemService itemService;
+
+    @Autowired
+    private ItemRepository itemRepository;
+
+    @Autowired
+    private RatingRepository ratingRepository;
 
     private User seller;
     private User buyer;
@@ -90,7 +100,21 @@ class TestRatings {
 
     @Test
     @WithMockUser(username = mailBuyer)
+    void rateItemWithoutBought() throws Exception {
+        RatingRequest request = new RatingRequest(item.getId(), 5);
+
+        mockMvc.perform(post("/api/ratings")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(username = mailBuyer)
     void rateItem() throws Exception {
+        item.getBuyers().add(buyer);
+        itemRepository.save(item);
+
         RatingRequest request = new RatingRequest(item.getId(), 5);
 
         mockMvc.perform(post("/api/ratings")
@@ -101,18 +125,32 @@ class TestRatings {
 
     @Test
     @WithMockUser(username = mailBuyer)
-    void getRatings() throws Exception {
-        mockMvc.perform(get("/api/ratings")
+    void getUserRatingEmpty() throws Exception {
+        mockMvc.perform(get("/api/ratings/user")
                 .param("itemId", String.valueOf(item.getId())))
-                .andExpect(status().isOk());
+                .andExpect(status().isNotFound());
     }
 
     @Test
     @WithMockUser(username = mailBuyer)
     void getUserRating() throws Exception {
+        item.getBuyers().add(buyer);
+        itemRepository.save(item);
+
+        Rating rating = new Rating();
+        rating.setItem(item);
+        rating.setUser(buyer);
+        rating.setRating(5);
+        ratingRepository.save(rating);
+
         mockMvc.perform(get("/api/ratings/user")
-                .param("itemId", String.valueOf(item.getId())))
-                .andExpect(status().isNotFound());
+            .param("itemId", String.valueOf(item.getId())))
+            .andExpect(status().isOk())
+            .andExpect(result -> {
+                String json = result.getResponse().getContentAsString();
+                Rating responseRating = objectMapper.readValue(json, Rating.class);
+                assertTrue(responseRating.getRating() == 5);
+            });
     }
 
 }

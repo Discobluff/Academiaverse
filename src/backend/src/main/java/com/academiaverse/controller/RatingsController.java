@@ -54,7 +54,12 @@ public class RatingsController {
                                             @AuthenticationPrincipal UserDetails userDetails) {
         User user = userRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
-        Rating createdRating = ratingService.createRating(user, request.itemId(), request.rating());
+        Item item = itemRepository.findById(request.itemId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Item not found"));
+        if (!item.getBuyers().contains(user)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User has not bought this item");
+        }
+        Rating createdRating = ratingService.createRating(user, item.getId(), request.rating());
         return ResponseEntity.ok(createdRating);
     }
 
