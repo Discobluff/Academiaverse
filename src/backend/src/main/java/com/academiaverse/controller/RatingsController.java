@@ -8,7 +8,6 @@ import com.academiaverse.repository.ItemRepository;
 import com.academiaverse.repository.UserRepository;
 import com.academiaverse.service.RatingService;
 
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,10 +30,10 @@ public class RatingsController {
     private final ItemRepository itemRepository;
 
     @GetMapping
-    public ResponseEntity<List<Rating>> getRatings(@RequestParam Long itemId) {
+    public ResponseEntity<Double> getAverageRatings(@RequestParam Long itemId) {
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Item not found"));
-        return ResponseEntity.ok(ratingService.getRatingsForItem(item));
+        return ResponseEntity.ok(ratingService.getAverageRatingsForItem(item));
     }
 
     @GetMapping("/user")
@@ -58,6 +57,9 @@ public class RatingsController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Item not found"));
         if (!item.getBuyers().contains(user)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User has not bought this item");
+        }
+        if (request.rating() < 1 || request.rating() > 5) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Rating must be between 1 and 5");
         }
         Rating createdRating = ratingService.createRating(user, item.getId(), request.rating());
         return ResponseEntity.ok(createdRating);

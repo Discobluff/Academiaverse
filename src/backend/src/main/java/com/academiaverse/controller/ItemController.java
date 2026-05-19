@@ -36,6 +36,17 @@ public class ItemController {
     private final UserRepository userRepository;
     private final CourseRepository courseRepository;
 
+    @GetMapping("/bought")
+    public ResponseEntity<Boolean> hasBoughtItem(@RequestParam Long itemId,
+                                    @AuthenticationPrincipal UserDetails userDetails) {
+        User user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, USER_NOT_FOUND));
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Item not found"));
+        boolean hasBought = item.getBuyers().contains(user);
+        return ResponseEntity.ok(hasBought);
+    }
+    
     @PostMapping
     public ResponseEntity<Item> createItem(@Valid @RequestBody Item item,
                                            @AuthenticationPrincipal UserDetails userDetails) {

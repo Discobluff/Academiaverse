@@ -30,17 +30,22 @@
 
   <!-- Report button – always visible to any logged-in user -->
   <button class="report-btn" (click)="reportItem()">Report</button>
-  <div role="radiogroup" aria-label="Star rating" class="star-rating">
-    <ng-container *ngFor="let i of range(starsNumber)">
-      <span role="radio" tabindex="0" [attr.aria-checked]="starsSelected === i + 1" (click)="rateItem(i + 1)"
-        (mouseenter)="starsHovered = i + 1" (mouseleave)="starsHovered = 0"
-        [class.filled]="i < starsSelected || i < starsHovered">
-        ★
-      </span>
-    </ng-container>
-  </div>
+  @if (hasBought) {
+    <div role="radiogroup" aria-label="Star rating" class="star-rating">
+      @for (i of range(starsNumber); track i) {
+          <span role="radio" tabindex="0" [attr.aria-checked]="starsSelected === i + 1" (click)="rateItem(i + 1)"
+            (mouseenter)="starsHovered = i + 1" (mouseleave)="starsHovered = 0" (keydown.enter)="rateItem(i + 1)"
+            [class.filled]="i < starsSelected || i < starsHovered">
+            ★
+          </span>
+      }
+    </div>
+  }
+  @if (starsAverage !== 0.0) {
+    <span>Average rating: {{ starsSelected }}</span>
+    <span class="star-average">★</span>
+  }
 
-        <!-- (keydown.enter)="setRating(i + 1)" (mouseenter)="setHover(i + 1)" (mouseleave)="setHover(null)" -->
 </div>
 } @else {
 <div class="not-found">

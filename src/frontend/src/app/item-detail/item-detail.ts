@@ -44,11 +44,35 @@ export class ItemDetailComponent implements OnInit {
   starsNumber = 5;
   starsSelected = 0;
   starsHovered = 0;
+  hasBought = false;
+  starsAverage = 0.0;
 
   ngOnInit() {
     this.route.params.subscribe(params => {
       const id = +params['id'];
       this.loadItem(id);
+    });
+  }
+
+  getStarsAverage(itemId: number) {
+    this.http.get<number>(`${environment.apiBaseUrl}/api/ratings`, {
+      params: { itemId: itemId }
+    }).subscribe({
+      next: (average) => {
+        this.starsAverage = average;
+      },
+      error: (err) => console.error(err)
+    });
+  }
+
+  checkIfBought(itemId: number): void {
+    this.http.get<boolean>(`${environment.apiBaseUrl}/api/items/bought`, {
+      params: { itemId: itemId }
+    }).subscribe({
+      next: (hasBought) => {
+        this.hasBought = hasBought;
+      },
+      error: (err) => console.error(err)
     });
   }
 
@@ -60,7 +84,11 @@ export class ItemDetailComponent implements OnInit {
         next: (data) => {
           this.item = data;
           this.checkIfAlreadyInterested();
-          this.getItemRating(data.id);
+          this.checkIfBought(data.id);
+          this.getStarsAverage(data.id);
+          if (this.hasBought) {
+            this.getItemRating(data.id);
+          }
         },
         error: () => this.item = null
       });
@@ -71,7 +99,7 @@ export class ItemDetailComponent implements OnInit {
   }
 
   getItemRating(itemId: number) {
-    this.http.get<{ rating: number }>(`${environment.apiBaseUrl}/api/ratings/user`, {params: {itemId: itemId}})
+    this.http.get<{ rating: number }>(`${environment.apiBaseUrl}/api/ratings/user`, { params: { itemId: itemId } })
       .subscribe({
         next: (data) => this.starsSelected = data.rating,
         error: () => this.starsSelected = 0
@@ -81,10 +109,10 @@ export class ItemDetailComponent implements OnInit {
   rateItem(stars: number) {
     if (!this.item) return;
     this.http.post(`${environment.apiBaseUrl}/api/ratings`, { itemId: this.item.id, rating: stars })
-    .subscribe({
-      next: () => {
-        console.log(stars, this.starsSelected);
-        this.starsSelected = stars;
+      .subscribe({
+        next: () => {
+          console.log(stars, this.starsSelected);
+          this.starsSelected = stars;
         },
         error: (err) => {
           console.error(err);

@@ -20,8 +20,15 @@ public class RatingService {
         return ratingRepository.findByUserAndItem(user, item);
     }
 
-    public List<Rating> getRatingsForItem(Item item) {
-        return ratingRepository.findByItem(item);
+    public Double getAverageRatingsForItem(Item item) {
+        List<Rating> ratings = ratingRepository.findByItem(item);
+        if (ratings.isEmpty()) {
+            return 0.0;
+        }
+        return ratings.stream()
+                .mapToInt(Rating::getRating)
+                .average()
+                .orElse(0.0);
     }
 
     @Transactional

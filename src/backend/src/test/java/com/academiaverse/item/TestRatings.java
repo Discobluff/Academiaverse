@@ -13,7 +13,6 @@ import com.academiaverse.repository.ItemRepository;
 import com.academiaverse.repository.RatingRepository;
 import com.academiaverse.repository.UserRepository;
 import com.academiaverse.service.ItemService;
-import com.academiaverse.service.RatingService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.junit.jupiter.api.BeforeEach;
