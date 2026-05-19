@@ -1,37 +1,49 @@
 @if (item) {
-  <div class="item-detail-container">
-    <h2 class="item-title">{{ item.title }}</h2>
-    <p class="item-description"><strong>Description:</strong> {{ item.description }}</p>
-    <p class="item-notes"><strong>Notes:</strong> {{ item.notes }}</p>
-    <p class="item-price"><strong>Price:</strong> {{ item.price }} {{ item.paymentMethod === 'points' ? 'points' : '€' }}</p>
-    <p class="item-type"><strong>Type:</strong> {{ item.type }}</p>
-    <p class="item-payment"><strong>Payment Method:</strong> {{ item.paymentMethod }}</p>
-    <p class="item-status"><strong>Status:</strong> {{ item.status || 'Available' }}</p>
+<div class="item-detail-container">
+  <h2 class="item-title">{{ item.title }}</h2>
+  <p class="item-description"><strong>Description:</strong> {{ item.description }}</p>
+  <p class="item-notes"><strong>Notes:</strong> {{ item.notes }}</p>
+  <p class="item-price"><strong>Price:</strong> {{ item.price }} {{ item.paymentMethod === 'points' ? 'points' : '€' }}
+  </p>
+  <p class="item-type"><strong>Type:</strong> {{ item.type }}</p>
+  <p class="item-payment"><strong>Payment Method:</strong> {{ item.paymentMethod }}</p>
+  <p class="item-status"><strong>Status:</strong> {{ item.status || 'Available' }}</p>
 
-    @if (item.isDigital) {
-      <div class="digital-info">
-        <p><strong>File:</strong> {{ item.digitalFileName }}</p>
-        <p><em>Available after purchase</em></p>
-      </div>
-    }
-
-    <!-- Show Interest button only if the user is not the owner -->
-    @if (!isOwner()) {
-      <button class="interest-btn" (click)="expressInterest()" [disabled]="alreadyInterested">
-        {{ alreadyInterested ? 'Already Interested' : 'Interested' }}
-      </button>
-    }
-
-    <!-- Show Buy-with-Points button only for points items, not the owner, and not already sold -->
-    @if (!isOwner() && item.paymentMethod === 'points' && item.status !== 'Sold') {
-      <button class="buy-points-btn" (click)="buyWithPoints()">Buy with Points</button>
-    }
-
-    <!-- Report button – always visible to any logged-in user -->
-    <button class="report-btn" (click)="reportItem()">Report</button>
+  @if (item.isDigital) {
+  <div class="digital-info">
+    <p><strong>File:</strong> {{ item.digitalFileName }}</p>
+    <p><em>Available after purchase</em></p>
   </div>
+  }
+
+  <!-- Show Interest button only if the user is not the owner -->
+  @if (!isOwner()) {
+  <button class="interest-btn" (click)="expressInterest()" [disabled]="alreadyInterested">
+    {{ alreadyInterested ? 'Already Interested' : 'Interested' }}
+  </button>
+  }
+
+  <!-- Show Buy-with-Points button only for points items, not the owner, and not already sold -->
+  @if (!isOwner() && item.paymentMethod === 'points' && item.status !== 'Sold') {
+  <button class="buy-points-btn" (click)="buyWithPoints()">Buy with Points</button>
+  }
+
+  <!-- Report button – always visible to any logged-in user -->
+  <button class="report-btn" (click)="reportItem()">Report</button>
+  <div role="radiogroup" aria-label="Star rating" class="star-rating">
+    <ng-container *ngFor="let i of range(starsNumber)">
+      <span role="radio" tabindex="0" [attr.aria-checked]="starsSelected === i + 1" (click)="rateItem(i + 1)"
+        (mouseenter)="starsHovered = i + 1" (mouseleave)="starsHovered = 0"
+        [class.filled]="i < starsSelected || i < starsHovered">
+        ★
+      </span>
+    </ng-container>
+  </div>
+
+        <!-- (keydown.enter)="setRating(i + 1)" (mouseenter)="setHover(i + 1)" (mouseleave)="setHover(null)" -->
+</div>
 } @else {
-  <div class="not-found">
-    Item not found.
-  </div>
+<div class="not-found">
+  Item not found.
+</div>
 }
