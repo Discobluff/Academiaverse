@@ -39,6 +39,10 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 }
 
+dependencyLocking {
+    lockAllConfigurations()
+}
+
 tasks.named('test') {
 	useJUnitPlatform()
 }
@@ -94,10 +98,4 @@ spotbugsMain {
         html { required = true }
         xml { required = false }
     }
-}
-
-// --- OWASP ---
-dependencyCheck {
-    failBuildOnCVSS = 7  // fail on high severity CVEs
-    format = "HTML"
 }

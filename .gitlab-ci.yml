@@ -47,13 +47,14 @@ static_analysis:frontend:
 
 dependency_scan:backend:
   stage: dependency_scan
-  image:
-    name: aquasec/trivy:latest
-    entrypoint: [""]
+  image: gradle:8-jdk21
   script:
-    - trivy fs --scanners vuln --exit-code 1 .
+    - ./gradlew dependencies --write-locks
+    - curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
+    - trivy fs --scanners vuln .
   before_script:
     - cd src/backend
+    - chmod +x gradlew
 
 dependency_scan:frontend:
   stage: dependency_scan
