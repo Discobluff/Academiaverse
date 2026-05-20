@@ -1,16 +1,13 @@
 <nav class="navbar">
-    <a routerLink="/" class="navbar__brand">
-        <i class="ti ti-hexagon-filled"></i>
-        Academiaverse
-    </a>
+    <p class="navbar__brand">Academiaverse</p>
 
     <ul class="navbar__links">
-        <li>
-            <a i18n="@@translation_home" routerLink="/home" routerLinkActive="active">
-                Home
-            </a>
-        </li>
         @if (authService.isAuthenticated()){
+            <li>
+                <a i18n="@@translation_home" routerLink="/home" routerLinkActive="active">
+                    Home
+                </a>
+            </li>
             <li>
                 <a i18n="@@translation_search_courses" routerLink="/search" routerLinkActive="active">
                     Search Courses
@@ -35,16 +32,20 @@
     </ul>
     <ul class="navbar__links">
         @if (!authService.isAuthenticated()) {
-            <li>
-                <a i18n="@@translation_login" routerLink="/login" routerLinkActive="active">
-                    Login
-                </a>
-            </li>
-            <li>
-                <a i18n="@@translation_register" routerLink="/register" routerLinkActive="active">
-                    Register
-                </a>
-            </li>
+            @if (!isLogin()) {
+                <li>
+                    <a i18n="@@translation_login" routerLink="/login" routerLinkActive="active">
+                        Login
+                    </a>
+                </li>
+            }
+            @if (!isRegister()) {
+                <li>
+                    <a i18n="@@translation_register" routerLink="/register" routerLinkActive="active">
+                        Register
+                    </a>
+                </li>
+            }
         }
         @if (authService.isAuthenticated()) {
             <li class="navbar__points">
