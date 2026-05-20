@@ -63,6 +63,12 @@ describe('ItemDetailComponent', () => {
       if (url.includes('/api/interests')) {
         return of(mockEmptyInterests);
       }
+      if (url.includes('/api/items/bought')) {
+        return of(false);   // not bought, so "Available after purchase" is shown
+      }
+      if (url.includes('/api/ratings')) {
+        return of(0.0);
+      }
       return of(mockItem);
     });
 
@@ -85,12 +91,18 @@ describe('ItemDetailComponent', () => {
     expect(el.querySelector('.digital-info')).toBeNull();
   });
 
-  it('should show digital file name and no download link for digital item', async () => {
+  it('should show digital file name and no download link for digital item when not bought', async () => {
     const digitalItem = { ...mockItem, isDigital: true, digitalFileName: 'notes.pdf' };
     const http = TestBed.inject(HttpClient);
     vi.spyOn(http, 'get').mockImplementation((url: string) => {
       if (url.includes('/api/interests')) {
         return of(mockEmptyInterests);
+      }
+      if (url.includes('/api/items/bought')) {
+        return of(false);   // not bought
+      }
+      if (url.includes('/api/ratings')) {
+        return of(0.0);
       }
       return of(digitalItem);
     });
@@ -100,7 +112,8 @@ describe('ItemDetailComponent', () => {
     const el = fixture.nativeElement;
     expect(el.querySelector('.digital-info').textContent).toContain('notes.pdf');
     expect(el.querySelector('.digital-info').textContent).toContain('Available after purchase');
-    expect(el.querySelector('a[download]')).toBeNull();
+    // No download button because not bought
+    expect(el.querySelector('.download-btn')).toBeNull();
   });
 
   it('should show Interested button when user is not owner', () => {

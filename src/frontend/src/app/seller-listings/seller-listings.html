@@ -7,6 +7,7 @@
                 <th>Price</th>
                 <th>Type</th>
                 <th>Status</th>
+                <th>Availability</th>
                 <th>Payment</th>
                 <th>Actions</th>
             </tr>
@@ -18,6 +19,7 @@
                 <td>{{ item.price }} {{ item.paymentMethod === 'points' ? 'points' : '€' }}</td>
                 <td>{{ item.type }}</td>
                 <td>{{ item.status || 'Available' }}</td>
+                <td>{{ item.availability || 'Available' }}</td>
                 <td>{{ item.paymentMethod }}</td>
                 <td>
                     <button class="view-btn" (click)="viewItem(item.id)">View</button>
