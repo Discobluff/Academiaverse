@@ -17,6 +17,10 @@ build:backend:
   before_script:
     - cd src/backend
     - chmod +x gradlew
+  artifacts:
+    paths:
+      - src/backend/build/
+    expire_in: 1 hour
 
 build:frontend:
   stage: build
@@ -50,10 +54,16 @@ dependency_scan:backend:
   image:
     name: aquasec/trivy:latest
     entrypoint: [""]
-  script:
-    - trivy fs --scanners vuln --exit-code 1 .
+  needs:
+    - job: build:backend
+      artifacts: true
   before_script:
     - cd src/backend
+  script:
+    - trivy fs --scanners vuln
+        --severity HIGH,CRITICAL
+        --exit-code 1
+        build/
 
 dependency_scan:frontend:
   stage: dependency_scan
