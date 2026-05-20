@@ -39,6 +39,7 @@ import org.springframework.web.server.ResponseStatusException;
 @RequiredArgsConstructor
 public class ItemController {
     private static final String USER_NOT_FOUND = "User not found";
+    private static final String ITEM_NOT_FOUND = "Item not found";    
 
     private final ItemService itemService;
     private final ItemRepository itemRepository;
@@ -51,7 +52,7 @@ public class ItemController {
         User user = userRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, USER_NOT_FOUND));
         Item item = itemRepository.findById(itemId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Item not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, ITEM_NOT_FOUND));
         boolean hasBought = item.getBuyers().contains(user);
         return ResponseEntity.ok(hasBought);
     }
@@ -110,7 +111,7 @@ public class ItemController {
     @GetMapping("/{id}")
     public ResponseEntity<Item> getItem(@PathVariable Long id) {
         Item item = itemRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Item not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, ITEM_NOT_FOUND));
         return ResponseEntity.ok(item);
     }
 
@@ -138,7 +139,7 @@ public class ItemController {
         User user = userRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, USER_NOT_FOUND));
         Item item = itemRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Item not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, ITEM_NOT_FOUND));
         if (!item.getOwner().getId().equals(user.getId())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
@@ -154,7 +155,7 @@ public class ItemController {
         User user = userRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, USER_NOT_FOUND));
         Item item = itemRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Item not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, ITEM_NOT_FOUND));
 
         // Only the buyer can download
         if (!item.getBuyers().contains(user)) {

@@ -39,7 +39,7 @@ export class EditItemComponent implements OnInit {
     availability: 'Available',
     availableUntil: ''
   };
-  availableUntilDate: string = '';
+  availableUntilDate = '';
 
   ngOnInit() {
     this.route.params.subscribe(params => {
@@ -74,11 +74,11 @@ export class EditItemComponent implements OnInit {
 
   onSubmit() {
     if (!this.isFormValid()) return;
-    const body: any = { ...this.item };
+    const body: Record<string, unknown> = { ...this.item };
     if (this.availableUntilDate && this.item.availability === 'Unavailable') {
-      body.availableUntil = this.availableUntilDate + 'T00:00:00';
+      body['availableUntil'] = this.availableUntilDate + 'T00:00:00';
     } else {
-      body.availableUntil = null;
+      body['availableUntil'] = null;
     }
     this.http.put(`${environment.apiBaseUrl}/api/items/${this.itemId}`, body)
     .subscribe({
