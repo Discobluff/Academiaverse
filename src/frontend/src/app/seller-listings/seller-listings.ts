@@ -3,7 +3,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environments';
 
-interface item { id: number; title: string; description: string; price: number; type: string; notes: string; paymentMethod: string; status: string };
+interface item { id: number; title: string; description: string; price: number; type: string; notes: string; paymentMethod: string; status: string; availability?: string };
 
 @Component({
   selector: 'app-seller-listings',

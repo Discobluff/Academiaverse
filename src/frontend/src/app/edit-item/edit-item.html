@@ -24,6 +24,17 @@
     <option value="rent">For Rent</option>
   </select>
 
+  <p>Availability:</p>
+  <select [(ngModel)]="item.availability" name="availability">
+    <option value="Available">Available</option>
+    <option value="Unavailable">Unavailable</option>
+  </select>
+
+  @if (item.availability === 'Unavailable') {
+    <p>Available again on:</p>
+    <input type="date" [(ngModel)]="availableUntilDate" name="availableUntil" />
+  }
+
   @if (!isFormValid()) {
     <p class="error-message">Please fill in a title and a price.</p>
   }

@@ -98,7 +98,8 @@ export class AddItem implements OnInit {
       body.course = { id: this.selectedCourseId };
     }
 
-    if (this.isDigital && this.selectedFile) {
+    if (this.selectedFile) {
+      // Multipart upload (digital or physical image)
       const formData = new FormData();
       formData.append('title', this.item.title);
       formData.append('description', this.item.description);
@@ -110,18 +111,20 @@ export class AddItem implements OnInit {
       if (this.selectedCourseId) {
         formData.append('courseId', String(this.selectedCourseId));
       }
+      formData.append('isDigital', String(this.isDigital));
 
       this.http.post(`${environment.apiBaseUrl}/api/items/upload`, formData).subscribe({
         next: () => {
-          alert('Digital item created successfully!');
+          alert(this.isDigital ? 'Digital item created successfully!' : 'Item created successfully!');
           this.router.navigate(['/']);
         },
         error: (err) => {
           console.error(err);
-          alert('Failed to create digital item.');
+          alert('Failed to create item.');
         }
       });
     } else {
+      // JSON for non‑digital items without an image
       this.http.post(`${environment.apiBaseUrl}/api/items`, body).subscribe({
         next: () => {
           alert('Item created successfully!');

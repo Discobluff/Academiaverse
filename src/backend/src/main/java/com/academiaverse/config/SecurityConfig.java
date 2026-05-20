@@ -37,6 +37,9 @@ public class SecurityConfig {
                 .requestMatchers("/api/chat/**").authenticated()
                 .requestMatchers("/api/ratings/**").authenticated()
                 .requestMatchers("/v1/admin").hasAuthority("ADMIN")
+                .requestMatchers("/api/uploads/**").permitAll()
+                .requestMatchers("/api/items/*/download").authenticated()              
+                .requestMatchers("/api/items/purchases").authenticated()                  
                 .anyRequest().authenticated()
             )
             .sessionManagement(session ->

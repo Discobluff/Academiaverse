@@ -19,6 +19,8 @@ interface Item {
   images: string[];
   status: string;
   owner: { id: number };
+  availability?: string;
+  availableUntil?: string;
 }
 
 interface InterestItem {
@@ -199,6 +201,32 @@ export class ItemDetailComponent implements OnInit {
       error: (err) => {
         console.error('Report failed', err);
         alert('Could not submit report.');
+      }
+    });
+  }
+
+  viewImage(path: string) {
+    window.open(`${environment.apiBaseUrl}${path}`, '_blank');
+  } 
+
+  downloadFile() {
+    if (!this.item) return;
+    this.http.get(`${environment.apiBaseUrl}/api/items/${this.item.id}/download`, {
+      responseType: 'blob'
+    }).subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = this.item!.digitalFileName || 'download';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      },
+      error: (err) => {
+        console.error('Download failed', err);
+        alert('Download failed. Make sure you purchased this item and are logged in.');
       }
     });
   }
