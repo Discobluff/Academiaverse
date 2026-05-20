@@ -46,7 +46,10 @@ static_analysis:frontend:
     - cd src/frontend
 
 dependency_scan:backend:
-  image: aquasec/trivy:latest
+  stage: dependency_scan
+  image:
+    name: aquasec/trivy:latest
+    entrypoint: [""]
   script:
     - trivy fs --scanners vuln --exit-code 1 .
   before_script:
