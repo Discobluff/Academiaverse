@@ -1,6 +1,6 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { AuthService } from '../core/services/auth.service';
 import { LanguageSwitcher } from '../language-switcher/language-switcher';
 import { environment } from '../../environments/environments';
@@ -14,6 +14,7 @@ import { environment } from '../../environments/environments';
 export class Navbar implements OnInit, OnDestroy {
   public authService: AuthService = inject(AuthService);
   private http = inject(HttpClient);
+  private router = inject(Router);
 
   userPoints: number | null = null;
   private pointsInterval: ReturnType<typeof setInterval> | null = null;
@@ -26,6 +27,14 @@ export class Navbar implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     if (this.pointsInterval) clearInterval(this.pointsInterval);
+  }
+
+  isLogin(): boolean {
+    return this.router.url === '/login';
+  }
+
+  isRegister(): boolean {
+    return this.router.url === '/register';
   }
 
   loadPoints() {
