@@ -8,12 +8,28 @@
   <p class="item-type"><strong>Type:</strong> {{ item.type }}</p>
   <p class="item-payment"><strong>Payment Method:</strong> {{ item.paymentMethod }}</p>
   <p class="item-status"><strong>Status:</strong> {{ item.status || 'Available' }}</p>
+  <p><strong>Availability:</strong> {{ item.availability || 'Available' }}</p>
+  @if (item.availability === 'Unavailable' && item.availableUntil) {
+    <p><strong>Available until:</strong> {{ item.availableUntil | date:'mediumDate' }}</p>
+  }
+
+  @if (!item.isDigital && item.digitalFilePath) {
+    <div class="item-image">
+      <p><strong>Image:</strong> {{ item.digitalFileName }}</p>
+      <button class="view-image-btn" (click)="viewImage(item.digitalFilePath)">View Image</button>
+    </div>
+  }
 
   @if (item.isDigital) {
-  <div class="digital-info">
-    <p><strong>File:</strong> {{ item.digitalFileName }}</p>
-    <p><em>Available after purchase</em></p>
-  </div>
+    <div class="digital-info">
+      <p><strong>File:</strong> {{ item.digitalFileName }}</p>
+      @if (!hasBought) {
+        <p><em>Available after purchase</em></p>
+      }
+      @if (hasBought) {
+        <button class="download-btn" (click)="downloadFile()">Download</button>
+      }
+    </div>
   }
 
   <!-- Show Interest button only if the user is not the owner -->
@@ -29,7 +45,7 @@
   }
 
   <!-- Show Buy-with-Points button only for points items, not the owner, and not already sold -->
-  @if (!isOwner() && item.paymentMethod === 'points' && item.status !== 'Sold') {
+    @if (!isOwner() && item.paymentMethod === 'points') {
   <button class="buy-points-btn" (click)="buyWithPoints()">Buy with Points</button>
   }
 

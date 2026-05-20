@@ -12,6 +12,8 @@ interface EditItemForm {
   price: number | null;
   type: string;
   paymentMethod: string;
+  availability?: string;
+  availableUntil?: string;
 }
 
 @Component({
@@ -33,8 +35,11 @@ export class EditItemComponent implements OnInit {
     notes: '',
     price: null,
     type: 'sale',
-    paymentMethod: 'cash'
+    paymentMethod: 'cash',
+    availability: 'Available',
+    availableUntil: ''
   };
+  availableUntilDate: string = '';
 
   ngOnInit() {
     this.route.params.subscribe(params => {
@@ -50,6 +55,10 @@ export class EditItemComponent implements OnInit {
     .subscribe({
       next: (data) => {
         this.item = data;
+        this.item.availability = data.availability || 'Available';
+        if (data.availableUntil) {
+          this.availableUntilDate = data.availableUntil.substring(0, 10);
+        }
       },
       error: (err) => {
         console.error('Failed to load item', err);
@@ -65,7 +74,13 @@ export class EditItemComponent implements OnInit {
 
   onSubmit() {
     if (!this.isFormValid()) return;
-    this.http.put(`${environment.apiBaseUrl}/api/items/${this.itemId}`, this.item)
+    const body: any = { ...this.item };
+    if (this.availableUntilDate && this.item.availability === 'Unavailable') {
+      body.availableUntil = this.availableUntilDate + 'T00:00:00';
+    } else {
+      body.availableUntil = null;
+    }
+    this.http.put(`${environment.apiBaseUrl}/api/items/${this.itemId}`, body)
     .subscribe({
       next: () => {
         alert('Item updated successfully!');

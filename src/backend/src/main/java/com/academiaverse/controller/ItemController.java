@@ -1,5 +1,8 @@
 package com.academiaverse.controller;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import org.springframework.transaction.annotation.Transactional;
 import com.academiaverse.entity.Course;
 import com.academiaverse.entity.Item;
 import com.academiaverse.entity.User;
@@ -8,8 +11,14 @@ import com.academiaverse.repository.ItemRepository;
 import com.academiaverse.repository.UserRepository;
 import com.academiaverse.service.ItemService;
 import jakarta.validation.Valid;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -46,7 +55,7 @@ public class ItemController {
         boolean hasBought = item.getBuyers().contains(user);
         return ResponseEntity.ok(hasBought);
     }
-    
+
     @PostMapping
     public ResponseEntity<Item> createItem(@Valid @RequestBody Item item,
                                            @AuthenticationPrincipal UserDetails userDetails) {
@@ -69,6 +78,8 @@ public class ItemController {
                                                   @RequestParam("type") String type,
                                                   @RequestParam("paymentMethod") String paymentMethod,
                                                   @RequestParam("file") MultipartFile file,
+                                                  @RequestParam(value = "courseId", required = false) Long courseId,
+                                                  @RequestParam(value = "isDigital", defaultValue = "true") boolean isDigital,
                                                   @AuthenticationPrincipal UserDetails userDetails) {
         User user = userRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, USER_NOT_FOUND));
@@ -81,7 +92,18 @@ public class ItemController {
         item.setType(type);
         item.setPaymentMethod(paymentMethod);
 
-        Item saved = itemService.createDigitalItem(item, user, file);
+        if (courseId != null) {
+            Course course = courseRepository.findById(courseId)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Course not found"));
+            item.setCourse(course);
+        }
+
+        Item saved;
+        if (isDigital) {
+            saved = itemService.createDigitalItem(item, user, file);
+        } else {
+            saved = itemService.createPhysicalItemWithImage(item, user, file);
+        }
         return ResponseEntity.ok(saved);
     }
 
@@ -123,4 +145,52 @@ public class ItemController {
         itemService.deleteItem(id, user);
         return ResponseEntity.ok().build();
     }
+
+    // ---------- NEW: Digital product download ----------
+    @GetMapping("/{id}/download")
+    @Transactional(readOnly = true)
+    public ResponseEntity<byte[]> downloadItem(@PathVariable Long id,
+                                               @AuthenticationPrincipal UserDetails userDetails) throws IOException {
+        User user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, USER_NOT_FOUND));
+        Item item = itemRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Item not found"));
+
+        // Only the buyer can download
+        if (!item.getBuyers().contains(user)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        // Only digital items can be downloaded
+        if (!item.getIsDigital() || item.getDigitalFileName() == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        Path filePath = Paths.get("uploads/", item.getDigitalFileName());
+        if (!Files.exists(filePath)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        byte[] data = Files.readAllBytes(filePath);
+        String contentType = Files.probeContentType(filePath);
+        if (contentType == null) {
+            contentType = "application/octet-stream";
+        }
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(contentType))
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=\"" + item.getDigitalFileName() + "\"")
+                .body(data);
+    }
+
+    @GetMapping("/purchases")
+    public ResponseEntity<List<Item>> getPurchases(@AuthenticationPrincipal UserDetails userDetails) {
+        User user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, USER_NOT_FOUND));
+        List<Item> purchased = itemRepository.findAll().stream()
+                .filter(item -> item.getBuyers().contains(user))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(purchased);
+    }    
 }

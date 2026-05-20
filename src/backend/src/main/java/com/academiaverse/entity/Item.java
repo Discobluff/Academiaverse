@@ -69,7 +69,10 @@ public class Item {
     )
     private List<User> buyers = new ArrayList<>();
 
-    private String status;   // Added – shows "Interest" when buyer expresses interest
+    private String status;   // shows "Interest" when buyer expresses interest
+
+    private String availability;          // "Available" or "Unavailable"
+    private LocalDateTime availableUntil; // deadline when unavailable
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
