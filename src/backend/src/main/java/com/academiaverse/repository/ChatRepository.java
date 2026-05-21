@@ -10,4 +10,6 @@ public interface ChatRepository extends JpaRepository<Chat, Long> {
 
     @Query("SELECT c FROM Chat c WHERE c.item.owner.id = :userId OR c.sender.id = :userId OR c.buyer.id = :userId ORDER BY c.createdAt ASC")
     List<Chat> findByUser(@Param("userId") Integer userId);
+
+    void deleteByItemId(Long itemId);
 }
