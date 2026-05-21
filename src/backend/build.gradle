@@ -10,6 +10,8 @@ plugins {
     // id 'org.barfuin.gradle.jacocolog' version '4.0.2'
 }
 
+ext['tomcat.version'] = '11.0.22'
+
 group = 'com.academiaverse'
 version = '0.0.1-SNAPSHOT'
 
@@ -37,6 +39,12 @@ dependencies {
 	testRuntimeOnly 'com.h2database:h2'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+}
+
+configurations.all {
+    resolutionStrategy {
+        force 'org.codehaus.plexus:plexus-utils:4.0.3'
+    }
 }
 
 dependencyLocking {
