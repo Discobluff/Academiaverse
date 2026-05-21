@@ -7,7 +7,6 @@ import com.academiaverse.entity.User;
 import com.academiaverse.repository.ItemRepository;
 import com.academiaverse.repository.UserRepository;
 import com.academiaverse.service.RatingService;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,7 +43,9 @@ public class RatingsController {
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Item not found"));
         Rating rating = ratingService.getRatingsForUserAndItem(user, item);
-        if (rating == null) return ResponseEntity.notFound().build();
+        if (rating == null) {
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity.ok(rating);
     }
 

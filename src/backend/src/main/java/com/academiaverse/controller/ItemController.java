@@ -1,8 +1,5 @@
 package com.academiaverse.controller;
 
-import java.util.List;
-import java.util.stream.Collectors;
-import org.springframework.transaction.annotation.Transactional;
 import com.academiaverse.entity.Course;
 import com.academiaverse.entity.Item;
 import com.academiaverse.entity.User;
@@ -15,6 +12,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -22,6 +21,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -82,9 +82,7 @@ public class ItemController {
                                                   @RequestParam(value = "courseId", required = false) Long courseId,
                                                   @RequestParam(value = "isDigital", defaultValue = "true") boolean isDigital,
                                                   @AuthenticationPrincipal UserDetails userDetails) {
-        User user = userRepository.findByEmail(userDetails.getUsername())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, USER_NOT_FOUND));
-
+                                                          
         Item item = new Item();
         item.setTitle(title);
         item.setDescription(description);
@@ -95,9 +93,12 @@ public class ItemController {
 
         if (courseId != null) {
             Course course = courseRepository.findById(courseId)
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Course not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Course not found"));
             item.setCourse(course);
         }
+
+        User user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, USER_NOT_FOUND));
 
         Item saved;
         if (isDigital) {
