@@ -3,9 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { environment } from '../../environments/environments';
-import { AuthService } from '../core/services/auth.service';
 
-interface ChatItem {
+interface ChatMessage {
+  id: number;
+  message: string;
+  sender: { id: number };
+  buyer: { id: number };
   item: { id: number; title: string };
 }
 
@@ -19,25 +22,28 @@ interface ChatItem {
 export class ChatsListComponent implements OnInit {
   private http = inject(HttpClient);
   private router = inject(Router);
-  private authService = inject(AuthService);
 
-  uniqueItems: { id: number; title: string }[] = [];
+  uniqueItems: { id: number; title: string; buyerId: number }[] = [];
 
   ngOnInit() {
     this.loadChats();
   }
 
   loadChats() {
-    this.http.get<ChatItem[]>(`${environment.apiBaseUrl}/api/chat`)
+    this.http.get<ChatMessage[]>(`${environment.apiBaseUrl}/api/chat`)
       .subscribe({
         next: (chats) => {
-          // Extract unique items from the chat messages
+          // Group by item and remember the first buyer (the original buyer)
           const seen = new Set<number>();
           this.uniqueItems = [];
           for (const chat of chats) {
             if (!seen.has(chat.item.id)) {
               seen.add(chat.item.id);
-              this.uniqueItems.push({ id: chat.item.id, title: chat.item.title });
+              this.uniqueItems.push({
+                id: chat.item.id,
+                title: chat.item.title,
+                buyerId: chat.buyer.id   // keep the original buyer for this conversation
+              });
             }
           }
         },
@@ -45,12 +51,7 @@ export class ChatsListComponent implements OnInit {
       });
   }
 
-  openChat(itemId: number) {
-    const buyerId = this.authService.getUserId();
-    if (!buyerId) {
-      alert('You must be logged in to view chats.');
-      return;
-    }
+  openChat(itemId: number, buyerId: number) {
     this.router.navigate(['/chat', itemId, buyerId]);
   }
 }

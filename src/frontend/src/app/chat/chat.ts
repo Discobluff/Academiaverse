@@ -19,6 +19,7 @@ interface ItemDetail {
   id: number;
   title: string;
   owner: { id: number; firstname: string; lastname: string };
+  course?: { id: number; name: string };
 }
 
 interface UserDetail {
@@ -72,9 +73,13 @@ export class ChatComponent implements OnInit, OnDestroy {
     .subscribe({
       next: (item) => {
         this.itemTitle = item.title;
-        this.sellerName = `${item.owner.firstname} ${item.owner.lastname}`;
+        this.sellerName = item.owner ? `${item.owner.firstname} ${item.owner.lastname}` : 'Unknown seller';
+        this.courseName = item.course?.name || 'Not assigned';
       },
-      error: () => this.itemTitle = 'Unknown item'
+      error: () => {
+        this.itemTitle = 'Unknown item';
+        this.sellerName = 'Unknown seller';
+      }
     });
   }
 
@@ -82,8 +87,17 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.http.get<UserDetail>(`${environment.apiBaseUrl}/v1/users/${this.buyerId}`)
     .subscribe({
       next: (user) => this.buyerName = `${user.firstname} ${user.lastname}`,
-               error: () => this.buyerName = 'Unknown buyer'
+      error: () => this.buyerName = 'Unknown buyer'
     });
+  }
+
+  scrollToBottom() {
+    setTimeout(() => {
+      const panel = document.querySelector('.messages-panel');
+      if (panel) {
+        panel.scrollTop = panel.scrollHeight;
+      }
+    }, 100);
   }
 
   loadMessages() {
@@ -91,6 +105,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     .subscribe({
       next: (data) => {
         this.messages = data.filter((m) => m.item.id === this.itemId);
+        this.scrollToBottom();
       },
       error: (err) => console.error('Failed to load messages', err)
     });
@@ -98,18 +113,18 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   sendMessage() {
     if (!this.newMessage.trim()) return;
-    const body = {
-      message: this.newMessage,
-      itemId: this.itemId,
-      buyerId: this.buyerId
-    };
+    const body = { message: this.newMessage, itemId: this.itemId, buyerId: this.buyerId };
     this.http.post(`${environment.apiBaseUrl}/api/chat`, body)
     .subscribe({
       next: () => {
         this.newMessage = '';
         this.loadMessages();
+        this.scrollToBottom();
       },
-      error: (err) => console.error('Failed to send message', err)
+      error: (err) => {
+        console.error('Failed to send message', err);
+        alert('Could not send message. Please try again.');
+      }
     });
   }
 

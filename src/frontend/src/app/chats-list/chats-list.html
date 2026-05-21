@@ -8,8 +8,8 @@
   <div class="chats-list">
     @for (item of uniqueItems; track item.id) {
       <div class="chat-card" tabindex="0" role="button"
-           (click)="openChat(item.id)"
-           (keydown.enter)="openChat(item.id)">
+           (click)="openChat(item.id, item.buyerId)"
+           (keydown.enter)="openChat(item.id, item.buyerId)">
         <h3>{{ item.title }}</h3>
         <p>Item ID: {{ item.id }}</p>
       </div>
