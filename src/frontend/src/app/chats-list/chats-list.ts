@@ -3,9 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { environment } from '../../environments/environments';
-import { AuthService } from '../core/services/auth.service';
 
-interface ChatItem {
+interface ChatMessage {
+  id: number;
+  message: string;
+  sender: { id: number };
+  buyer: { id: number; firstname?: string; lastname?: string };
   item: { id: number; title: string };
 }
 
@@ -19,25 +22,32 @@ interface ChatItem {
 export class ChatsListComponent implements OnInit {
   private http = inject(HttpClient);
   private router = inject(Router);
-  private authService = inject(AuthService);
 
-  uniqueItems: { id: number; title: string }[] = [];
+  conversations: { itemId: number; itemTitle: string; buyerId: number; buyerName: string }[] = [];
 
   ngOnInit() {
     this.loadChats();
   }
 
   loadChats() {
-    this.http.get<ChatItem[]>(`${environment.apiBaseUrl}/api/chat`)
+    this.http.get<ChatMessage[]>(`${environment.apiBaseUrl}/api/chat`)
       .subscribe({
         next: (chats) => {
-          // Extract unique items from the chat messages
-          const seen = new Set<number>();
-          this.uniqueItems = [];
+          const seen = new Set<string>();
+          this.conversations = [];
           for (const chat of chats) {
-            if (!seen.has(chat.item.id)) {
-              seen.add(chat.item.id);
-              this.uniqueItems.push({ id: chat.item.id, title: chat.item.title });
+            const key = `${chat.item.id}-${chat.buyer.id}`;
+            if (!seen.has(key)) {
+              seen.add(key);
+              const buyerName = chat.buyer.firstname
+                ? `${chat.buyer.firstname} ${chat.buyer.lastname || ''}`
+                : `Buyer #${chat.buyer.id}`;
+              this.conversations.push({
+                itemId: chat.item.id,
+                itemTitle: chat.item.title,
+                buyerId: chat.buyer.id,
+                buyerName
+              });
             }
           }
         },
@@ -45,12 +55,7 @@ export class ChatsListComponent implements OnInit {
       });
   }
 
-  openChat(itemId: number) {
-    const buyerId = this.authService.getUserId();
-    if (!buyerId) {
-      alert('You must be logged in to view chats.');
-      return;
-    }
+  openChat(itemId: number, buyerId: number) {
     this.router.navigate(['/chat', itemId, buyerId]);
   }
 }
