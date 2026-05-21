@@ -34,7 +34,19 @@ This stage enforces code quality and style rules without executing the applicati
 
 ---
 
-### 3. `test`
+### 3. `dependency_scan`
+
+#### Backend
+
+trivy
+
+#### Frontend
+
+`npm audit`
+
+---
+
+### 4. `test`
 
 This stage runs the full test suites and collects coverage data for both applications.
 
@@ -49,7 +61,7 @@ The backend test job also uses a **Gradle cache** (`backend/.gradle/`) keyed by 
 
 ---
 
-### 4. `deploy`
+### 5. `deploy`
 
 This stage produces the final build artifacts and simulates deployment. In its current state, it verifies that the artifacts are present and ready for a downstream deployment step.
 
