@@ -55,7 +55,7 @@ dependency_scan:backend:
   script:
     - ./gradlew dependencies --write-locks
     - curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
-    - trivy fs --scanners vuln .
+    - trivy fs --scanners vuln --exit-code 1 .
   before_script:
     - cd src/backend
     - chmod +x gradlew
