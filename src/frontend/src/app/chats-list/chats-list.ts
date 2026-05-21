@@ -8,7 +8,7 @@ interface ChatMessage {
   id: number;
   message: string;
   sender: { id: number };
-  buyer: { id: number };
+  buyer: { id: number; firstname?: string; lastname?: string };
   item: { id: number; title: string };
 }
 
@@ -23,7 +23,7 @@ export class ChatsListComponent implements OnInit {
   private http = inject(HttpClient);
   private router = inject(Router);
 
-  uniqueItems: { id: number; title: string; buyerId: number }[] = [];
+  conversations: { itemId: number; itemTitle: string; buyerId: number; buyerName: string }[] = [];
 
   ngOnInit() {
     this.loadChats();
@@ -33,16 +33,20 @@ export class ChatsListComponent implements OnInit {
     this.http.get<ChatMessage[]>(`${environment.apiBaseUrl}/api/chat`)
       .subscribe({
         next: (chats) => {
-          // Group by item and remember the first buyer (the original buyer)
-          const seen = new Set<number>();
-          this.uniqueItems = [];
+          const seen = new Set<string>();
+          this.conversations = [];
           for (const chat of chats) {
-            if (!seen.has(chat.item.id)) {
-              seen.add(chat.item.id);
-              this.uniqueItems.push({
-                id: chat.item.id,
-                title: chat.item.title,
-                buyerId: chat.buyer.id   // keep the original buyer for this conversation
+            const key = `${chat.item.id}-${chat.buyer.id}`;
+            if (!seen.has(key)) {
+              seen.add(key);
+              const buyerName = chat.buyer.firstname
+                ? `${chat.buyer.firstname} ${chat.buyer.lastname || ''}`
+                : `Buyer #${chat.buyer.id}`;
+              this.conversations.push({
+                itemId: chat.item.id,
+                itemTitle: chat.item.title,
+                buyerId: chat.buyer.id,
+                buyerName
               });
             }
           }

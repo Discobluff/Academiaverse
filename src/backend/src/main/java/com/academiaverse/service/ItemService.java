@@ -2,6 +2,7 @@ package com.academiaverse.service;
 
 import com.academiaverse.entity.Item;
 import com.academiaverse.entity.User;
+import com.academiaverse.repository.ChatRepository;
 import com.academiaverse.repository.ItemRepository;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -18,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class ItemService {
     private final ItemRepository itemRepository;
+    private final ChatRepository chatRepository;
     private static final String UPLOAD_DIR = "uploads/";
 
     @Transactional
@@ -101,6 +103,8 @@ public class ItemService {
         if (!existing.getOwner().getId().equals(owner.getId())) {
             throw new RuntimeException("You can only delete your own items");
         }
+        // Delete associated chat messages first
+        chatRepository.deleteByItemId(id);
         itemRepository.delete(existing);
     }
 }

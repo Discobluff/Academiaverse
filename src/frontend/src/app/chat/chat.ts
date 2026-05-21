@@ -104,10 +104,12 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.http.get<ChatMessage[]>(`${environment.apiBaseUrl}/api/chat`)
     .subscribe({
       next: (data) => {
-        this.messages = data.filter((m) => m.item.id === this.itemId);
-        this.scrollToBottom();
+        this.messages = data.filter((m) => m.item.id === this.itemId && m.buyer.id === this.buyerId);
       },
-      error: (err) => console.error('Failed to load messages', err)
+      error: (err) => {
+        console.error('Failed to load messages', err);
+        // Keep old messages visible even if the request fails
+      }
     });
   }
 

@@ -1,17 +1,17 @@
 <div class="chats-container">
   <h2>My Chats</h2>
 
-  @if (uniqueItems.length === 0) {
+  @if (conversations.length === 0) {
     <p class="no-chats">You haven't chatted about any items yet.</p>
   }
 
   <div class="chats-list">
-    @for (item of uniqueItems; track item.id) {
+    @for (conv of conversations; track conv.itemId + '-' + conv.buyerId) {
       <div class="chat-card" tabindex="0" role="button"
-           (click)="openChat(item.id, item.buyerId)"
-           (keydown.enter)="openChat(item.id, item.buyerId)">
-        <h3>{{ item.title }}</h3>
-        <p>Item ID: {{ item.id }}</p>
+           (click)="openChat(conv.itemId, conv.buyerId)"
+           (keydown.enter)="openChat(conv.itemId, conv.buyerId)">
+        <h3>{{ conv.itemTitle }}</h3>
+        <p>Buyer: {{ conv.buyerName }}</p>
       </div>
     }
   </div>
