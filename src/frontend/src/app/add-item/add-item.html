@@ -43,8 +43,15 @@
   </p>
 
   @if (isDigital) {
-    <p>Upload file:</p>
-    <input type="file" (change)="onFileSelected($event)" name="file" />
+    <p>Upload file (PDF, DOC, TXT, ZIP):</p>
+    <input type="file" (change)="onFileSelected($event)" name="file"
+           accept=".pdf,.doc,.docx,.txt,.zip,.rar" />
+    <small style="color: gray;">Accepted formats: PDF, DOC, TXT, ZIP</small>
+  } @else {
+    <p>Upload image (optional):</p>
+    <input type="file" (change)="onFileSelected($event)" name="file"
+           accept="image/*" />
+    <small style="color: gray;">Accepted formats: JPG, PNG, GIF</small>
   }
 
   @if (!isFormValid()) {

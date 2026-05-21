@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { environment } from '../../environments/environments';
+import { AuthService } from '../core/services/auth.service';
 
 interface InterestItem {
   id: number;
@@ -18,6 +19,16 @@ interface InterestItem {
   createdAt: string;
 }
 
+interface PurchaseItem {
+  id: number;
+  title: string;
+  description: string;
+  price: number;
+  type: string;
+  paymentMethod: string;
+  isDigital: boolean;
+}
+
 @Component({
   selector: 'app-buyer-interests',
   standalone: true,
@@ -28,8 +39,11 @@ interface InterestItem {
 export class BuyerInterestsComponent implements OnInit {
   private http = inject(HttpClient);
   private router = inject(Router);
+  private authService = inject(AuthService);
 
   interests: InterestItem[] = [];
+  purchases: PurchaseItem[] = [];
+  activeTab: 'interests' | 'purchases' = 'interests';
 
   ngOnInit() {
     this.loadInterests();
@@ -43,12 +57,27 @@ export class BuyerInterestsComponent implements OnInit {
       });
   }
 
+  loadPurchases() {
+    this.http.get<PurchaseItem[]>(`${environment.apiBaseUrl}/api/items/purchases`)
+      .subscribe({
+        next: (data) => this.purchases = data,
+        error: (err) => console.error('Failed to load purchases', err)
+      });
+  }
+
+  setTab(tab: 'interests' | 'purchases') {
+    this.activeTab = tab;
+    if (tab === 'purchases') {
+      this.loadPurchases();
+    }
+  }
+
   viewItem(id: number) {
     this.router.navigate(['/item', id]);
   }
 
   removeInterest(itemId: number, event: MouseEvent) {
-    event.stopPropagation(); // prevent card click navigation
+    event.stopPropagation();
     if (confirm('Remove this interest?')) {
       this.http.delete(`${environment.apiBaseUrl}/api/interests/${itemId}`)
         .subscribe({
@@ -61,5 +90,15 @@ export class BuyerInterestsComponent implements OnInit {
           }
         });
     }
+  }
+
+  openChat(itemId: number, event: MouseEvent) {
+    event.stopPropagation();
+    const buyerId = this.authService.getUserId();
+    if (!buyerId) {
+      alert('You must be logged in to start a chat.');
+      return;
+    }
+    this.router.navigate(['/chat', itemId, buyerId]);
   }
 }

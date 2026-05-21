@@ -19,6 +19,8 @@ interface Item {
   images: string[];
   status: string;
   owner: { id: number };
+  availability?: string;
+  availableUntil?: string;
 }
 
 interface InterestItem {
@@ -72,6 +74,9 @@ export class ItemDetailComponent implements OnInit {
     }).subscribe({
       next: (hasBought) => {
         this.hasBought = hasBought;
+        if (hasBought) {
+          this.getItemRating(itemId);
+        }
       },
       error: (err) => console.error(err)
     });
@@ -87,9 +92,6 @@ export class ItemDetailComponent implements OnInit {
           this.checkIfAlreadyInterested();
           this.checkIfBought(data.id);
           this.getStarsAverage(data.id);
-          if (this.hasBought) {
-            this.getItemRating(data.id);
-          }
         },
         error: () => this.item = null
       });
@@ -100,9 +102,9 @@ export class ItemDetailComponent implements OnInit {
   }
 
   getItemRating(itemId: number) {
-    this.http.get<{ rating: number }>(`${environment.apiBaseUrl}/api/ratings/user`, { params: { itemId: itemId } })
+    this.http.get<{ ratingValue: number }>(`${environment.apiBaseUrl}/api/ratings/user`, { params: { itemId: itemId } })
       .subscribe({
-        next: (data) => this.starsSelected = data.rating,
+        next: (data) => this.starsSelected = data.ratingValue,
         error: () => this.starsSelected = 0
       });
   }
@@ -199,6 +201,32 @@ export class ItemDetailComponent implements OnInit {
       error: (err) => {
         console.error('Report failed', err);
         alert('Could not submit report.');
+      }
+    });
+  }
+
+  viewImage(path: string) {
+    window.open(`${environment.apiBaseUrl}${path}`, '_blank');
+  } 
+
+  downloadFile() {
+    if (!this.item) return;
+    this.http.get(`${environment.apiBaseUrl}/api/items/${this.item.id}/download`, {
+      responseType: 'blob'
+    }).subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = this.item!.digitalFileName || 'download';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      },
+      error: (err) => {
+        console.error('Download failed', err);
+        alert('Download failed. Make sure you purchased this item and are logged in.');
       }
     });
   }
