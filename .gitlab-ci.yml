@@ -121,10 +121,10 @@ test:e2e:
   before_script:
     - apt-get update && apt-get install -y openjdk-21-jdk nodejs npm
     - cd src/backend && chmod +x gradlew
-    - ./gradlew bootRun
+    - ./gradlew bootRun &
     - cd ../../src/frontend
     - npm ci
-    - npx ng serve
+    - npx ng serve &
     - sleep 20
     # - until curl -s http://localhost:8080/actuator/health; do sleep 2; done
     # - until curl -s http://localhost:4200; do sleep 2; done
