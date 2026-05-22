@@ -5,9 +5,9 @@ import com.academiaverse.entity.Item;
 import com.academiaverse.entity.Rating;
 import com.academiaverse.entity.User;
 import com.academiaverse.repository.ItemRepository;
+import com.academiaverse.repository.TransactionRepository;
 import com.academiaverse.repository.UserRepository;
 import com.academiaverse.service.RatingService;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +28,7 @@ public class RatingsController {
     private final RatingService ratingService;
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
+    private final TransactionRepository transactionRepository;
 
     @GetMapping
     public ResponseEntity<Double> getAverageRatings(@RequestParam Long itemId) {
@@ -44,7 +45,9 @@ public class RatingsController {
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Item not found"));
         Rating rating = ratingService.getRatingsForUserAndItem(user, item);
-        if (rating == null) return ResponseEntity.notFound().build();
+        if (rating == null) {
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity.ok(rating);
     }
 
@@ -55,7 +58,7 @@ public class RatingsController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
         Item item = itemRepository.findById(request.itemId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Item not found"));
-        if (!item.getBuyers().contains(user)) {
+        if (transactionRepository.findByItemAndBuyer(item, user).isEmpty()) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User has not bought this item");
         }
         if (request.ratingValue() < 1 || request.ratingValue() > 5) {

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,5 +46,13 @@ public class CourseController {
         Course course = courseRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Course not found"));
         return itemRepository.findByCourse(course);
+    }
+
+    @PostMapping
+    public Course addCourse(@RequestParam String name, @RequestParam String code) {
+        Course course = new Course();
+        course.setName(name);
+        course.setCode(code);
+        return courseRepository.save(course);
     }
 }

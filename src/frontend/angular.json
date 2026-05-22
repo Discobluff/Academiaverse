@@ -89,7 +89,13 @@
         "test": {
           "builder": "@angular/build:unit-test",
           "options": {
-            "coverage": true
+            "coverage": true,
+            "coverageThresholds": {
+              "statements": 50,
+              "branches": 50,
+              "functions": 20,
+              "lines": 50
+            }
           }
         },
         "lint": {

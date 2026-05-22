@@ -1,8 +1,10 @@
 package com.academiaverse.service;
 
 import com.academiaverse.entity.Item;
+import com.academiaverse.entity.Transaction;
 import com.academiaverse.entity.User;
 import com.academiaverse.repository.ItemRepository;
+import com.academiaverse.repository.TransactionRepository;
 import com.academiaverse.repository.UserRepository;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class PointsService {
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
+    private final TransactionRepository transactionRepository;
 
     @Transactional
     public Map<String, Integer> buyWithPoints(User buyer, Long itemId) {
@@ -35,7 +38,10 @@ public class PointsService {
         buyer.setPoints(buyerPoints - price);
         seller.setPoints(sellerPoints + price);
 
-        item.getBuyers().add(buyer);
+        Transaction transaction = new Transaction();
+        transaction.setItem(item);
+        transaction.setBuyer(buyer);
+        transactionRepository.save(transaction);
 
         // Mark the item as Sold
         item.setStatus("Sold");

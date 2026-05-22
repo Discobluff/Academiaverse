@@ -35,3 +35,9 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### Trivy
+
+gradle.lockfile
+html.tpl
+trivy-report.html
