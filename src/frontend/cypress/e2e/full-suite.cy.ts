@@ -46,7 +46,7 @@ describe('Full User Story Coverage', () => {
   });
 
   it('Story 4 (API): Course‑based item listings', () => {
-    cy.request('GET', 'http://localhost:8080/api/courses/0/items').then((resp) => {
+    cy.request('GET', 'http://localhost:8080/api/courses/1/items').then((resp) => {
       expect(resp.status).to.eq(200);
       expect(resp.body.length).to.be.greaterThan(0);
     });
@@ -74,7 +74,7 @@ describe('Full User Story Coverage', () => {
         method: 'POST',
         url: 'http://localhost:8080/api/items',
         headers: { Authorization: `Bearer ${token}` },
-        body: { title: `RentItem_${Date.now()}`, description: 'Rentable gadget', price: 15, paymentMethod: 'cash', type: 'rent', course: { id: 0 } }
+        body: { title: `RentItem_${Date.now()}`, description: 'Rentable gadget', price: 15, paymentMethod: 'cash', type: 'rent', course: { id: 1 } }
       }).then((resp) => {
         expect(resp.status).to.eq(200);
         expect(resp.body.type).to.eq('rent');
@@ -338,7 +338,7 @@ describe('Full User Story Coverage', () => {
   });
 
   it('UI Smoke: Course page loads', () => {
-    cy.visit('/course/2');
+    cy.visit('/course/0');
     cy.get('.item-card', { timeout: 15000 }).should('have.length.at.least', 1);
   });
 
