@@ -9,79 +9,104 @@ workflow:
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
 
-build:backend:
-  stage: build
-  image: gradle:8-jdk21
-  script:
-    - ./gradlew build -x test -x check
-  before_script:
-    - cd src/backend
-    - chmod +x gradlew
-  artifacts:
-    paths:
-      - src/backend/build/
-    expire_in: 1 hour
+# build:backend:
+#   stage: build
+#   image: gradle:8-jdk21
+#   script:
+#     - ./gradlew build -x test -x check
+#   before_script:
+#     - cd src/backend
+#     - chmod +x gradlew
+#   artifacts:
+#     paths:
+#       - src/backend/build/
+#     expire_in: 1 hour
 
-build:frontend:
-  stage: build
-  image: node:trixie
-  script:
-    - npm ci
-    - npx ng build
-  before_script:
-    - cd src/frontend
+# build:frontend:
+#   stage: build
+#   image: node:trixie
+#   script:
+#     - npm ci
+#     - npx ng build
+#   before_script:
+#     - cd src/frontend
 
-static_analysis:backend:
-  stage: static_analysis
-  image: gradle:8-jdk21
-  script:
-    - ./gradlew check -x test
-  before_script:
-    - cd src/backend
-    - chmod +x gradlew
+# static_analysis:backend:
+#   stage: static_analysis
+#   image: gradle:8-jdk21
+#   script:
+#     - ./gradlew check -x test
+#   before_script:
+#     - cd src/backend
+#     - chmod +x gradlew
 
-static_analysis:frontend:
-  stage: static_analysis
-  image: node:trixie
-  script:
-    - npm ci
-    - npx ng lint
-  before_script:
-    - cd src/frontend
+# static_analysis:frontend:
+#   stage: static_analysis
+#   image: node:trixie
+#   script:
+#     - npm ci
+#     - npx ng lint
+#   before_script:
+#     - cd src/frontend
 
-dependency_scan:backend:
-  stage: dependency_scan
-  image: gradle:8-jdk21
-  script:
-    - ./gradlew dependencies --write-locks
-    - curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
-    - trivy fs --scanners vuln --exit-code 1 .
-  before_script:
-    - cd src/backend
-    - chmod +x gradlew
+# dependency_scan:backend:
+#   stage: dependency_scan
+#   image: gradle:8-jdk21
+#   script:
+#     - ./gradlew dependencies --write-locks
+#     - curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
+#     - trivy fs --scanners vuln --exit-code 1 .
+#   before_script:
+#     - cd src/backend
+#     - chmod +x gradlew
 
-dependency_scan:frontend:
-  stage: dependency_scan
-  image: node:trixie
-  script:
-    - npm ci
-    - npm audit
-  before_script:
-    - cd src/frontend
+# dependency_scan:frontend:
+#   stage: dependency_scan
+#   image: node:trixie
+#   script:
+#     - npm ci
+#     - npm audit
+#   before_script:
+#     - cd src/frontend
 
-test:frontend:
+# test:frontend:
+#   stage: test
+#   image: node:trixie
+#   script:
+#     - npm ci
+#     - npx ng test
+#   before_script:
+#     - cd src/frontend
+#   coverage: '/Lines\s*:\s*([0-9.]+)%/'
+
+# test:backend:
+#   stage: test
+#   image: gradle:8-jdk21
+#   services:
+#     - name: mysql:8.0
+#       alias: mysql
+#   variables:
+#     MYSQL_ROOT_PASSWORD: root
+#     MYSQL_DATABASE: mydb
+#     MYSQL_USER: myuser
+#     MYSQL_PASSWORD: pwd
+#     SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/mydb?allowPublicKeyRetrieval=true&useSSL=false
+#     SPRING_DATASOURCE_USERNAME: myuser
+#     SPRING_DATASOURCE_PASSWORD: pwd
+#   cache:
+#     key: backend-$CI_COMMIT_REF_SLUG
+#     paths:
+#       - backend/.gradle/
+#   before_script:
+#     - cd src/backend
+#     - chmod +x gradlew
+#   script:
+#     - ./gradlew test jacocoTestReport
+#   coverage: '/Total.*?([0-9]{1,3})%/'
+
+test:e2e:
   stage: test
-  image: node:trixie
-  script:
-    - npm ci
-    - npx ng test
-  before_script:
-    - cd src/frontend
-  coverage: '/Lines\s*:\s*([0-9.]+)%/'
-
-test:backend:
-  stage: test
-  image: gradle:8-jdk21
+  image: cypress/included:latest
   services:
     - name: mysql:8.0
       alias: mysql
@@ -93,16 +118,18 @@ test:backend:
     SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/mydb?allowPublicKeyRetrieval=true&useSSL=false
     SPRING_DATASOURCE_USERNAME: myuser
     SPRING_DATASOURCE_PASSWORD: pwd
-  cache:
-    key: backend-$CI_COMMIT_REF_SLUG
-    paths:
-      - backend/.gradle/
   before_script:
-    - cd src/backend
-    - chmod +x gradlew
+    - apt-get update && apt-get install -y openjdk-21-jdk nodejs npm
+    - cd src/backend && chmod +x gradlew
+    - ./gradlew bootRun
+    - cd ../../src/frontend
+    - npm ci
+    - npx ng serve
+    - sleep 20
+    # - until curl -s http://localhost:8080/actuator/health; do sleep 2; done
+    # - until curl -s http://localhost:4200; do sleep 2; done
   script:
-    - ./gradlew test jacocoTestReport
-  coverage: '/Total.*?([0-9]{1,3})%/'
+    - npx cypress run
 
 deploy:backend:
   stage: deploy

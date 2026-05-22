@@ -24,7 +24,10 @@ function loginViaApi(email: string, password: string) {
 
 describe('Full User Story Coverage', () => {
 
+  
   it('Story 1 & 2 (API): Register, accept terms, login, logout', () => {
+    registerViaApi('Alice', 'Test', 'alice@example.com', 'test');
+    registerViaApi('Bob', 'Test', 'bob@example.com', 'test');
     const email = `testuser_${Date.now()}@example.com`;
     registerViaApi('Alice', 'Test', email, 'testtest').then((resp) => {
       expect(resp.status).to.be.oneOf([200, 409]);
