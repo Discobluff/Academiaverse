@@ -21,6 +21,9 @@ export class Home implements OnInit {
   admin = "";
 
   ngOnInit(){
+    if (!this.authService.isAuthenticated()) {
+      this.router.navigate(['/login']);
+    }
     this.getTest();
     this.isAdmin();
   }
