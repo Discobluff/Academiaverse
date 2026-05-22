@@ -49,9 +49,7 @@ public class PointsService {
         transaction.setBuyer(buyer);
         transactionRepository.save(transaction);
 
-        // Mark the item as Sold (optional – keeps existing behaviour)
-        item.setStatus("Sold");
-        itemRepository.save(item);
+        // Do NOT mark the item as Sold – digital items stay available
 
         userRepository.save(buyer);
         userRepository.save(seller);
