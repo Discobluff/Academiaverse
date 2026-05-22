@@ -38,5 +38,6 @@ class InterestListTest {
         interestRepository.save(interest);
 
         testHelper.testGet(mailBuyer, "/api/interests", List.of(), status().isOk(), jsonPath("$[0].item.title").value(item.getTitle()));
+        interestRepository.delete(interest);
     }
 }
