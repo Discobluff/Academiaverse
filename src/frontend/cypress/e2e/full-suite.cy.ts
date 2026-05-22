@@ -46,7 +46,7 @@ describe('Full User Story Coverage', () => {
   });
 
   it('Story 4 (API): Course‑based item listings', () => {
-    cy.request('GET', 'http://localhost:8080/api/courses/2/items').then((resp) => {
+    cy.request('GET', 'http://localhost:8080/api/courses/0/items').then((resp) => {
       expect(resp.status).to.eq(200);
       expect(resp.body.length).to.be.greaterThan(0);
     });
@@ -74,7 +74,7 @@ describe('Full User Story Coverage', () => {
         method: 'POST',
         url: 'http://localhost:8080/api/items',
         headers: { Authorization: `Bearer ${token}` },
-        body: { title: `RentItem_${Date.now()}`, description: 'Rentable gadget', price: 15, paymentMethod: 'cash', type: 'rent', course: { id: 2 } }
+        body: { title: `RentItem_${Date.now()}`, description: 'Rentable gadget', price: 15, paymentMethod: 'cash', type: 'rent', course: { id: 0 } }
       }).then((resp) => {
         expect(resp.status).to.eq(200);
         expect(resp.body.type).to.eq('rent');
