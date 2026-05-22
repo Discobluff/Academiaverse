@@ -8,9 +8,9 @@ import com.academiaverse.entity.Item;
 import com.academiaverse.entity.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.context.annotation.Import;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 
 @SpringBootTest
@@ -18,37 +18,37 @@ import org.springframework.http.MediaType;
 @Import(Helper.class)
 class PointsPurchaseTest {
 
-    private String buyer_email = "buyerpoints@example.com";
-    private String seller_email = "sellerpoints@example.com";
+    private String buyerEmail = "buyerpoints@example.com";
+    private String sellerEmail = "sellerpoints@example.com";
 
     @Autowired
     private Helper testHelper;
 
     @Test
     void shouldBuyWithPointsReturnsOk() throws Exception {
-        Item item = testHelper.createBaseItem(seller_email);
-        testHelper.testPost(buyer_email, "/api/items/" + item.getId() + "/buy-with-points", MediaType.APPLICATION_JSON, "", status().isOk());
+        Item item = testHelper.createBaseItem(sellerEmail);
+        testHelper.testPost(buyerEmail, "/api/items/" + item.getId() + "/buy-with-points", MediaType.APPLICATION_JSON, "", status().isOk());
     }
 
     @Test
     void shouldDeductBuyerPoints() throws Exception {
-        testHelper.setPoints(seller_email, 10);
-        testHelper.setPoints(buyer_email, 10);
-        User buyer = testHelper.getUser(buyer_email);
-        Item item = testHelper.createBaseItem(seller_email);
+        testHelper.setPoints(sellerEmail, 10);
+        testHelper.setPoints(buyerEmail, 10);
+        User buyer = testHelper.getUser(buyerEmail);
+        Item item = testHelper.createBaseItem(sellerEmail);
         Integer newPoints = buyer.getPoints() - item.getPrice().intValue();
 
-        testHelper.testPost(buyer_email, "/api/items/" + item.getId() + "/buy-with-points", MediaType.APPLICATION_JSON, "", jsonPath("$.buyerPoints").value(newPoints));
+        testHelper.testPost(buyerEmail, "/api/items/" + item.getId() + "/buy-with-points", MediaType.APPLICATION_JSON, "", jsonPath("$.buyerPoints").value(newPoints));
     }
 
     @Test
     void shouldCreditSellerPoints() throws Exception {
-        testHelper.setPoints(seller_email, 10);
-        testHelper.setPoints(buyer_email, 10);
-        User seller = testHelper.getUser(seller_email);
-        Item item = testHelper.createBaseItem(seller_email);
+        testHelper.setPoints(sellerEmail, 10);
+        testHelper.setPoints(buyerEmail, 10);
+        User seller = testHelper.getUser(sellerEmail);
+        Item item = testHelper.createBaseItem(sellerEmail);
         Integer newPoints = seller.getPoints() + item.getPrice().intValue();
 
-        testHelper.testPost(buyer_email, "/api/items/" + item.getId() + "/buy-with-points", MediaType.APPLICATION_JSON, "", jsonPath("$.sellerPoints").value(newPoints));
+        testHelper.testPost(buyerEmail, "/api/items/" + item.getId() + "/buy-with-points", MediaType.APPLICATION_JSON, "", jsonPath("$.sellerPoints").value(newPoints));
     }
 }

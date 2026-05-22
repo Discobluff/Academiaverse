@@ -3,8 +3,6 @@ package com.academiaverse.item;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.List;
-
 import com.academiaverse.Helper;
 import com.academiaverse.Param;
 import com.academiaverse.dto.request.RatingRequest;
@@ -14,19 +12,18 @@ import com.academiaverse.entity.Transaction;
 import com.academiaverse.repository.ItemRepository;
 import com.academiaverse.repository.RatingRepository;
 import com.academiaverse.repository.TransactionRepository;
-
-import tools.jackson.databind.ObjectMapper;
-
+import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.context.annotation.Import;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.transaction.annotation.Transactional;
+import tools.jackson.databind.ObjectMapper;
 
 @SpringBootTest
 @AutoConfigureMockMvc

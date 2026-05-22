@@ -194,8 +194,8 @@ public class ItemController {
     public ResponseEntity<List<Item>> getPurchases(@AuthenticationPrincipal UserDetails userDetails) {
         User user = userRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, USER_NOT_FOUND));
-        List<Item> purchased = itemRepository.findAll().stream()
-                .filter(item -> transactionRepository.findByItemAndBuyer(item, user).isPresent())
+        List<Item> purchased = transactionRepository.findByBuyer(user).stream()
+                .map(transaction -> transaction.getItem())
                 .collect(Collectors.toList());
         return ResponseEntity.ok(purchased);
     }    

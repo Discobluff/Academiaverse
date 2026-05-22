@@ -4,21 +4,21 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.academiaverse.Helper;
 import com.academiaverse.entity.Item;
-import tools.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.context.annotation.Import;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import tools.jackson.databind.ObjectMapper;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @Import(Helper.class)
 class ItemEditDeleteTest {
 
-    private String seller_mail = "seller@example.com";
-    private String other_mail = "other@example.com";
+    private String sellerMail = "seller@example.com";
+    private String otherMail = "other@example.com";
 
     @Autowired
     private Helper testHelper;
@@ -28,10 +28,10 @@ class ItemEditDeleteTest {
 
     @Test
     void shouldUpdateItem() throws Exception {
-        Item item = testHelper.createBaseItem(seller_mail);
-        Item updated = testHelper.createBaseItem(seller_mail);
+        Item item = testHelper.createBaseItem(sellerMail);
+        Item updated = testHelper.createBaseItem(sellerMail);
         updated.setTitle("Updated Item");
-        testHelper.testPut(seller_mail, "/api/items/" + item.getId(), MediaType.APPLICATION_JSON, objectMapper.writeValueAsString(updated), status().isOk());
+        testHelper.testPut(sellerMail, "/api/items/" + item.getId(), MediaType.APPLICATION_JSON, objectMapper.writeValueAsString(updated), status().isOk());
         testHelper.deleteItem(item);
         testHelper.deleteItem(updated);
 
@@ -39,14 +39,14 @@ class ItemEditDeleteTest {
 
     @Test
     void shouldDeleteItem() throws Exception {
-        Item item = testHelper.createBaseItem(seller_mail);
-        testHelper.testDelete(seller_mail, "/api/items/" + item.getId(), status().isOk());
+        Item item = testHelper.createBaseItem(sellerMail);
+        testHelper.testDelete(sellerMail, "/api/items/" + item.getId(), status().isOk());
     }
 
     @Test
     void shouldNotDeleteIfNotOwner() throws Exception {
-        Item item = testHelper.createBaseItem(seller_mail);
-        testHelper.testDelete(other_mail, "/api/items/" + item.getId(), status().isForbidden());
+        Item item = testHelper.createBaseItem(sellerMail);
+        testHelper.testDelete(otherMail, "/api/items/" + item.getId(), status().isForbidden());
         testHelper.deleteItem(item);
     }
 }
