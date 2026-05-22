@@ -111,6 +111,9 @@ test:e2e:
   image:
     name: cypress/included:latest
     entrypoint: [""]
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_COMMIT_BRANCH == "dev"
   services:
     - name: mysql:8.0
       alias: mysql
