@@ -25,6 +25,12 @@ public class PointsService {
         if (!"points".equals(item.getPaymentMethod())) {
             throw new RuntimeException("This item cannot be purchased with points");
         }
+
+        // Prevent duplicate purchase
+        if (transactionRepository.findByItemAndBuyer(item, buyer).isPresent()) {
+            throw new RuntimeException("You have already purchased this item.");
+        }
+
         int price = item.getPrice().intValue();
 
         int buyerPoints = buyer.getPoints() != null ? buyer.getPoints() : 0;
@@ -43,7 +49,7 @@ public class PointsService {
         transaction.setBuyer(buyer);
         transactionRepository.save(transaction);
 
-        // Mark the item as Sold
+        // Mark the item as Sold (optional – keeps existing behaviour)
         item.setStatus("Sold");
         itemRepository.save(item);
 

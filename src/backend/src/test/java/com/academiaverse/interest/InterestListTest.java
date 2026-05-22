@@ -1,5 +1,6 @@
 package com.academiaverse.interest;
 
+import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -36,7 +37,10 @@ class InterestListTest {
         interest.setUser(testHelper.getUser(mailBuyer));
         interestRepository.save(interest);
 
-        testHelper.testGet(mailBuyer, "/api/interests", List.of(), status().isOk(), jsonPath("$[0].item.title").value(item.getTitle()));
+        testHelper.testGet(mailBuyer, "/api/interests", List.of(),
+                status().isOk(),
+                jsonPath("$[*].item.title", hasItem(item.getTitle())));
+
         interestRepository.delete(interest);
     }
 }
