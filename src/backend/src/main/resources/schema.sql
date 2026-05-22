@@ -9,3 +9,11 @@ CREATE TABLE IF NOT EXISTS user (
     updated_at TIMESTAMP
 
 );
+
+CREATE TABLE IF NOT EXISTS course (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    code VARCHAR(255),
+    name VARCHAR(255)
+);
+
+INSERT INTO course VALUES (1, 'CS101', 'Software Engineering');
