@@ -16,4 +16,4 @@ CREATE TABLE IF NOT EXISTS course (
     name VARCHAR(255)
 );
 
-INSERT INTO course VALUES (1, 'CS101', 'Software Engineering');
+INSERT INTO course (code, name) VALUES ('CS101', 'Software Engineering');

@@ -7,7 +7,6 @@ plugins {
     id "com.github.spotbugs" version "6.5.1"
     id "org.owasp.dependencycheck" version "12.2.1"
 	id 'jacoco'
-    // id 'org.barfuin.gradle.jacocolog' version '4.0.2'
 }
 
 ext['tomcat.version'] = '11.0.22'
@@ -80,6 +79,16 @@ jacocoTestReport {
     reports {
         xml.required = true
         html.required = true
+    }
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.60
+            }
+        }
     }
 }
 

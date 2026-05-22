@@ -34,19 +34,21 @@ This stage enforces code quality and style rules without executing the applicati
 
 ---
 
-### 3. `dependency_scan`
+### 3. `dependency_scan` (NEW)
 
 #### Backend
 
-trivy
+We use [Trivy](https://github.com/aquasecurity/trivy) to scan the backend dependencies for known vulnerabilities. Trivy analyzes the Gradle dependency tree and checks it against vulnerability databases. The pipeline will fail if any vulnerabilities of any severity are found, ensuring that we address security issues in our dependencies before proceeding to testing and deployment.
 
 #### Frontend
 
-`npm audit`
+We use the command `npm audit` to scan for vulnerabilities in the frontend dependencies. The pipeline will fail if any vulnerabilities of any severity are found, ensuring that we address security issues in our dependencies before proceeding to testing and deployment.
 
 ---
 
 ### 4. `test`
+
+#### Frontend and backend
 
 This stage runs the full test suites and collects coverage data for both applications.
 
@@ -58,6 +60,10 @@ This stage runs the full test suites and collects coverage data for both applica
 **Tools:** JUnit (via Gradle), JaCoCo, Angular/Karma test runner, MySQL 8.0 (as a service)
 
 The backend test job also uses a **Gradle cache** (`backend/.gradle/`) keyed by `backend-$CI_COMMIT_REF_SLUG` to speed up repeated runs on the same branch.
+
+#### End-to-end (NEW)
+
+We do in the pipeline end-to-end testing with `Cypress`. The `test:e2e` job runs after the unit tests and assumes that the application can be started in a test environment. It uses the `cypress/included:12.0.0` Docker image, which includes both Cypress and its dependencies. This job is only triggered on the branches `main` and `dev` to ensure that end-to-end tests are run on stable code.
 
 ---
 
@@ -71,6 +77,8 @@ This stage produces the final build artifacts and simulates deployment. In its c
 | `deploy:frontend` | `src/frontend` | `node:trixie` | Runs `npx ng build --configuration production` to produce optimized assets under `dist/` |
 
 **Tools:** Spring Boot Gradle plugin (`bootJar`), Angular CLI production build
+
+This job is only triggered on the branches `main` and `dev` to ensure that end-to-end tests are run on stable code.
 
 ---
 
@@ -103,13 +111,23 @@ File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s
 
 ---
 
+## Thresholds on test coverage (NEW)
+
+We set a minimum threshold for both backend and frontend test coverage. If the coverage falls below this threshold, the pipeline will fail, enforcing a standard of quality.
+
+---
+
 ## Trigger Choice and Reasoning
 
 ```yaml
 workflow:
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_COMMIT_BRANCH == "dev"
 ```
+
+For all jobs except the deployement and the end-to-end testing, the pipeline is configured to trigger **only on merge request events**, and on the branches `main` and `dev`. All jobs without exception will me triggered on `main` and `dev` branches. This ensure to have minimum quality on the features branches, and to have a good quality on the `main` and `dev` branches.
 
 The pipeline is configured to trigger **only on merge request events**. This is a deliberate and common strategy for the following reasons:
 
@@ -131,6 +149,7 @@ The pipeline is configured to trigger **only on merge request events**. This is 
 | `gradle:8-jdk21` | All backend jobs |
 | `node:trixie` | All frontend jobs |
 | `mysql:8.0` | Service dependency of `test:backend` |
+| `cypress/included:latest` | End-to-end |
 
 These images are pulled from Docker Hub. Runners must have **internet access** or a configured **registry mirror/proxy** to resolve them.
 
