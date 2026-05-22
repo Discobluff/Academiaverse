@@ -5,8 +5,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.List;
 
-import com.academiaverse.TestHelper;
-import com.academiaverse.TestParam;
+import com.academiaverse.Helper;
+import com.academiaverse.Param;
 import com.academiaverse.dto.request.RatingRequest;
 import com.academiaverse.entity.Item;
 import com.academiaverse.entity.Rating;
@@ -30,7 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Import(TestHelper.class)
+@Import(Helper.class)
 class TestRatings {
 
     private static final String mailSeller = "sellerRatings@example.com";
@@ -46,7 +46,7 @@ class TestRatings {
     private TransactionRepository transactionRepository;
 
     @Autowired
-    private TestHelper testHelper;
+    private Helper testHelper;
     
     private Item item;
 
@@ -71,7 +71,7 @@ class TestRatings {
     
     @Test
     void getUserRatingEmpty() throws Exception {
-        testHelper.testGet(mailBuyer, "/api/ratings/user", List.of(new TestParam("itemId", String.valueOf(item.getId()))), status().isNotFound());
+        testHelper.testGet(mailBuyer, "/api/ratings/user", List.of(new Param("itemId", String.valueOf(item.getId()))), status().isNotFound());
     }
 
     @Transactional
@@ -109,7 +109,7 @@ class TestRatings {
             assertEquals(responseRating.getRatingValue(), 5, "Rating value should be 5");
         };
 
-        testHelper.testGet(mailBuyer, "/api/ratings/user", List.of(new TestParam("itemId", String.valueOf(item.getId()))), status().isOk(), checkRating);
+        testHelper.testGet(mailBuyer, "/api/ratings/user", List.of(new Param("itemId", String.valueOf(item.getId()))), status().isOk(), checkRating);
 
         ratingRepository.delete(rating);
         testHelper.deleteTransaction(item, testHelper.getUser(mailBuyer));

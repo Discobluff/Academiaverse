@@ -2,7 +2,7 @@ package com.academiaverse.report;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.academiaverse.TestHelper;
+import com.academiaverse.Helper;
 import com.academiaverse.entity.Item;
 import tools.jackson.databind.ObjectMapper;
 import java.util.Map;
@@ -15,11 +15,11 @@ import org.springframework.http.MediaType;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Import(TestHelper.class)
+@Import(Helper.class)
 class ReportCreationTest {
 
     @Autowired
-    private TestHelper testHelper;
+    private Helper testHelper;
 
     @Autowired
     private ObjectMapper objectMapper;

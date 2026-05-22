@@ -3,8 +3,8 @@ package com.academiaverse.item;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.academiaverse.TestHelper;
-import com.academiaverse.TestParam;
+import com.academiaverse.Helper;
+import com.academiaverse.Param;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
@@ -18,13 +18,13 @@ import org.springframework.mock.web.MockMultipartFile;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Import(TestHelper.class)
+@Import(Helper.class)
 class DigitalProductUploadTest {
 
     private String mail = "digital@example.com";
 
     @Autowired
-    private TestHelper testHelper;
+    private Helper testHelper;
 
     @Test
     void shouldUploadDigitalProduct() throws Exception {
@@ -36,12 +36,12 @@ class DigitalProductUploadTest {
         );
 
         testHelper.testMultipart(mail, "/api/items/upload", file, List.of(
-            new TestParam("title", "Awesome Lecture Notes"),
-            new TestParam("description", "Scanned notes from Lecture 1"),
-            new TestParam("notes", "Includes practice problems"),
-            new TestParam("price", "5"),
-            new TestParam("type", "sale"),
-            new TestParam("paymentMethod", "points")),
+            new Param("title", "Awesome Lecture Notes"),
+            new Param("description", "Scanned notes from Lecture 1"),
+            new Param("notes", "Includes practice problems"),
+            new Param("price", "5"),
+            new Param("type", "sale"),
+            new Param("paymentMethod", "points")),
             status().isOk(),
             jsonPath("$.title").value("Awesome Lecture Notes"),
             jsonPath("$.isDigital").value(true),

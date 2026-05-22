@@ -3,7 +3,7 @@ package com.academiaverse.points;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.academiaverse.TestHelper;
+import com.academiaverse.Helper;
 import com.academiaverse.entity.Item;
 import com.academiaverse.entity.User;
 import org.junit.jupiter.api.Test;
@@ -15,14 +15,14 @@ import org.springframework.http.MediaType;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Import(TestHelper.class)
+@Import(Helper.class)
 class PointsPurchaseTest {
 
     private String buyer_email = "buyerpoints@example.com";
     private String seller_email = "sellerpoints@example.com";
 
     @Autowired
-    private TestHelper testHelper;
+    private Helper testHelper;
 
     @Test
     void shouldBuyWithPointsReturnsOk() throws Exception {

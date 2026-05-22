@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.academiaverse.TestHelper;
+import com.academiaverse.Helper;
 import com.academiaverse.dto.request.ChatRequest;
 import com.academiaverse.entity.Item;
 import java.util.List;
@@ -20,11 +20,11 @@ import tools.jackson.databind.ObjectMapper;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Import(TestHelper.class)   
+@Import(Helper.class)   
 class TestChat {
 
     @Autowired
-    private TestHelper testHelper;
+    private Helper testHelper;
     
     private String mailSeller = "seller@example.com";
     private String mailBuyer = "buyer@example.com";

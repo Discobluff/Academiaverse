@@ -3,7 +3,7 @@ package com.academiaverse.interest;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.academiaverse.TestHelper;
+import com.academiaverse.Helper;
 import com.academiaverse.entity.Item;
 import tools.jackson.databind.ObjectMapper;
 import java.util.List;
@@ -17,11 +17,11 @@ import org.springframework.http.MediaType;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Import(TestHelper.class)
+@Import(Helper.class)
 class RemoveInterestTest {
 
     @Autowired
-    private TestHelper testHelper;
+    private Helper testHelper;
 
     private String buyer_email = "buyerremove@example.com";
     private String seller_email = "sellerremove@example.com";

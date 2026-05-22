@@ -3,7 +3,7 @@ package com.academiaverse.item;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.academiaverse.TestHelper;
+import com.academiaverse.Helper;
 import com.academiaverse.entity.Item;
 import java.util.List;
 
@@ -17,13 +17,13 @@ import org.springframework.test.web.servlet.ResultMatcher;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Import(TestHelper.class)
+@Import(Helper.class)
 class TestSellerListings {
 
     private static final String mail = "sellerlistings@example.com";
 
     @Autowired 
-    private TestHelper testHelper;
+    private Helper testHelper;
 
     @Test
     void getSellerListingsShouldReturnOk() throws Exception {

@@ -93,7 +93,8 @@ checkstyle {
 pmd {
     toolVersion = "7.23.0"
     ignoreFailures = false
-    ruleSets = ["category/java/bestpractices.xml", "category/java/errorprone.xml"]
+    // ruleSets = ["category/java/bestpractices.xml", "category/java/errorprone.xml"]
+    ruleSetFiles = files("pmd-ruleset.xml")
 }
 
 // --- SpotBugs ---

@@ -2,7 +2,7 @@ package com.academiaverse.report;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.academiaverse.TestHelper;
+import com.academiaverse.Helper;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,11 +13,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Import(TestHelper.class)
+@Import(Helper.class)
 class ReportAdminListTest {
 
     @Autowired
-    private TestHelper testHelper;
+    private Helper testHelper;
 
     private String mail = "admin@example.com";
 

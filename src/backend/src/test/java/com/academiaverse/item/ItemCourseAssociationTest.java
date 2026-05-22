@@ -3,7 +3,7 @@ package com.academiaverse.item;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.academiaverse.TestHelper;
+import com.academiaverse.Helper;
 import com.academiaverse.entity.Course;
 import com.academiaverse.repository.CourseRepository;
 import tools.jackson.databind.ObjectMapper;
@@ -17,13 +17,13 @@ import org.springframework.http.MediaType;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Import(TestHelper.class)
+@Import(Helper.class)
 class ItemCourseAssociationTest {
 
     private String mail = "seller@example.com";
 
     @Autowired
-    private TestHelper testHelper;
+    private Helper testHelper;
 
     @Autowired
     private ObjectMapper objectMapper;

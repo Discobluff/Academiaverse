@@ -5,8 +5,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.List;
 
-import com.academiaverse.TestHelper;
-import com.academiaverse.TestParam;
+import com.academiaverse.Helper;
+import com.academiaverse.Param;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
@@ -16,11 +16,11 @@ import org.springframework.http.MediaType;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Import(TestHelper.class)
+@Import(Helper.class)
 class RecentSearchTest {
     
     @Autowired
-    private TestHelper testHelper;
+    private Helper testHelper;
 
     private String url = "/api/search/recent";
 
@@ -28,9 +28,9 @@ class RecentSearchTest {
 
     @Test
     void saveAndRetrieveRecentSearches() throws Exception {
-        TestParam softwareParam = new TestParam("query", "Software Engineering");
+        Param softwareParam = new Param("query", "Software Engineering");
         testHelper.testPost(mail, url, List.of(softwareParam), MediaType.APPLICATION_JSON, "", status().isOk());
-        TestParam algorithmsParam = new TestParam("query", "Algorithms");
+        Param algorithmsParam = new Param("query", "Algorithms");
         testHelper.testPost(mail, url, List.of(algorithmsParam), MediaType.APPLICATION_JSON, "", status().isOk());
 
         testHelper.testGet(mail, url, List.of(), status().isOk(),

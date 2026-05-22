@@ -5,7 +5,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.List;
 
-import com.academiaverse.TestHelper;
+import com.academiaverse.Helper;
 import com.academiaverse.entity.Interest;
 import com.academiaverse.entity.Item;
 import com.academiaverse.repository.InterestRepository;
@@ -17,11 +17,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Import(TestHelper.class)
+@Import(Helper.class)
 class InterestListTest {
 
     @Autowired
-    private TestHelper testHelper;
+    private Helper testHelper;
 
     private String mailSeller = "seller@example.com";
     private String mailBuyer = "buyer@example.com";

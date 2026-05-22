@@ -27,7 +27,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
 
 @TestComponent
-public class TestHelper {
+public class Helper {
     
     @Autowired
     private JwtService jwtService;
@@ -46,6 +46,9 @@ public class TestHelper {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    private String headerAuth = "Authorization";
+    private String bearer = "Bearer ";
 
     public void setAdmin(String mail) {
         User user = getUser(mail);
@@ -99,7 +102,7 @@ public class TestHelper {
     public void testDelete(String mailUser, String uri, ResultMatcher... matchers) throws Exception {
         User user = getUser(mailUser);
         String token = jwtService.generateToken(user);
-        MockHttpServletRequestBuilder request = delete(uri).header("Authorization", "Bearer " + token);
+        MockHttpServletRequestBuilder request = delete(uri).header(headerAuth, bearer + token);
         ResultActions resultsActions = mockMvc.perform(request);
         for (ResultMatcher matcher : matchers) {
             assertDoesNotThrow(() -> resultsActions.andExpect(matcher));
@@ -109,16 +112,16 @@ public class TestHelper {
     public void testPut(String mailUser, String uri, MediaType mediaType, String content, ResultMatcher... matchers) throws Exception {
         User user = getUser(mailUser);
         String token = jwtService.generateToken(user);
-        MockHttpServletRequestBuilder request = put(uri).header("Authorization", "Bearer " + token).contentType(mediaType).content(content);
+        MockHttpServletRequestBuilder request = put(uri).header(headerAuth, bearer + token).contentType(mediaType).content(content);
         ResultActions resultsActions = mockMvc.perform(request);
         for (ResultMatcher matcher : matchers) {
             assertDoesNotThrow(() -> resultsActions.andExpect(matcher));
         }
     }
 
-    public void testGet(String uri, List<TestParam> params, ResultMatcher... matchers) throws Exception {
+    public void testGet(String uri, List<Param> params, ResultMatcher... matchers) throws Exception {
         MockHttpServletRequestBuilder request = get(uri);
-        for (TestParam param : params) {
+        for (Param param : params) {
             request = request.param(param.getName(), param.getValue());
         }
         final MockHttpServletRequestBuilder finalRequest = request;
@@ -128,11 +131,11 @@ public class TestHelper {
         }
     }    
 
-    public void testGet(String mailUser, String uri, List<TestParam> params, ResultMatcher... matchers) throws Exception {
+    public void testGet(String mailUser, String uri, List<Param> params, ResultMatcher... matchers) throws Exception {
         User user = getUser(mailUser);
         String token = jwtService.generateToken(user);
-        MockHttpServletRequestBuilder request = get(uri).header("Authorization", "Bearer " + token);
-        for (TestParam param : params) {
+        MockHttpServletRequestBuilder request = get(uri).header(headerAuth, bearer + token);
+        for (Param param : params) {
             request = request.param(param.getName(), param.getValue());
         }
         final MockHttpServletRequestBuilder finalRequest = request;
@@ -142,11 +145,11 @@ public class TestHelper {
         }
     }
 
-    public void testMultipart(String mailUser, String uri, MockMultipartFile file, List<TestParam> params, ResultMatcher... matchers) throws Exception {
+    public void testMultipart(String mailUser, String uri, MockMultipartFile file, List<Param> params, ResultMatcher... matchers) throws Exception {
         User user = getUser(mailUser);
         String token = jwtService.generateToken(user);
-        MockMultipartHttpServletRequestBuilder  request = multipart(uri).header("Authorization", "Bearer " + token).file(file);
-        for (TestParam param : params) {
+        MockMultipartHttpServletRequestBuilder  request = multipart(uri).header(headerAuth, bearer + token).file(file);
+        for (Param param : params) {
             request = request.param(param.getName(), param.getValue());
         }
         MockMultipartHttpServletRequestBuilder finalRequest = request;
@@ -159,7 +162,7 @@ public class TestHelper {
     public void testPost(String mailUser, String uri, ResultMatcher... matchers) throws Exception {
         User user = getUser(mailUser);
         String token = jwtService.generateToken(user);
-        MockHttpServletRequestBuilder request = post(uri).header("Authorization", "Bearer " + token);
+        MockHttpServletRequestBuilder request = post(uri).header(headerAuth, bearer + token);
         ResultActions resultsActions = mockMvc.perform(request);
         for (ResultMatcher matcher : matchers) {
             assertDoesNotThrow(() -> resultsActions.andExpect(matcher));
@@ -169,18 +172,18 @@ public class TestHelper {
     public void testPost(String mailUser, String uri, MediaType mediaType, String content, ResultMatcher... matchers) throws Exception {
         User user = getUser(mailUser);
         String token = jwtService.generateToken(user);
-        MockHttpServletRequestBuilder request = post(uri).header("Authorization", "Bearer " + token).contentType(mediaType).content(content);
+        MockHttpServletRequestBuilder request = post(uri).header(headerAuth, bearer + token).contentType(mediaType).content(content);
         ResultActions resultsActions = mockMvc.perform(request);
         for (ResultMatcher matcher : matchers) {
             assertDoesNotThrow(() -> resultsActions.andExpect(matcher));
         }
     }
 
-    public void testPost(String mailUser, String uri, List<TestParam> params, MediaType mediaType, String content, ResultMatcher... matchers) throws Exception {
+    public void testPost(String mailUser, String uri, List<Param> params, MediaType mediaType, String content, ResultMatcher... matchers) throws Exception {
         User user = getUser(mailUser);
         String token = jwtService.generateToken(user);
-        MockHttpServletRequestBuilder request = post(uri).header("Authorization", "Bearer " + token).contentType(mediaType).content(content);
-        for (TestParam param : params) {
+        MockHttpServletRequestBuilder request = post(uri).header(headerAuth, bearer + token).contentType(mediaType).content(content);
+        for (Param param : params) {
             request = request.param(param.getName(), param.getValue());
         }
         ResultActions resultsActions = mockMvc.perform(request);
