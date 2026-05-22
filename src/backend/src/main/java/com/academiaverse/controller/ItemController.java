@@ -5,6 +5,7 @@ import com.academiaverse.entity.Item;
 import com.academiaverse.entity.User;
 import com.academiaverse.repository.CourseRepository;
 import com.academiaverse.repository.ItemRepository;
+import com.academiaverse.repository.TransactionRepository;
 import com.academiaverse.repository.UserRepository;
 import com.academiaverse.service.ItemService;
 import jakarta.validation.Valid;
@@ -45,6 +46,7 @@ public class ItemController {
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
     private final CourseRepository courseRepository;
+    private final TransactionRepository transactionRepository;
 
     @GetMapping("/bought")
     public ResponseEntity<Boolean> hasBoughtItem(@RequestParam Long itemId,
@@ -53,8 +55,10 @@ public class ItemController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, USER_NOT_FOUND));
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, ITEM_NOT_FOUND));
-        boolean hasBought = item.getBuyers().contains(user);
-        return ResponseEntity.ok(hasBought);
+        if (transactionRepository.findByItemAndBuyer(item, user).isEmpty()) {
+            return ResponseEntity.ok(false);
+        }
+        return ResponseEntity.ok(true);
     }
 
     @PostMapping
@@ -159,7 +163,7 @@ public class ItemController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, ITEM_NOT_FOUND));
 
         // Only the buyer can download
-        if (!item.getBuyers().contains(user)) {
+        if (transactionRepository.findByItemAndBuyer(item, user).isEmpty()) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
@@ -191,7 +195,7 @@ public class ItemController {
         User user = userRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, USER_NOT_FOUND));
         List<Item> purchased = itemRepository.findAll().stream()
-                .filter(item -> item.getBuyers().contains(user))
+                .filter(item -> transactionRepository.findByItemAndBuyer(item, user).isPresent())
                 .collect(Collectors.toList());
         return ResponseEntity.ok(purchased);
     }    

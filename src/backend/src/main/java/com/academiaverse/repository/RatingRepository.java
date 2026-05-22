@@ -11,4 +11,6 @@ public interface RatingRepository extends JpaRepository<Rating, Long> {
     Rating findByUserAndItem(User user, Item item);
 
     List<Rating> findByItem(Item item);
+
+    void deleteByItemAndUser(Item item, User user);
 }

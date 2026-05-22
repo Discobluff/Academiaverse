@@ -5,6 +5,7 @@ import com.academiaverse.entity.Item;
 import com.academiaverse.entity.Rating;
 import com.academiaverse.entity.User;
 import com.academiaverse.repository.ItemRepository;
+import com.academiaverse.repository.TransactionRepository;
 import com.academiaverse.repository.UserRepository;
 import com.academiaverse.service.RatingService;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ public class RatingsController {
     private final RatingService ratingService;
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
+    private final TransactionRepository transactionRepository;
 
     @GetMapping
     public ResponseEntity<Double> getAverageRatings(@RequestParam Long itemId) {
@@ -56,7 +58,7 @@ public class RatingsController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
         Item item = itemRepository.findById(request.itemId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Item not found"));
-        if (!item.getBuyers().contains(user)) {
+        if (transactionRepository.findByItemAndBuyer(item, user).isEmpty()) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User has not bought this item");
         }
         if (request.ratingValue() < 1 || request.ratingValue() > 5) {
