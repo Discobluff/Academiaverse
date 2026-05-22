@@ -1,42 +1,37 @@
 package com.academiaverse.item;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.academiaverse.Helper;
+import com.academiaverse.Param;
 import com.academiaverse.dto.request.RatingRequest;
 import com.academiaverse.entity.Item;
 import com.academiaverse.entity.Rating;
-import com.academiaverse.entity.User;
+import com.academiaverse.entity.Transaction;
 import com.academiaverse.repository.ItemRepository;
 import com.academiaverse.repository.RatingRepository;
-import com.academiaverse.repository.UserRepository;
-import com.academiaverse.service.ItemService;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
+import com.academiaverse.repository.TransactionRepository;
+import java.util.List;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultMatcher;
+import org.springframework.transaction.annotation.Transactional;
+import tools.jackson.databind.ObjectMapper;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Import(Helper.class)
 class TestRatings {
 
     private static final String mailSeller = "sellerRatings@example.com";
     private static final String mailBuyer = "buyerRatings@example.com";
-
-    @Autowired
-    private ItemService itemService;
 
     @Autowired
     private ItemRepository itemRepository;
@@ -44,115 +39,77 @@ class TestRatings {
     @Autowired
     private RatingRepository ratingRepository;
 
-    private User seller;
-    private User buyer;
-    private Item item;
+    @Autowired
+    private TransactionRepository transactionRepository;
 
     @Autowired
-    private MockMvc mockMvc;
+    private Helper testHelper;
+    
+    private Item item;
 
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
     @BeforeEach
-    void setUp() throws Exception {
-
-        if (userRepository.findByEmail(mailSeller).isEmpty()) {
-            User user = new User();
-            user.setEmail(mailSeller);
-            user.setPassword(passwordEncoder.encode("password"));
-            user.setRole("ROLE_USER");
-            seller = userRepository.save(user);
-        }
-        else {
-            seller = userRepository.findByEmail(mailSeller).get();
-        }
-        if (userRepository.findByEmail(mailBuyer).isEmpty()) {
-            User user = new User();
-            user.setEmail(mailBuyer);
-            user.setPassword(passwordEncoder.encode("password"));
-            user.setRole("ROLE_USER");
-            buyer = userRepository.save(user);
-        }
-        else {
-            buyer = userRepository.findByEmail(mailBuyer).get();
-        }
-        item = createItem();
+    void setUp() {
+        item = testHelper.createBaseItem(mailSeller);
     }
 
-    @WithMockUser(username = mailSeller)
-    Item createItem() throws Exception {
-        Item item = new Item();
-        item.setTitle("Test Listing");
-        item.setDescription("Test Description");
-        item.setOwner(seller);
-        item.setPrice(1.0);
-        item.setType("sale");
-        item.setNotes("Test notes");
-        item.setPaymentMethod("points");
-
-        return itemService.createItem(item, seller);
+    @AfterEach
+    void cleanUp() {
+        testHelper.deleteItem(item);
     }
 
     @Test
-    @WithMockUser(username = mailBuyer)
     void rateItemWithoutBought() throws Exception {
         RatingRequest request = new RatingRequest(item.getId(), 5);
-
-        assertDoesNotThrow(() -> mockMvc.perform(post("/api/ratings")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isForbidden()));
+        testHelper.testPost(mailBuyer, "/api/ratings", MediaType.APPLICATION_JSON, objectMapper.writeValueAsString(request), status().isForbidden());
+    }
+    
+    @Test
+    void getUserRatingEmpty() throws Exception {
+        testHelper.testGet(mailBuyer, "/api/ratings/user", List.of(new Param("itemId", String.valueOf(item.getId()))), status().isNotFound());
     }
 
+    @Transactional
     @Test
-    @WithMockUser(username = mailBuyer)
     void rateItem() throws Exception {
-        item.getBuyers().add(buyer);
-        itemRepository.save(item);
+        Transaction transaction = new Transaction();
+        transaction.setItem(item);
+        transaction.setBuyer(testHelper.getUser(mailBuyer));
+        transactionRepository.save(transaction);
 
         RatingRequest request = new RatingRequest(item.getId(), 5);
+        testHelper.testPost(mailBuyer, "/api/ratings", MediaType.APPLICATION_JSON, objectMapper.writeValueAsString(request), status().isOk());
 
-        assertDoesNotThrow(() ->mockMvc.perform(post("/api/ratings")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isOk()));
+        ratingRepository.deleteByItemAndUser(item, testHelper.getUser(mailBuyer));
+        testHelper.deleteTransaction(item, testHelper.getUser(mailBuyer));
     }
 
     @Test
-    @WithMockUser(username = mailBuyer)
-    void getUserRatingEmpty() throws Exception {
-        assertDoesNotThrow(() ->mockMvc.perform(get("/api/ratings/user")
-                .param("itemId", String.valueOf(item.getId())))
-                .andExpect(status().isNotFound()));
-    }
-
-    @Test
-    @WithMockUser(username = mailBuyer)
     void getUserRating() throws Exception {
-        item.getBuyers().add(buyer);
+        Transaction transaction = new Transaction();
+        transaction.setItem(item);
+        transaction.setBuyer(testHelper.getUser(mailBuyer));
+        transactionRepository.save(transaction);
         itemRepository.save(item);
 
         Rating rating = new Rating();
         rating.setItem(item);
-        rating.setUser(buyer);
+        rating.setUser(testHelper.getUser(mailBuyer));
         rating.setRatingValue(5);
         ratingRepository.save(rating);
 
-        assertDoesNotThrow(() ->mockMvc.perform(get("/api/ratings/user")
-            .param("itemId", String.valueOf(item.getId())))
-            .andExpect(status().isOk())
-            .andExpect(result -> {
-                String json = result.getResponse().getContentAsString();
-                Rating responseRating = objectMapper.readValue(json, Rating.class);
-                assertEquals(responseRating.getRatingValue(), 5, "Rating value should be 5");
-            }));
+        ResultMatcher checkRating = result -> {
+            String json = result.getResponse().getContentAsString();
+            Rating responseRating = objectMapper.readValue(json, Rating.class);
+            assertEquals(responseRating.getRatingValue(), 5, "Rating value should be 5");
+        };
+
+        testHelper.testGet(mailBuyer, "/api/ratings/user", List.of(new Param("itemId", String.valueOf(item.getId()))), status().isOk(), checkRating);
+
+        ratingRepository.delete(rating);
+        testHelper.deleteTransaction(item, testHelper.getUser(mailBuyer));
     }
 
 }

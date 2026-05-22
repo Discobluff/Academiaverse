@@ -1,48 +1,33 @@
 package com.academiaverse.report;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.academiaverse.Helper;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.context.annotation.Import;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Import(Helper.class)
 class ReportAdminListTest {
 
     @Autowired
-    private MockMvc mockMvc;
+    private Helper testHelper;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private com.academiaverse.repository.UserRepository userRepository;
+    private String mail = "admin@example.com";
 
     @BeforeEach
     void setUp() {
-        if (userRepository.findByEmail("admin@example.com").isEmpty()) {
-            com.academiaverse.entity.User admin = new com.academiaverse.entity.User();
-            admin.setEmail("admin@example.com");
-            admin.setPassword(passwordEncoder.encode("adminpass"));
-            admin.setRole("ADMIN");
-            admin.setFirstname("Admin");
-            admin.setLastname("User");
-            userRepository.save(admin);
-        }
+        testHelper.setAdmin(mail);
     }
 
     @Test
-    @WithMockUser(username = "admin@example.com", authorities = "ADMIN")
     void shouldReturnReportsForAdmin() throws Exception {
-        assertDoesNotThrow(() -> mockMvc.perform(get("/api/reports"))
-                .andExpect(status().isOk()));
+        testHelper.testGet(mail, "/api/reports", List.of(), status().isOk());
     }
 }

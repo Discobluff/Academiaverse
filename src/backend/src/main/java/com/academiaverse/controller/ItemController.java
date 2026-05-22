@@ -1,13 +1,11 @@
 package com.academiaverse.controller;
 
-import java.util.List;
-import java.util.stream.Collectors;
-import org.springframework.transaction.annotation.Transactional;
 import com.academiaverse.entity.Course;
 import com.academiaverse.entity.Item;
 import com.academiaverse.entity.User;
 import com.academiaverse.repository.CourseRepository;
 import com.academiaverse.repository.ItemRepository;
+import com.academiaverse.repository.TransactionRepository;
 import com.academiaverse.repository.UserRepository;
 import com.academiaverse.service.ItemService;
 import jakarta.validation.Valid;
@@ -15,6 +13,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -22,6 +22,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,6 +46,7 @@ public class ItemController {
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
     private final CourseRepository courseRepository;
+    private final TransactionRepository transactionRepository;
 
     @GetMapping("/bought")
     public ResponseEntity<Boolean> hasBoughtItem(@RequestParam Long itemId,
@@ -53,8 +55,10 @@ public class ItemController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, USER_NOT_FOUND));
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, ITEM_NOT_FOUND));
-        boolean hasBought = item.getBuyers().contains(user);
-        return ResponseEntity.ok(hasBought);
+        if (transactionRepository.findByItemAndBuyer(item, user).isEmpty()) {
+            return ResponseEntity.ok(false);
+        }
+        return ResponseEntity.ok(true);
     }
 
     @PostMapping
@@ -82,9 +86,7 @@ public class ItemController {
                                                   @RequestParam(value = "courseId", required = false) Long courseId,
                                                   @RequestParam(value = "isDigital", defaultValue = "true") boolean isDigital,
                                                   @AuthenticationPrincipal UserDetails userDetails) {
-        User user = userRepository.findByEmail(userDetails.getUsername())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, USER_NOT_FOUND));
-
+                                                          
         Item item = new Item();
         item.setTitle(title);
         item.setDescription(description);
@@ -95,9 +97,12 @@ public class ItemController {
 
         if (courseId != null) {
             Course course = courseRepository.findById(courseId)
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Course not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Course not found"));
             item.setCourse(course);
         }
+
+        User user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, USER_NOT_FOUND));
 
         Item saved;
         if (isDigital) {
@@ -158,7 +163,7 @@ public class ItemController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, ITEM_NOT_FOUND));
 
         // Only the buyer can download
-        if (!item.getBuyers().contains(user)) {
+        if (transactionRepository.findByItemAndBuyer(item, user).isEmpty()) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
@@ -189,8 +194,8 @@ public class ItemController {
     public ResponseEntity<List<Item>> getPurchases(@AuthenticationPrincipal UserDetails userDetails) {
         User user = userRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, USER_NOT_FOUND));
-        List<Item> purchased = itemRepository.findAll().stream()
-                .filter(item -> item.getBuyers().contains(user))
+        List<Item> purchased = transactionRepository.findByBuyer(user).stream()
+                .map(transaction -> transaction.getItem())
                 .collect(Collectors.toList());
         return ResponseEntity.ok(purchased);
     }    

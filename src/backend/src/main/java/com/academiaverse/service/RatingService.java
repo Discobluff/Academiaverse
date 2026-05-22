@@ -1,10 +1,10 @@
 package com.academiaverse.service;
 
-import com.academiaverse.entity.Rating;
 import com.academiaverse.entity.Item;
+import com.academiaverse.entity.Rating;
 import com.academiaverse.entity.User;
-import com.academiaverse.repository.RatingRepository;
 import com.academiaverse.repository.ItemRepository;
+import com.academiaverse.repository.RatingRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -1,73 +1,44 @@
 package com.academiaverse.search;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.academiaverse.entity.User;
-import com.academiaverse.repository.UserRepository;
-import org.junit.jupiter.api.BeforeEach;
+import com.academiaverse.Helper;
+import com.academiaverse.Param;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Import(Helper.class)
 class RecentSearchTest {
-
+    
     @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private Helper testHelper;
 
     private String url = "/api/search/recent";
 
-    @BeforeEach
-    void setUp() {
-        if (userRepository.findByEmail("searchuser@example.com").isEmpty()) {
-            User user = new User();
-            user.setEmail("searchuser@example.com");
-            user.setPassword(passwordEncoder.encode("password"));
-            user.setRole("USER");
-            user.setFirstname("Search");
-            user.setLastname("User");
-            userRepository.save(user);
-        }
-    }
+    private String mail = "searchuser@example.com";
 
     @Test
-    @WithMockUser(username = "searchuser@example.com")
     void saveAndRetrieveRecentSearches() throws Exception {
-        mockMvc.perform(post(url)
-                .param("query", "Software Engineering")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+        Param softwareParam = new Param("query", "Software Engineering");
+        testHelper.testPost(mail, url, List.of(softwareParam), MediaType.APPLICATION_JSON, "", status().isOk());
+        Param algorithmsParam = new Param("query", "Algorithms");
+        testHelper.testPost(mail, url, List.of(algorithmsParam), MediaType.APPLICATION_JSON, "", status().isOk());
 
-        mockMvc.perform(post(url)
-                .param("query", "Algorithms")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-
-        assertDoesNotThrow(() -> mockMvc.perform(get(url))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0]").value("Algorithms"))
-                .andExpect(jsonPath("$[1]").value("Software Engineering")));
+        testHelper.testGet(mail, url, List.of(), status().isOk(),
+                jsonPath("$[0]").value("Algorithms"),
+                jsonPath("$[1]").value("Software Engineering"));
     }
 
     @Test
     void recentEndpointWithoutAuthReturns403() throws Exception {
-        assertDoesNotThrow(() -> mockMvc.perform(get(url))
-                .andExpect(status().isForbidden()));
+        testHelper.testGet(url, List.of(), status().isForbidden());
     }
 }
