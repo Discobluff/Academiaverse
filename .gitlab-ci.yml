@@ -129,7 +129,7 @@ test:e2e:
     # - until curl -s http://localhost:8080/actuator/health; do sleep 2; done
     # - until curl -s http://localhost:4200; do sleep 2; done
   script:
-    - npx cypress run
+    - npx cypress run --headless
 
 deploy:backend:
   stage: deploy
