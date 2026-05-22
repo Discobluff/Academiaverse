@@ -1,3 +1,0 @@
-services:
-  backend:
-      image: gradle:8-jdk21

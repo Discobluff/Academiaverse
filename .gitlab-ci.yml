@@ -127,9 +127,8 @@ test:e2e:
     - cd ../../src/frontend
     - npm ci
     - npx ng serve &
-    - sleep 20
-    # - until curl -s http://localhost:8080/actuator/health; do sleep 2; done
-    # - until curl -s http://localhost:4200; do sleep 2; done
+    - until curl -s http://localhost:8080/actuator/health; do sleep 2; done
+    - until curl -s http://localhost:4200; do sleep 2; done
   script:
     - npx cypress run --headless
 
