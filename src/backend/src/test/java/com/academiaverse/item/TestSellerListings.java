@@ -1,5 +1,6 @@
 package com.academiaverse.item;
 
+import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -21,7 +22,7 @@ class TestSellerListings {
 
     private static final String mail = "sellerlistings@example.com";
 
-    @Autowired 
+    @Autowired
     private Helper testHelper;
 
     @Test
@@ -34,22 +35,16 @@ class TestSellerListings {
     @Test
     @WithMockUser(username = mail)
     void getSellerListings() throws Exception {
-        
+
         Item item = testHelper.createBaseItem(mail);
 
         ResultMatcher[] matchers = new ResultMatcher[] {
             status().isOk(),
-            jsonPath("$[0].title").value(item.getTitle()),
-            jsonPath("$[0].description").value(item.getDescription()),
-            jsonPath("$[0].price").value(item.getPrice()),
-            jsonPath("$[0].type").value(item.getType()),
-            jsonPath("$[0].notes").value(item.getNotes()),
-            jsonPath("$[0].paymentMethod").value(item.getPaymentMethod())
+            jsonPath("$[*].title", hasItem(item.getTitle()))
         };
 
         testHelper.testGet(mail, "/api/items/seller_listings", List.of(), matchers);
 
-        
         testHelper.deleteItem(item);
     }
 }

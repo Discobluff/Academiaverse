@@ -51,8 +51,9 @@
       <trans-unit id="translation_buyer_interests">
         <target>مصالح المشتري</target>
       </trans-unit>
-
-
+      <trans-unit id="translation_chats" datatype="html">
+        <target>المحادثات</target>
+      </trans-unit>
 
       <trans-unit id="translation_">
         <target></target>
