@@ -121,7 +121,7 @@ test:e2e:
     SPRING_DATASOURCE_USERNAME: myuser
     SPRING_DATASOURCE_PASSWORD: pwd
   before_script:
-    - apt-get update && apt-get install -y openjdk-21-jdk nodejs npm
+    - apt-get update && apt-get install -y openjdk-21-jdk nodejs npm curl
     - cd src/backend && chmod +x gradlew
     - ./gradlew bootRun &
     - cd ../../src/frontend
