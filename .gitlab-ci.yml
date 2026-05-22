@@ -106,7 +106,9 @@ workflow:
 
 test:e2e:
   stage: test
-  image: cypress/included:latest
+  image:
+    name: cypress/included:latest
+    entrypoint: [""]
   services:
     - name: mysql:8.0
       alias: mysql
