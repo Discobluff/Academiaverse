@@ -35,8 +35,17 @@ export class Register implements OnInit {
     if (this.password != this.passwordConfirmation) {
       this.errorMessage = "The passwords are differents."
       return;
-    } else if (!this.acceptedTerms) {
+    }
+    if (!this.acceptedTerms) {
       this.errorMessage = "You must accept the terms of service to register."
+      return;
+    }
+    if (!this.email) {
+      this.errorMessage = "Email is required."
+      return;
+    }
+    if (!this.password) {
+      this.errorMessage = "Password is required."
       return;
     }
 
