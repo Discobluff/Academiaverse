@@ -66,7 +66,7 @@ class CourseItemsTest {
         item.setPaymentMethod("cash");
         item.setOwner(owner);
         item.setCourse(course);
-        itemRepository.save(item);
+        item = itemRepository.save(item);
     }
 
     @Test
@@ -75,5 +75,7 @@ class CourseItemsTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].title").value("Algorithm Book"))
                 .andExpect(jsonPath("$[0].course.id").value(course.getId().intValue())));
+        itemRepository.delete(item);
+        courseRepository.delete(course);
     }
 }

@@ -16,4 +16,8 @@ CREATE TABLE IF NOT EXISTS course (
     name VARCHAR(255)
 );
 
-INSERT INTO course (code, name) VALUES ('CS101', 'Software Engineering');
+INSERT INTO course (code, name)
+SELECT 'CS101', 'Software Engineering'
+WHERE NOT EXISTS (
+    SELECT 1 FROM course WHERE code = 'CS101'
+);
