@@ -67,7 +67,7 @@ dependency_scan:frontend:
   image: node:trixie
   script:
     - npm ci
-    - npm audit
+    - npm audit --audit-level=high
   before_script:
     - cd src/frontend
 

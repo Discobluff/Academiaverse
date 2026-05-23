@@ -63,6 +63,7 @@ export class ItemDetailComponent implements OnInit {
     }).subscribe({
       next: (average) => {
         this.starsAverage = average;
+        console.log(average)
       },
       error: (err) => console.error(err)
     });
@@ -116,6 +117,7 @@ export class ItemDetailComponent implements OnInit {
         next: () => {
           console.log(stars, this.starsSelected);
           this.starsSelected = stars;
+          this.getStarsAverage(this.item!.id);
         },
         error: (err) => {
           console.error(err);

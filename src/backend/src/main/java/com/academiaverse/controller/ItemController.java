@@ -86,7 +86,9 @@ public class ItemController {
                                                   @RequestParam(value = "courseId", required = false) Long courseId,
                                                   @RequestParam(value = "isDigital", defaultValue = "true") boolean isDigital,
                                                   @AuthenticationPrincipal UserDetails userDetails) {
-                                                          
+        if (price < 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Price cannot be negative");
+        }
         Item item = new Item();
         item.setTitle(title);
         item.setDescription(description);

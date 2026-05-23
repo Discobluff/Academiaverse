@@ -5,7 +5,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.academiaverse.Helper;
 import com.academiaverse.entity.Course;
+import com.academiaverse.entity.Item;
 import com.academiaverse.repository.CourseRepository;
+import com.academiaverse.repository.ItemRepository;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,9 @@ class ItemCourseAssociationTest {
 
     @Autowired
     private CourseRepository courseRepository;
+
+    @Autowired
+    private ItemRepository itemRepository;
     
     @Test
     void shouldCreateItemWithCourse() throws Exception {
@@ -50,5 +55,10 @@ class ItemCourseAssociationTest {
             jsonPath("$.course.id").value(finalCourse.getId().intValue()),
             jsonPath("$.course.name").value("Software Engineering")
         );
+
+        for (Item item : itemRepository.findByCourse(finalCourse)) {
+            itemRepository.delete(item);
+        }
+        courseRepository.delete(finalCourse);
     }
 }
