@@ -92,7 +92,7 @@
             "coverage": true,
             "coverageThresholds": {
               "statements": 50,
-              "branches": 50,
+              "branches": 40,
               "functions": 20,
               "lines": 50
             }

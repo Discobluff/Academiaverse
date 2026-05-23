@@ -35,8 +35,17 @@ export class Register implements OnInit {
     if (this.password != this.passwordConfirmation) {
       this.errorMessage = "The passwords are differents."
       return;
-    } else if (!this.acceptedTerms) {
+    }
+    if (!this.acceptedTerms) {
       this.errorMessage = "You must accept the terms of service to register."
+      return;
+    }
+    if (!this.email) {
+      this.errorMessage = "Email is required."
+      return;
+    }
+    if (!this.password) {
+      this.errorMessage = "Password is required."
       return;
     }
 
@@ -51,8 +60,12 @@ export class Register implements OnInit {
       next: () => {
         this.router.navigate(['/login']);
       },
-      error: () => {
-        this.errorMessage = "Error with the registration.";
+      error: (error) => {
+        if (error.status === 409) {
+          this.errorMessage = "Email already exists.";
+        } else {
+          this.errorMessage = "Error with the registration.";
+        }
       }
     });
   }

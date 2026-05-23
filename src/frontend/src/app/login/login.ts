@@ -30,7 +30,14 @@ export class Login implements OnInit{
   login() {
     this.authService.login({ username: this.email, password: this.password }).subscribe({
       next: () => this.router.navigate(['/home']),
-      error: () => this.errorMessage = "Login failed.",
+      error: (error) => {
+        if (error.status === 401) {
+          this.errorMessage = "Wrong password.";
+        } 
+        if (error.status === 404) {
+          this.errorMessage = "User not found.";
+        }
+      },
     });
   }
 
