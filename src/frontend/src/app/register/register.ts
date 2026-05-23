@@ -51,8 +51,12 @@ export class Register implements OnInit {
       next: () => {
         this.router.navigate(['/login']);
       },
-      error: () => {
-        this.errorMessage = "Error with the registration.";
+      error: (error) => {
+        if (error.status === 409) {
+          this.errorMessage = "Email already exists.";
+        } else {
+          this.errorMessage = "Error with the registration.";
+        }
       }
     });
   }
