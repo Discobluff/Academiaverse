@@ -49,7 +49,9 @@ public class PointsService {
         transaction.setBuyer(buyer);
         transactionRepository.save(transaction);
 
-        // Do NOT mark the item as Sold – digital items stay available
+        // Mark the item as Unavailable after purchase
+        item.setAvailability("Unavailable");
+        itemRepository.save(item);
 
         userRepository.save(buyer);
         userRepository.save(seller);

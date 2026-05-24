@@ -7,19 +7,10 @@
   </datalist>
   <button (click)="search()">Search</button>
 
-  @if (authService.isAuthenticated() && recentSearches.length){
-    <div>
-      <h4>Recent searches:</h4>
-      <ul>
-        @for (item of recentSearches; track item){
-          <li>
-            <a href="#" (click)="useRecentSearch(item); $event.preventDefault()">{{ item }}</a>
-          </li>
-        }
-      </ul>
-    </div>
+  <!-- Search results first, with a clear title -->
+  @if (results.length) {
+    <h3>Search Results</h3>
   }
-
   <ul>
     @for (course of results; track course.id) {
       <li>
@@ -27,4 +18,18 @@
       </li>
     }
   </ul>
+
+  <!-- Recent searches below -->
+  @if (authService.isAuthenticated() && recentSearches.length) {
+    <div>
+      <h4>Recent searches:</h4>
+      <ul>
+        @for (item of recentSearches; track item) {
+          <li>
+            <a href="#" (click)="useRecentSearch(item); $event.preventDefault()">{{ item }}</a>
+          </li>
+        }
+      </ul>
+    </div>
+  }
 </div>

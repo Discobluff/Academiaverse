@@ -3,7 +3,7 @@
   <h2 class="item-title">{{ item.title }}</h2>
   <p class="item-description"><strong>Description:</strong> {{ item.description }}</p>
   <p class="item-notes"><strong>Notes:</strong> {{ item.notes }}</p>
-  <p class="item-price"><strong>Price:</strong> {{ item.price }} {{ item.paymentMethod === 'points' ? 'points' : '€' }}
+  <p class="item-price"><strong>Price:</strong> {{ item.price | number:'1.2-2' }} {{ item.paymentMethod === 'points' ? 'points' : '€' }}
   </p>
   <p class="item-type"><strong>Type:</strong> {{ item.type }}</p>
   <p class="item-payment"><strong>Payment Method:</strong> {{ item.paymentMethod }}</p>
@@ -13,7 +13,7 @@
     <p><strong>Available until:</strong> {{ item.availableUntil | date:'mediumDate' }}</p>
   }
 
-  @if (!item.isDigital && item.digitalFilePath) {
+  @if (!item.isDigital && item.digitalFilePath && item.digitalFileName) {
     <div class="item-image">
       <p><strong>Image:</strong> {{ item.digitalFileName }}</p>
       <button class="view-image-btn" (click)="viewImage(item.digitalFilePath)">View Image</button>
@@ -32,11 +32,11 @@
     </div>
   }
 
-  <!-- Show Interest button only if the user is not the owner -->
-  @if (!isOwner()) {
-  <button class="interest-btn" (click)="expressInterest()" [disabled]="alreadyInterested">
-    {{ alreadyInterested ? 'Already Interested' : 'Interested' }}
-  </button>
+  <!-- Show Interest button only if the user is not the owner and hasn't bought -->
+  @if (!isOwner() && !hasBought) {
+    <button class="interest-btn" (click)="expressInterest()" [disabled]="alreadyInterested">
+      {{ alreadyInterested ? 'Already Interested' : 'Interested' }}
+    </button>
   }
 
   <!-- Show Chat with Seller button only for buyers (not the owner) -->
@@ -50,7 +50,10 @@
   }
 
   <!-- Report button – always visible to any logged-in user -->
+  <!-- Report button – only visible to non-owners -->
+  @if (!isOwner()) {
   <button class="report-btn" (click)="reportItem()">Report</button>
+  }
 
   @if (hasBought) {
     <div role="radiogroup" aria-label="Star rating" class="star-rating">
@@ -64,7 +67,7 @@
     </div>
   }
   @if (starsAverage !== 0.0) {
-    <span>Average rating: {{ starsAverage }}</span>
+    <span>Average rating: {{ starsAverage | number:'1.2-2' }}</span>
     <span class="star-average">★</span>
   }
 

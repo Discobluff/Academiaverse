@@ -1,7 +1,9 @@
 package com.academiaverse.controller;
 
 import com.academiaverse.entity.Interest;
+import com.academiaverse.entity.Item;
 import com.academiaverse.entity.User;
+import com.academiaverse.repository.ItemRepository;
 import com.academiaverse.repository.UserRepository;
 import com.academiaverse.service.InterestService;
 import java.util.List;
@@ -26,6 +28,7 @@ import org.springframework.web.server.ResponseStatusException;
 public class InterestController {
     private final InterestService interestService;
     private final UserRepository userRepository;
+    private final ItemRepository itemRepository;
 
     @GetMapping
     public ResponseEntity<List<Interest>> getInterests(@AuthenticationPrincipal UserDetails userDetails) {
@@ -33,6 +36,13 @@ public class InterestController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
         List<Interest> interests = interestService.getInterestsForUser(user);
         return ResponseEntity.ok(interests);
+    }
+
+    @GetMapping("/by-item/{itemId}")
+    public ResponseEntity<List<Interest>> getInterestsByItem(@PathVariable Long itemId) {
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Item not found"));
+        return ResponseEntity.ok(interestService.getInterestsForItem(item));
     }
 
     @PostMapping

@@ -32,7 +32,17 @@
 
   @if (item.availability === 'Unavailable') {
     <p>Available again on:</p>
-    <input type="date" [(ngModel)]="availableUntilDate" name="availableUntil" />
+    <input type="date" [(ngModel)]="availableUntilDate" name="availableUntil" [min]="minDate" />
+  }
+
+  @if (isDigital) {
+    <div class="digital-info">
+      <p>Current file: {{ digitalFileName }}</p>
+      <button type="button" class="download-btn" (click)="downloadFile()">Download</button>
+      <p>Replace file (optional):</p>
+      <input type="file" (change)="onFileSelected($event)" name="file"
+             accept=".pdf,.doc,.docx,.txt,.zip,.rar,.png,.jpg,.jpeg,.gif,.webp" />
+    </div>
   }
 
   @if (!isFormValid()) {

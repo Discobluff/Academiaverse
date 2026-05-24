@@ -66,7 +66,12 @@ export class AddItem implements OnInit {
   }
 
   isFormValid(): boolean {
-    return this.item.title.trim().length > 0 && this.item.price !== null && this.item.price > 0;
+    return (
+      this.item.title.trim().length > 0 &&
+      this.item.price !== null &&
+      this.item.price > 0 &&
+      this.selectedCourseId !== null
+    );
   }
 
   onFileSelected(event: Event) {
@@ -79,6 +84,7 @@ export class AddItem implements OnInit {
   onDigitalChange() {
     if (this.isDigital) {
       this.item.type = 'sale';
+      this.item.paymentMethod = 'points';
     }
   }
 

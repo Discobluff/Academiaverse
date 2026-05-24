@@ -1,3 +1,4 @@
+import '@angular/localize/init';  // <--- add this line
 import 'zone.js';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { appConfig } from './app/app.config';

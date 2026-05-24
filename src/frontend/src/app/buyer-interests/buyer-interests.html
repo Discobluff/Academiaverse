@@ -20,7 +20,7 @@
              (keydown.enter)="viewItem(interest.item.id)">
           <h3>{{ interest.item.title }}</h3>
           <p>{{ interest.item.description }}</p>
-          <p><strong>Price:</strong> {{ interest.item.price }} {{ interest.item.paymentMethod === 'points' ? 'points' : '€' }}</p>
+          <p><strong>Price:</strong> {{ interest.item.price | number:'1.2-2' }} {{ interest.item.paymentMethod === 'points' ? 'points' : '€' }}</p>
           <p><strong>Type:</strong> {{ interest.item.type }}</p>
           <p><strong>Payment:</strong> {{ interest.item.paymentMethod }}</p>
           @if (interest.item.isDigital) {
@@ -45,7 +45,7 @@
              (keydown.enter)="viewItem(item.id)">
           <h3>{{ item.title }}</h3>
           <p>{{ item.description }}</p>
-          <p><strong>Price:</strong> {{ item.price }} {{ item.paymentMethod === 'points' ? 'points' : '€' }}</p>
+          <p><strong>Price:</strong> {{ item.price | number:'1.2-2' }} {{ item.paymentMethod === 'points' ? 'points' : '€' }}</p>
           <p><strong>Type:</strong> {{ item.type }}</p>
           <p><strong>Payment:</strong> {{ item.paymentMethod }}</p>
           @if (item.isDigital) {

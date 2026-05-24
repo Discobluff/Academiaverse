@@ -8,6 +8,7 @@
                 <th>Type</th>
                 <th>Status</th>
                 <th>Payment</th>
+                <th>Interested Users</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -15,10 +16,17 @@
             @for (item of items; track item) {
             <tr>
                 <td>{{ item.title }}</td>
-                <td>{{ item.price }} {{ item.paymentMethod === 'points' ? 'points' : '€' }}</td>
+                <td>{{ item.price | number:'1.2-2' }} {{ item.paymentMethod === 'points' ? 'points' : '€' }}</td>
                 <td>{{ item.type }}</td>
-                <td>{{ item.availability || item.status || 'Available' }}</td>
+                <td>{{ item.availability || 'Available' }}</td>
                 <td>{{ item.paymentMethod }}</td>
+                <td>
+                    <ul class="interested-list">
+                        @for (user of item.interestedUsers; track user) {
+                            <li>{{ user }}</li>
+                        }
+                    </ul>
+                </td>
                 <td>
                     <button class="view-btn" (click)="viewItem(item.id)">View</button>
                     <button class="edit-btn" (click)="editItem(item.id)">Edit</button>

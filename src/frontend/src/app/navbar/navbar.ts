@@ -1,13 +1,14 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { RouterLink, RouterLinkActive, Router } from '@angular/router';
+import { CommonModule } from '@angular/common';  // <-- add this
 import { AuthService } from '../core/services/auth.service';
 import { LanguageSwitcher } from '../language-switcher/language-switcher';
 import { environment } from '../../environments/environments';
 
 @Component({
   selector: 'app-navbar',
-  imports: [RouterLink, RouterLinkActive, LanguageSwitcher],
+  imports: [RouterLink, RouterLinkActive, LanguageSwitcher, CommonModule], // <-- add CommonModule
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
 })

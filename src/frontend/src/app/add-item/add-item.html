@@ -10,29 +10,36 @@
   <textarea [(ngModel)]="item.notes" name="notes"></textarea>
 
   <p>Course:</p>
-  <select [(ngModel)]="selectedCourseId" name="course">
-    <option [ngValue]="null">-- Select a course (optional) --</option>
+  <select [(ngModel)]="selectedCourseId" name="course" required>
+    <option [ngValue]="null" disabled>-- Select a course --</option>
     @for (course of courses; track course.id) {
       <option [ngValue]="course.id">{{ course.name }}</option>
     }
   </select>
 
   <p>Payment Method:</p>
-  <select [(ngModel)]="item.paymentMethod" name="paymentMethod">
-    <option value="cash">Cash</option>
-    <option value="points">Points</option>
-  </select>
+  @if (isDigital) {
+    <p>Points</p>
+    <small style="color: gray;">Digital items are purchased with points only.</small>
+  } @else {
+    <select [(ngModel)]="item.paymentMethod" name="paymentMethod">
+      <option value="cash">Cash</option>
+      <option value="points">Points</option>
+    </select>
+  }
 
   <p>Price ({{ item.paymentMethod === 'points' ? 'points' : '€' }}):</p>
   <input type="number" [(ngModel)]="item.price" name="price" required />
 
   <p>Type:</p>
-  <select [(ngModel)]="item.type" name="type" [disabled]="isDigital">
-    <option value="sale">For Sale</option>
-    <option value="rent" [disabled]="isDigital">For Rent</option>
-  </select>
   @if (isDigital) {
+    <p>Sale</p>
     <small style="color: gray; margin-left: 8px;">Digital products are for sale only.</small>
+  } @else {
+    <select [(ngModel)]="item.type" name="type">
+      <option value="sale">For Sale</option>
+      <option value="rent">For Rent</option>
+    </select>
   }
 
   <p>
@@ -43,10 +50,10 @@
   </p>
 
   @if (isDigital) {
-    <p>Upload file (PDF, DOC, TXT, ZIP):</p>
+    <p>Upload file (PDF, DOC, TXT, ZIP, PNG, JPG, JPEG, GIF, WEBP):</p>
     <input type="file" (change)="onFileSelected($event)" name="file"
-           accept=".pdf,.doc,.docx,.txt,.zip,.rar" />
-    <small style="color: gray;">Accepted formats: PDF, DOC, TXT, ZIP</small>
+           accept=".pdf,.doc,.docx,.txt,.zip,.rar,.png,.jpg,.jpeg,.gif,.webp" />
+    <small style="color: gray;">Accepted formats: PDF, DOC, TXT, ZIP, PNG, JPG, GIF, WEBP</small>
   } @else {
     <p>Upload image (optional):</p>
     <input type="file" (change)="onFileSelected($event)" name="file"
@@ -55,7 +62,7 @@
   }
 
   @if (!isFormValid()) {
-    <p class="error-message">Please fill in a title and a price.</p>
+    <p class="error-message">Please fill in a title, a price, and select a course.</p>
   }
 
   <button type="submit" [disabled]="!isFormValid()">Create Item</button>
