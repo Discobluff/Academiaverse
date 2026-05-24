@@ -14,6 +14,9 @@ interface EditItemForm {
   paymentMethod: string;
   availability?: string;
   availableUntil?: string;
+  isDigital?: boolean;
+  digitalFileName?: string;
+  digitalFilePath?: string;
 }
 
 @Component({
@@ -40,8 +43,14 @@ export class EditItemComponent implements OnInit {
     availableUntil: ''
   };
   availableUntilDate = '';
+  minDate = '';
+  isDigital = false;
+  digitalFileName = '';
+  selectedFile: File | null = null;
 
   ngOnInit() {
+    const today = new Date();
+    this.minDate = today.toISOString().substring(0, 10);
     this.route.params.subscribe(params => {
       this.itemId = +params['id'];
       if (this.itemId) {
@@ -56,6 +65,8 @@ export class EditItemComponent implements OnInit {
       next: (data) => {
         this.item = data;
         this.item.availability = data.availability || 'Available';
+        this.isDigital = data.isDigital || false;
+        this.digitalFileName = data.digitalFileName || '';
         if (data.availableUntil) {
           this.availableUntilDate = data.availableUntil.substring(0, 10);
         }
@@ -72,24 +83,84 @@ export class EditItemComponent implements OnInit {
     return this.item.title.trim().length > 0 && this.item.price !== null && this.item.price > 0;
   }
 
-  onSubmit() {
-    if (!this.isFormValid()) return;
-    const body: Record<string, unknown> = { ...this.item };
-    if (this.availableUntilDate && this.item.availability === 'Unavailable') {
-      body['availableUntil'] = this.availableUntilDate + 'T00:00:00';
-    } else {
-      body['availableUntil'] = null;
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.selectedFile = input.files[0];
     }
-    this.http.put(`${environment.apiBaseUrl}/api/items/${this.itemId}`, body)
-    .subscribe({
-      next: () => {
-        alert('Item updated successfully!');
-        this.router.navigate(['/seller-listings']);
+  }
+
+  downloadFile() {
+    if (!this.itemId) return;
+    this.http.get(`${environment.apiBaseUrl}/api/items/${this.itemId}/download`, {
+      responseType: 'blob'
+    }).subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = this.digitalFileName || 'download';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
       },
       error: (err) => {
-        console.error('Failed to update item', err);
-        alert('Failed to update item.');
+        console.error('Download failed', err);
+        alert('Download failed.');
       }
     });
+  }
+
+  onSubmit() {
+    if (!this.isFormValid()) return;
+
+    if (this.selectedFile) {
+      // Multipart upload with optional metadata
+      const formData = new FormData();
+      formData.append('title', this.item.title);
+      formData.append('description', this.item.description);
+      formData.append('notes', this.item.notes);
+      formData.append('price', String(this.item.price));
+      formData.append('type', this.item.type);
+      formData.append('paymentMethod', this.item.paymentMethod);
+      formData.append('file', this.selectedFile);
+      if (this.item.availability) {
+        formData.append('availability', this.item.availability);
+      }
+      if (this.availableUntilDate && this.item.availability === 'Unavailable') {
+        formData.append('availableUntil', this.availableUntilDate + 'T00:00:00');
+      }
+      this.http.put(`${environment.apiBaseUrl}/api/items/${this.itemId}/upload`, formData)
+        .subscribe({
+          next: () => {
+            alert('Item updated successfully!');
+            this.router.navigate(['/seller-listings']);
+          },
+          error: (err) => {
+            console.error('Failed to update item', err);
+            alert('Failed to update item.');
+          }
+        });
+    } else {
+      // JSON update without file change
+      const body: Record<string, unknown> = { ...this.item };
+      if (this.availableUntilDate && this.item.availability === 'Unavailable') {
+        body['availableUntil'] = this.availableUntilDate + 'T00:00:00';
+      } else {
+        body['availableUntil'] = null;
+      }
+      this.http.put(`${environment.apiBaseUrl}/api/items/${this.itemId}`, body)
+        .subscribe({
+          next: () => {
+            alert('Item updated successfully!');
+            this.router.navigate(['/seller-listings']);
+          },
+          error: (err) => {
+            console.error('Failed to update item', err);
+            alert('Failed to update item.');
+          }
+        });
+    }
   }
 }

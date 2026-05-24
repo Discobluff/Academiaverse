@@ -58,8 +58,6 @@ public class Item {
     @JoinColumn(name = "course_id")
     private Course course;
 
-    private String status;   // shows "Interest" when buyer expresses interest
-
     private String availability;          // "Available" or "Unavailable"
     private LocalDateTime availableUntil; // deadline when unavailable
 

@@ -54,7 +54,7 @@
         }
         @if (authService.isAuthenticated()) {
             <li class="navbar__points">
-                🪙 {{ userPoints ?? '…' }} pts
+                🪙 @if (userPoints !== null) { {{ userPoints | number:'1.2-2' }} } @else { … } pts
             </li>
             <li>
                 <a i18n="@@translation_log_out" routerLink="/logout" routerLinkActive="active">
