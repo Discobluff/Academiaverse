@@ -10,6 +10,15 @@ interface ChatMessage {
   sender: { id: number };
   buyer: { id: number; firstname?: string; lastname?: string };
   item: { id: number; title: string };
+  createdAt: string;
+}
+
+interface Conversation {
+  itemId: number;
+  itemTitle: string;
+  buyerId: number;
+  buyerName: string;
+  lastMessageTime: string;
 }
 
 @Component({
@@ -33,23 +42,32 @@ export class ChatsListComponent implements OnInit {
     this.http.get<ChatMessage[]>(`${environment.apiBaseUrl}/api/chat`)
       .subscribe({
         next: (chats) => {
-          const seen = new Set<string>();
-          this.conversations = [];
+          const conversationMap = new Map<string, Conversation>();
           for (const chat of chats) {
             const key = `${chat.item.id}-${chat.buyer.id}`;
-            if (!seen.has(key)) {
-              seen.add(key);
+            const existing = conversationMap.get(key);
+            if (!existing || chat.createdAt > existing.lastMessageTime) {
               const buyerName = chat.buyer.firstname
                 ? `${chat.buyer.firstname} ${chat.buyer.lastname || ''}`
                 : `Buyer #${chat.buyer.id}`;
-              this.conversations.push({
+              conversationMap.set(key, {
                 itemId: chat.item.id,
                 itemTitle: chat.item.title,
                 buyerId: chat.buyer.id,
-                buyerName
+                buyerName,
+                lastMessageTime: chat.createdAt
               });
             }
           }
+          // Sort by most recent message first
+          const sorted = Array.from(conversationMap.values())
+            .sort((a, b) => b.lastMessageTime.localeCompare(a.lastMessageTime));
+          this.conversations = sorted.map(c => ({
+            itemId: c.itemId,
+            itemTitle: c.itemTitle,
+            buyerId: c.buyerId,
+            buyerName: c.buyerName
+          }));
         },
         error: (err) => console.error('Failed to load chats', err)
       });

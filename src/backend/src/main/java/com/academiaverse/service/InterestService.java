@@ -20,6 +20,10 @@ public class InterestService {
         return interestRepository.findByUser(user);
     }
 
+    public List<Interest> getInterestsForItem(Item item) {
+        return interestRepository.findByItem(item);
+    }
+
     @Transactional
     public Interest createInterest(User buyer, Long itemId) {
         Item item = itemRepository.findById(itemId)
@@ -29,10 +33,6 @@ public class InterestService {
         if (!existing.isEmpty()) {
             throw new RuntimeException("You already expressed interest in this item.");
         }
-
-        // Set item status to "Interest"
-        item.setStatus("Interest");
-        itemRepository.save(item);
 
         Interest interest = new Interest();
         interest.setItem(item);
@@ -50,14 +50,6 @@ public class InterestService {
             throw new RuntimeException("No interest found for this item.");
         }
 
-        // Delete all matching interests (clean duplicates)
         interestRepository.deleteAll(existing);
-
-        // If no other interests for this item, reset its status
-        long remaining = interestRepository.countByItem(item);
-        if (remaining == 0) {
-            item.setStatus(null);
-            itemRepository.save(item);
-        }
     }
 }

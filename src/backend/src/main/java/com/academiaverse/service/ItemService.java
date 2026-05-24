@@ -3,7 +3,11 @@ package com.academiaverse.service;
 import com.academiaverse.entity.Item;
 import com.academiaverse.entity.User;
 import com.academiaverse.repository.ChatRepository;
+import com.academiaverse.repository.InterestRepository;
 import com.academiaverse.repository.ItemRepository;
+import com.academiaverse.repository.RatingRepository;
+import com.academiaverse.repository.ReportRepository;
+import com.academiaverse.repository.TransactionRepository;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -20,6 +24,10 @@ import org.springframework.web.multipart.MultipartFile;
 public class ItemService {
     private final ItemRepository itemRepository;
     private final ChatRepository chatRepository;
+    private final InterestRepository interestRepository;
+    private final TransactionRepository transactionRepository;
+    private final RatingRepository ratingRepository;
+    private final ReportRepository reportRepository;
     private static final String UPLOAD_DIR = "uploads/";
 
     @Transactional
@@ -38,7 +46,6 @@ public class ItemService {
         item.setIsDigital(true);
         item.setDigitalFileName(file.getOriginalFilename());
 
-        // Save file to disk
         saveFile(file, item.getDigitalFileName());
 
         item.setDigitalFilePath("/api/uploads/" + file.getOriginalFilename());
@@ -53,11 +60,25 @@ public class ItemService {
         item.setIsDigital(false);
         item.setDigitalFileName(file.getOriginalFilename());
 
-        // Save image to disk
         saveFile(file, item.getDigitalFileName());
 
         item.setDigitalFilePath("/api/uploads/" + file.getOriginalFilename());
         return itemRepository.save(item);
+    }
+
+    @Transactional
+    public Item updateItemFile(Item item, MultipartFile file) {
+        // Delete old file if exists
+        if (item.getDigitalFileName() != null) {
+            try {
+                Path oldFile = Paths.get(UPLOAD_DIR, item.getDigitalFileName());
+                Files.deleteIfExists(oldFile);
+            } catch (IOException ignored) {}
+        }
+        saveFile(file, file.getOriginalFilename());
+        item.setDigitalFileName(file.getOriginalFilename());
+        item.setDigitalFilePath("/api/uploads/" + file.getOriginalFilename());
+        return item;
     }
 
     private void saveFile(MultipartFile file, String filename) {
@@ -103,8 +124,11 @@ public class ItemService {
         if (!existing.getOwner().getId().equals(owner.getId())) {
             throw new RuntimeException("You can only delete your own items");
         }
-        // Delete associated chat messages first
         chatRepository.deleteByItemId(id);
+        interestRepository.deleteByItem(existing);
+        transactionRepository.deleteByItem(existing);
+        ratingRepository.deleteByItem(existing);
+        reportRepository.deleteByItem(existing);
         itemRepository.delete(existing);
     }
 }

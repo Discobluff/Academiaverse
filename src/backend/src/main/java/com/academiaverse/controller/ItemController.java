@@ -40,7 +40,7 @@ import org.springframework.web.server.ResponseStatusException;
 @RequiredArgsConstructor
 public class ItemController {
     private static final String USER_NOT_FOUND = "User not found";
-    private static final String ITEM_NOT_FOUND = "Item not found";    
+    private static final String ITEM_NOT_FOUND = "Item not found";
 
     private final ItemService itemService;
     private final ItemRepository itemRepository;
@@ -140,6 +140,47 @@ public class ItemController {
         return ResponseEntity.ok(saved);
     }
 
+    @PutMapping("/{id}/upload")
+    public ResponseEntity<Item> updateItemWithFile(@PathVariable Long id,
+                                                   @RequestParam(value = "title", required = false) String title,
+                                                   @RequestParam(value = "description", required = false) String description,
+                                                   @RequestParam(value = "notes", required = false) String notes,
+                                                   @RequestParam(value = "price", required = false) Double price,
+                                                   @RequestParam(value = "type", required = false) String type,
+                                                   @RequestParam(value = "paymentMethod", required = false) String paymentMethod,
+                                                   @RequestParam(value = "file", required = false) MultipartFile file,
+                                                   @RequestParam(value = "availability", required = false) String availability,
+                                                   @RequestParam(value = "availableUntil", required = false) String availableUntil,
+                                                   @AuthenticationPrincipal UserDetails userDetails) {
+        User user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, USER_NOT_FOUND));
+        Item existing = itemRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, ITEM_NOT_FOUND));
+        if (!existing.getOwner().getId().equals(user.getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        // Update metadata if provided
+        if (title != null) existing.setTitle(title);
+        if (description != null) existing.setDescription(description);
+        if (notes != null) existing.setNotes(notes);
+        if (price != null) existing.setPrice(price);
+        if (type != null) existing.setType(type);
+        if (paymentMethod != null) existing.setPaymentMethod(paymentMethod);
+        if (availability != null) existing.setAvailability(availability);
+        if (availableUntil != null && !availableUntil.isEmpty()) {
+            existing.setAvailableUntil(java.time.LocalDateTime.parse(availableUntil));
+        } else if (availableUntil != null) {
+            existing.setAvailableUntil(null);
+        }
+
+        // If a new file is uploaded, save it
+        if (file != null && !file.isEmpty()) {
+            existing = itemService.updateItemFile(existing, file);
+        }
+
+        return ResponseEntity.ok(itemRepository.save(existing));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteItem(@PathVariable Long id,
                                            @AuthenticationPrincipal UserDetails userDetails) {
@@ -154,7 +195,6 @@ public class ItemController {
         return ResponseEntity.ok().build();
     }
 
-    // ---------- NEW: Digital product download ----------
     @GetMapping("/{id}/download")
     @Transactional(readOnly = true)
     public ResponseEntity<byte[]> downloadItem(@PathVariable Long id,
@@ -164,12 +204,13 @@ public class ItemController {
         Item item = itemRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, ITEM_NOT_FOUND));
 
-        // Only the buyer can download
-        if (transactionRepository.findByItemAndBuyer(item, user).isEmpty()) {
+        // Allow owner to download, or buyer who purchased
+        boolean isOwner = item.getOwner().getId().equals(user.getId());
+        boolean hasPurchased = transactionRepository.findByItemAndBuyer(item, user).isPresent();
+        if (!isOwner && !hasPurchased) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
-        // Only digital items can be downloaded
         if (!item.getIsDigital() || item.getDigitalFileName() == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
@@ -200,5 +241,5 @@ public class ItemController {
                 .map(transaction -> transaction.getItem())
                 .collect(Collectors.toList());
         return ResponseEntity.ok(purchased);
-    }    
+    }
 }

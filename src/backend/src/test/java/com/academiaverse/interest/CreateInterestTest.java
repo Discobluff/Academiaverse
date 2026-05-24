@@ -28,10 +28,10 @@ class CreateInterestTest {
     private ObjectMapper objectMapper;
 
     @Test
-    void shouldCreateInterestAndChangeItemStatus() throws Exception {
+    void shouldCreateInterestAndNotChangeItemStatus() throws Exception {
         Item item = testHelper.createBaseItem(mail);
         Map<String, Long> body = Map.of("itemId", item.getId());
 
-        testHelper.testPost(mail, "/api/interests", MediaType.APPLICATION_JSON, objectMapper.writeValueAsString(body), status().isOk(), jsonPath("$.item.status").value("Interest"), jsonPath("$.item.id").value(item.getId().intValue()));
+        testHelper.testPost(mail, "/api/interests", MediaType.APPLICATION_JSON, objectMapper.writeValueAsString(body), status().isOk(), jsonPath("$.item.id").value(item.getId().intValue()));
     }
 }

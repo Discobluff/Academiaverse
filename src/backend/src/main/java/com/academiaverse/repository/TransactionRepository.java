@@ -10,10 +10,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
 
     Optional<Transaction> findByItemAndBuyer(Item item, User buyer);
-    
+
     void deleteByItemAndBuyer(Item item, User buyer);
 
     List<Transaction> findByBuyer(User buyer);
 
     List<Transaction> findByItem(Item item);
+
+    void deleteByItem(Item item);
 }

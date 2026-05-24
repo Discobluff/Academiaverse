@@ -55,6 +55,94 @@
         <target>المحادثات</target>
       </trans-unit>
 
+      <trans-unit id="terms_page_title" datatype="html">
+        <target>شروط الخدمة | Academiaverse</target>
+      </trans-unit>
+      <trans-unit id="terms_heading" datatype="html">
+        <target>شروط الخدمة</target>
+      </trans-unit>
+      <trans-unit id="terms_last_updated" datatype="html">
+        <target>آخر تحديث: 25 أبريل 2026</target>
+      </trans-unit>
+      <trans-unit id="terms_section1_heading" datatype="html">
+        <target>1. قبول الشروط</target>
+      </trans-unit>
+      <trans-unit id="terms_section1_text" datatype="html">
+        <target>باستخدامك لـ Academiaverse (الموقع)، فإنك توافق على الالتزام بشروط الخدمة هذه. إذا كنت لا توافق، يرجى عدم استخدام الموقع.</target>
+      </trans-unit>
+      <trans-unit id="terms_section2_heading" datatype="html">
+        <target>2. استخدام الموقع</target>
+      </trans-unit>
+      <trans-unit id="terms_section2_text" datatype="html">
+        <target>يجوز لك استخدام الموقع للأغراض القانونية فقط. أنت توافق على عدم:</target>
+      </trans-unit>
+      <trans-unit id="terms_section2_li1" datatype="html">
+        <target>سرقة أو نسخ أو تجريف أو حصاد أو جمع أي بيانات أو محتوى أو معلومات مستخدم من الموقع دون إذن كتابي صريح منا.</target>
+      </trans-unit>
+      <trans-unit id="terms_section2_li2" datatype="html">
+        <target>استخدام أي نظام آلي (مثل البوتات أو برامج الزحف) للوصول إلى الموقع بطريقة تضر أو تتجاوز التشغيل العادي له.</target>
+      </trans-unit>
+      <trans-unit id="terms_section2_li3" datatype="html">
+        <target>محاولة الوصول غير المصرح به إلى أي جزء من الموقع أو خوادمه.</target>
+      </trans-unit>
+      <trans-unit id="terms_section3_heading" datatype="html">
+        <target>3. بياناتك والخصوصية</target>
+      </trans-unit>
+      <trans-unit id="terms_section3_text" datatype="html">
+        <target>نحن نحترم خصوصيتك. كيفية تعاملنا مع أي معلومات شخصية تقدمها موصوفة في سياسة الخصوصية الخاصة بنا. لن نبيع بياناتك الشخصية أبدًا أو نستخدمها لأغراض تتجاوز ما تم الإفصاح عنه لك.</target>
+      </trans-unit>
+      <trans-unit id="terms_section4_heading" datatype="html">
+        <target>4. الملكية الفكرية</target>
+      </trans-unit>
+      <trans-unit id="terms_section4_text" datatype="html">
+        <target>جميع المحتويات على هذا الموقع (نصوص، رسومات، شعارات، إلخ) هي ملك لنا أو مستخدمة بإذن. لا يجوز لك إعادة إنتاج أو توزيع أو سرقة هذا المحتوى لأغراض تجارية.</target>
+      </trans-unit>
+      <trans-unit id="terms_section5_heading" datatype="html">
+        <target>5. الأنشطة المحظورة – سرقة البيانات</target>
+      </trans-unit>
+      <trans-unit id="terms_section5_text" datatype="html">
+        <target>يُمنع منعًا باتًا:</target>
+      </trans-unit>
+      <trans-unit id="terms_section5_li1" datatype="html">
+        <target>استخراج أو هندسة عكسية أو تنزيل منهجي للبيانات من الموقع.</target>
+      </trans-unit>
+      <trans-unit id="terms_section5_li2" datatype="html">
+        <target>استخدام الموقع كمصدر لبناء منتج أو قاعدة بيانات منافسة.</target>
+      </trans-unit>
+      <trans-unit id="terms_section5_li3" datatype="html">
+        <target>مشاركة أو بيع أو نشر علني لأي بيانات مأخوذة من الموقع دون إذن.</target>
+      </trans-unit>
+      <trans-unit id="terms_section5_warning" datatype="html">
+        <target>انتهاك هذه القواعد قد يؤدي إلى إنهاء فوري لوصولك وإجراءات قانونية.</target>
+      </trans-unit>
+      <trans-unit id="terms_section6_heading" datatype="html">
+        <target>6. إخلاء المسؤولية عن الضمانات</target>
+      </trans-unit>
+      <trans-unit id="terms_section6_text" datatype="html">
+        <target>الموقع يُقدم "كما هو". لا نقدم أي ضمانات بأنه سيكون خاليًا من الأخطاء أو آمنًا أو غير منقطع.</target>
+      </trans-unit>
+      <trans-unit id="terms_section7_heading" datatype="html">
+        <target>7. تحديد المسؤولية</target>
+      </trans-unit>
+      <trans-unit id="terms_section7_text" datatype="html">
+        <target>إلى أقصى حد يسمح به القانون، لسنا مسؤولين عن أي أضرار تنشأ عن استخدامك للموقع أو أي بيانات مسروقة حصل عليها أطراف ثالثة بوسائل غير مصرح بها.</target>
+      </trans-unit>
+      <trans-unit id="terms_section8_heading" datatype="html">
+        <target>8. التغييرات على هذه الشروط</target>
+      </trans-unit>
+      <trans-unit id="terms_section8_text" datatype="html">
+        <target>قد نقوم بتحديث شروط الخدمة هذه. استمرار استخدام الموقع بعد التغييرات يعني قبولك للشروط المحدثة.</target>
+      </trans-unit>
+      <trans-unit id="terms_section9_heading" datatype="html">
+        <target>9. اتصل بنا</target>
+      </trans-unit>
+      <trans-unit id="terms_section9_text" datatype="html">
+        <target>للأسئلة، اتصل على:</target>
+      </trans-unit>
+      <trans-unit id="terms_footer" datatype="html">
+        <target>&copy; 2026 Academiaverse. جميع الحقوق محفوظة.</target>
+      </trans-unit>
+
       <trans-unit id="translation_">
         <target></target>
       </trans-unit>

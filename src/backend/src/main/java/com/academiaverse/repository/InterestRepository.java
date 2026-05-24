@@ -12,4 +12,8 @@ public interface InterestRepository extends JpaRepository<Interest, Long> {
     List<Interest> findByUserAndItem(User user, Item item);
 
     long countByItem(Item item);
+
+    List<Interest> findByItem(Item item);
+
+    void deleteByItem(Item item);
 }

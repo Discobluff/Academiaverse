@@ -133,7 +133,7 @@ describe('Full User Story Coverage', () => {
     });
   });
 
-  it('Story 14 (API): Express interest changes item status', () => {
+it('Story 14 (API): Express interest records interest without changing item status', () => {
     const interestTitle = `InterestItem_${Date.now()}`;
     let createdItemId: number;
     loginViaApi('alice@example.com', 'test').then((aliceToken) => {
@@ -150,13 +150,16 @@ describe('Full User Story Coverage', () => {
             url: 'http://localhost:8080/api/interests',
             headers: { Authorization: `Bearer ${bobToken}` },
             body: { itemId: createdItemId }
-          }).then(() => {
+          }).then((interestResp) => {
+            // Interest created successfully (status 200)
+            expect(interestResp.status).to.eq(200);
+            // Verify that the item does NOT have a 'status' property anymore
             cy.request({
               method: 'GET',
               url: `http://localhost:8080/api/items/${createdItemId}`,
               headers: { Authorization: `Bearer ${aliceToken}` }
             }).then((itemResp) => {
-              expect(itemResp.body.status).to.eq('Interest');
+              expect(itemResp.body).to.not.have.property('status');
             });
           });
         });
@@ -336,13 +339,11 @@ describe('Full User Story Coverage', () => {
 
   it('UI Smoke: Home page loads', () => {
     loginViaApi('alice@example.com', 'test').then((token) => {
-      cy.visit('/home', {
-        onBeforeLoad(win) {
-          win.localStorage.setItem('token', token as unknown as string);
-        }
-      });
+      cy.setCookie('token', token as unknown as string, { domain: 'localhost', path: '/' });
+      cy.getCookie('token').should('exist'); // debug
+      cy.visit('/home');
+      cy.get('nav.navbar', { timeout: 15000 }).should('be.visible');
     });
-    cy.get('nav.navbar', { timeout: 15000 }).should('be.visible');
   });
 
   it('UI Smoke: Course page loads', () => {
