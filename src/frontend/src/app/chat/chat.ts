@@ -61,6 +61,7 @@ export class ChatComponent implements OnInit, OnDestroy {
       this.loadBuyerName();
       this.loadMessages();
       this.polling = setInterval(() => this.loadMessages(), 3000);
+      this.tryRequestConfirmation();
     });
   }
 
@@ -88,6 +89,33 @@ export class ChatComponent implements OnInit, OnDestroy {
     .subscribe({
       next: (user) => this.buyerName = `${user.firstname} ${user.lastname}`,
       error: () => this.buyerName = 'Unknown buyer'
+    });
+  }
+
+  tryRequestConfirmation(): void {
+    if (!this.itemId) return;
+
+    const path = `${environment.apiBaseUrl}/api/sale-confirmation/${this.itemId}/${this.currentUserId === this.buyerId ? 'buyer-popup' : 'owner-popup'}`;
+    this.http.get<boolean>(path)
+    .subscribe({
+      next: (data) => {
+        alert(data)
+        if (data) {
+          this.triggerPopup();
+        }
+      },
+      error: (err) => {
+        console.error(this.currentUserId, this.buyerId, this.itemId);
+        console.error('Failed to load sale confirmation popup state', err);
+      }
+    });
+  }
+
+  triggerPopup() {
+    const message = "The other party has confirmed the transaction. Would you also like to confirmt the transaction?";
+
+    this.showConfirmDialog(message, () => {
+      this.confirmTransaction();
     });
   }
 
@@ -135,8 +163,13 @@ export class ChatComponent implements OnInit, OnDestroy {
     const sellerText = "Did you receive the payment and give the item to the buyer? And do you agree to the terms agreed upon in the chat & item description?";
     const message = (this.currentUserId === this.buyerId ? buyerText : sellerText) + "<br/><br/><b> This action cannot be undone.</b>";
 
+
+
     this.showConfirmDialog(message, () => {
-      console.log("Proceeding...");
+      this.http.put(`...`, {}).subscribe({
+        next: () => alert('Transaction confirmed. Thank you for using Academiaverse!'),
+        error: (err) => alert('Failed to confirm transaction. Please try again.')
+      });
     });
   }
 
@@ -187,6 +220,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   noButton?.addEventListener("click", () => {
     document.body.removeChild(overlay);
+    alert("Transaction not confirmed");
   });
 }
 }

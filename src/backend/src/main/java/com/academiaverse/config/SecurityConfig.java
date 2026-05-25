@@ -39,7 +39,8 @@ public class SecurityConfig {
                 .requestMatchers("/v1/admin").hasAuthority("ADMIN")
                 .requestMatchers("/api/uploads/**").permitAll()
                 .requestMatchers("/api/items/*/download").authenticated()              
-                .requestMatchers("/api/items/purchases").authenticated()                  
+                .requestMatchers("/api/items/purchases").authenticated()          
+                .requestMatchers("/api/sale-confirmation/**").authenticated()                  
                 .anyRequest().authenticated()
             )
             .sessionManagement(session ->

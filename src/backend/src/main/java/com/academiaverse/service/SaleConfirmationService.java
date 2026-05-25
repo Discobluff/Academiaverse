@@ -53,26 +53,13 @@ public class SaleConfirmationService {
     private SaleConfirmation getOrCreateForItem(Long itemId) {
         Item item = itemRepository.findById(itemId)
             .orElseThrow(() -> new RuntimeException("Item not found"));
-        Optional<SaleConfirmation> confirmation = saleConfirmationRepository.findByItem(item);
-        return confirmation.orElseGet(() -> createForItem(item));
-    }
-
-    private SaleConfirmation createForItem(Item item) {
-        SaleConfirmation confirmation = new SaleConfirmation();
-        confirmation.setItem(item);
-        confirmation.setBuyer(resolveBuyer(item));
-        confirmation.setOwnerConfirmed(false);
-        confirmation.setBuyerConfirmed(false);
-        confirmation.setCreatedAt(LocalDateTime.now());
-        confirmation.setUpdatedAt(LocalDateTime.now());
-        return saleConfirmationRepository.save(confirmation);
-    }
-
-    private User resolveBuyer(Item item) {
-        return transactionRepository.findByItem(item)
-            .stream()
-            .findFirst()
-            .map(transaction -> transaction.getBuyer())
-            .orElse(null);
+        return saleConfirmationRepository.findByItem(item)
+            .orElseGet(() -> {
+                SaleConfirmation confirmation = new SaleConfirmation();
+                confirmation.setItem(item);
+                confirmation.setCreatedAt(LocalDateTime.now());
+                confirmation.setUpdatedAt(LocalDateTime.now());
+                return confirmation;
+            });
     }
 }

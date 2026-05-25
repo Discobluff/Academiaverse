@@ -1,5 +1,6 @@
 package com.academiaverse.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,6 +27,7 @@ public class SaleConfirmation {
 
     @OneToOne
     @JoinColumn(name = "item_id")
+    @JsonIgnoreProperties("saleConfirmation")
     private Item item;
 
     @ManyToOne
