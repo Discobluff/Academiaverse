@@ -23,7 +23,11 @@
       <span class="info-value">{{ buyerName }}</span>
     </div>
   </div>
+  @if (bothConfirmed) {
+  <span class="confirmed-label">✅ Both parties confirmed</span>
+} @else {
   <button class="confirm-btn" (click)="confirmTransaction()">Confirm Transaction</button>
+}
 </div>
 
   <div class="messages-panel">

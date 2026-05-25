@@ -51,6 +51,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   sellerName = '';
   buyerName = '';
   courseName = 'Not assigned';
+  bothConfirmed = false;
 
   ngOnInit() {
     this.currentUserId = this.authService.getUserId();
@@ -92,30 +93,30 @@ export class ChatComponent implements OnInit, OnDestroy {
     });
   }
 
-tryRequestConfirmation(): void {
-  if (!this.itemId) return;
+  tryRequestConfirmation(): void {
+    if (!this.itemId) return;
 
-  const path = `${environment.apiBaseUrl}/api/sale-confirmation/${this.itemId}/${this.currentUserId === this.buyerId ? 'buyer-popup' : 'owner-popup'}`;
-  this.http.get<string>(path, { responseType: 'text' as 'json' })
-  .subscribe({
-    next: (status) => {
-      if (status === 'PENDING_YOU') {
-        this.triggerPopup();
-      } else if (status === 'BOTH_CONFIRMED') {
-        alert('Both parties have confirmed the transaction. It is complete!');
+    const path = `${environment.apiBaseUrl}/api/sale-confirmation/${this.itemId}/${this.currentUserId === this.buyerId ? 'buyer-popup' : 'owner-popup'}`;
+    this.http.get<string>(path, { responseType: 'text' as 'json' })
+    .subscribe({
+      next: (status) => {
+        if (status === 'PENDING_YOU') {
+          this.triggerPopup();
+        } else if (status === 'BOTH_CONFIRMED') {
+          this.bothConfirmed = true;
+          alert('Both parties have confirmed the transaction. It is complete!');
+        }
+        // 'NONE' → do nothing
+      },
+      error: (err) => {
+        console.error(this.currentUserId, this.buyerId, this.itemId);
+        console.error('Failed to load sale confirmation popup state', err);
       }
-      // 'NONE' → do nothing
-    },
-    error: (err) => {
-      console.error(this.currentUserId, this.buyerId, this.itemId);
-      console.error('Failed to load sale confirmation popup state', err);
-    }
-  });
-}
+    });
+  }
 
   triggerPopup() {
-    const message = "The other party has confirmed the transaction. Would you also like to confirmt the transaction?";
-
+    const message = "The other party has confirmed the transaction. Would you also like to confirm the transaction?";
     this.showConfirmDialog(message, () => {
       this.confirmTransaction();
     });
@@ -138,7 +139,6 @@ tryRequestConfirmation(): void {
       },
       error: (err) => {
         console.error('Failed to load messages', err);
-        // Keep old messages visible even if the request fails
       }
     });
   }
@@ -165,16 +165,16 @@ tryRequestConfirmation(): void {
     const sellerText = "Did you receive the payment and give the item to the buyer? And do you agree to the terms agreed upon in the chat & item description?";
     const message = (this.currentUserId === this.buyerId ? buyerText : sellerText) + "<br/><br/><b> This action cannot be undone.</b>";
 
-
-
     const path = this.currentUserId === this.buyerId
       ? `${environment.apiBaseUrl}/api/sale-confirmation/${this.itemId}/buyer-confirmed`
       : `${environment.apiBaseUrl}/api/sale-confirmation/${this.itemId}/owner-confirmed`;
 
     this.showConfirmDialog(message, () => {
       this.http.put(path, {}).subscribe({
-        next: () => alert('Transaction confirmed. Thank you for using Academiaverse!'),
-        error: (err) => alert('Failed to confirm transaction. Please try again.')
+        next: () => {
+          alert('Transaction confirmed. Thank you for using Academiaverse!');
+        },
+        error: () => alert('Failed to confirm transaction. Please try again.')
       });
     });
   }
@@ -188,45 +188,45 @@ tryRequestConfirmation(): void {
   }
 
   showConfirmDialog(message: string, onConfirm: () => void) {
-  const overlay = document.createElement("div");
-  overlay.style.cssText = `
-    position: fixed; inset: 0; background: rgba(0,0,0,0.45);
-    display: flex; align-items: center; justify-content: center; z-index: 1000;
-  `;
+    const overlay = document.createElement("div");
+    overlay.style.cssText = `
+      position: fixed; inset: 0; background: rgba(0,0,0,0.45);
+      display: flex; align-items: center; justify-content: center; z-index: 1000;
+    `;
 
-  overlay.innerHTML = `
-    <div style="background: #fff; border-radius: 12px; border: 0.5px solid #e0e0e0;
-                padding: 1.75rem 1.5rem 1.5rem; max-width: 380px; width: 90%;">
-      <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 1rem;">
-        <div style="width: 36px; height: 36px; border-radius: 50%; background: #fff8e1;
-                    display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-          🛡️
+    overlay.innerHTML = `
+      <div style="background: #fff; border-radius: 12px; border: 0.5px solid #e0e0e0;
+                  padding: 1.75rem 1.5rem 1.5rem; max-width: 380px; width: 90%;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 1rem;">
+          <div style="width: 36px; height: 36px; border-radius: 50%; background: #fff8e1;
+                      display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+            🛡️
+          </div>
+          <h2 style="font-size: 16px; font-weight: 500; margin: 0;">Confirm transaction</h2>
         </div>
-        <h2 style="font-size: 16px; font-weight: 500; margin: 0;">Confirm transaction</h2>
+        <p style="font-size: 14px; color: #555; line-height: 1.6; margin: 0 0 1.5rem;">${message}</p>
+        <div style="display: flex; gap: 8px; justify-content: flex-end;">
+          <button id="dialog-no" style="padding: 8px 20px; font-size: 14px; cursor: pointer;
+                  border-radius: 8px; border: 1px solid #ccc; background: transparent;">No</button>
+          <button id="dialog-yes" style="padding: 8px 20px; font-size: 14px; cursor: pointer;
+                  border-radius: 8px; border: 1px solid #a3d9a5; background: #f0faf0; color: #2e7d32;">Yes</button>
+        </div>
       </div>
-      <p style="font-size: 14px; color: #555; line-height: 1.6; margin: 0 0 1.5rem;">${message}</p>
-      <div style="display: flex; gap: 8px; justify-content: flex-end;">
-        <button id="dialog-no" style="padding: 8px 20px; font-size: 14px; cursor: pointer;
-                border-radius: 8px; border: 1px solid #ccc; background: transparent;">No</button>
-        <button id="dialog-yes" style="padding: 8px 20px; font-size: 14px; cursor: pointer;
-                border-radius: 8px; border: 1px solid #a3d9a5; background: #f0faf0; color: #2e7d32;">Yes</button>
-      </div>
-    </div>
-  `;
+    `;
 
-  document.body.appendChild(overlay);
+    document.body.appendChild(overlay);
 
-  const yesButton = overlay.querySelector<HTMLButtonElement>("#dialog-yes");
-  const noButton = overlay.querySelector<HTMLButtonElement>("#dialog-no");
+    const yesButton = overlay.querySelector<HTMLButtonElement>("#dialog-yes");
+    const noButton = overlay.querySelector<HTMLButtonElement>("#dialog-no");
 
-  yesButton?.addEventListener("click", () => {
-    document.body.removeChild(overlay);
-    onConfirm();
-  });
+    yesButton?.addEventListener("click", () => {
+      document.body.removeChild(overlay);
+      onConfirm();
+    });
 
-  noButton?.addEventListener("click", () => {
-    document.body.removeChild(overlay);
-    alert("Transaction not confirmed");
-  });
-}
+    noButton?.addEventListener("click", () => {
+      document.body.removeChild(overlay);
+      alert("Transaction not confirmed");
+    });
+  }
 }

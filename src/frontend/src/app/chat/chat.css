@@ -155,3 +155,8 @@
 .confirm-btn:hover {
   background-color: #064d45;
 }
+.confirmed-label {
+  font-size: 14px;
+  font-weight: bold;
+  color: #2e7d32;
+}
