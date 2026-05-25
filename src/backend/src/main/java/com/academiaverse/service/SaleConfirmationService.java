@@ -1,5 +1,4 @@
 package com.academiaverse.service;
-
 import com.academiaverse.entity.Item;
 import com.academiaverse.entity.SaleConfirmation;
 import com.academiaverse.entity.User;
@@ -15,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class SaleConfirmationService {
-
     private final SaleConfirmationRepository saleConfirmationRepository;
     private final ItemRepository itemRepository;
     private final TransactionRepository transactionRepository;
@@ -37,29 +35,35 @@ public class SaleConfirmationService {
     }
 
     @Transactional(readOnly = true)
-    public boolean shouldOwnerGetPopup(Long itemId) {
+    public String getOwnerPopupStatus(Long itemId) {
         SaleConfirmation confirmation = getOrCreateForItem(itemId);
-        return Boolean.TRUE.equals(confirmation.getBuyerConfirmed())
-            && !Boolean.TRUE.equals(confirmation.getOwnerConfirmed());
+        boolean ownerConfirmed = Boolean.TRUE.equals(confirmation.getOwnerConfirmed());
+        boolean buyerConfirmed = Boolean.TRUE.equals(confirmation.getBuyerConfirmed());
+        if (ownerConfirmed && buyerConfirmed) return "BOTH_CONFIRMED";
+        if (buyerConfirmed && !ownerConfirmed)  return "PENDING_YOU";
+        return "NONE";
     }
 
     @Transactional(readOnly = true)
-    public boolean shouldBuyerGetPopup(Long itemId) {
+    public String getBuyerPopupStatus(Long itemId) {
         SaleConfirmation confirmation = getOrCreateForItem(itemId);
-        return Boolean.TRUE.equals(confirmation.getOwnerConfirmed())
-            && !Boolean.TRUE.equals(confirmation.getBuyerConfirmed());
+        boolean ownerConfirmed = Boolean.TRUE.equals(confirmation.getOwnerConfirmed());
+        boolean buyerConfirmed = Boolean.TRUE.equals(confirmation.getBuyerConfirmed());
+        if (ownerConfirmed && buyerConfirmed) return "BOTH_CONFIRMED";
+        if (ownerConfirmed && !buyerConfirmed)  return "PENDING_YOU";
+        return "NONE";
     }
 
     private SaleConfirmation getOrCreateForItem(Long itemId) {
         Item item = itemRepository.findById(itemId)
-            .orElseThrow(() -> new RuntimeException("Item not found"));
+                .orElseThrow(() -> new RuntimeException("Item not found"));
         return saleConfirmationRepository.findByItem(item)
-            .orElseGet(() -> {
-                SaleConfirmation confirmation = new SaleConfirmation();
-                confirmation.setItem(item);
-                confirmation.setCreatedAt(LocalDateTime.now());
-                confirmation.setUpdatedAt(LocalDateTime.now());
-                return confirmation;
-            });
+                .orElseGet(() -> {
+                    SaleConfirmation confirmation = new SaleConfirmation();
+                    confirmation.setItem(item);
+                    confirmation.setCreatedAt(LocalDateTime.now());
+                    confirmation.setUpdatedAt(LocalDateTime.now());
+                    return confirmation;
+                });
     }
 }

@@ -1,5 +1,4 @@
 package com.academiaverse.controller;
-
 import com.academiaverse.entity.SaleConfirmation;
 import com.academiaverse.service.SaleConfirmationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/sale-confirmation")
 public class SaleConfirmationController {
-
     @Autowired
     private SaleConfirmationService saleConfirmationService;
 
@@ -26,18 +24,12 @@ public class SaleConfirmationController {
     }
 
     @GetMapping("/{id}/owner-popup")
-    public ResponseEntity<Boolean> getShouldOwnerGetPopup(@PathVariable Long id) {
-        boolean shouldGetPopup = saleConfirmationService.shouldOwnerGetPopup(id);
-        return ResponseEntity.ok(shouldGetPopup);
+    public ResponseEntity<String> getOwnerPopupStatus(@PathVariable Long id) {
+        return ResponseEntity.ok(saleConfirmationService.getOwnerPopupStatus(id));
     }
 
     @GetMapping("/{id}/buyer-popup")
-    public ResponseEntity<Boolean> getShouldBuyerGetPopup(@PathVariable Long id) {
-        boolean shouldGetPopup = saleConfirmationService.shouldBuyerGetPopup(id);
-        return ResponseEntity.ok(shouldGetPopup);
+    public ResponseEntity<String> getBuyerPopupStatus(@PathVariable Long id) {
+        return ResponseEntity.ok(saleConfirmationService.getBuyerPopupStatus(id));
     }
 }
-
-
-
-

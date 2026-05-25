@@ -92,24 +92,26 @@ export class ChatComponent implements OnInit, OnDestroy {
     });
   }
 
-  tryRequestConfirmation(): void {
-    if (!this.itemId) return;
+tryRequestConfirmation(): void {
+  if (!this.itemId) return;
 
-    const path = `${environment.apiBaseUrl}/api/sale-confirmation/${this.itemId}/${this.currentUserId === this.buyerId ? 'buyer-popup' : 'owner-popup'}`;
-    this.http.get<boolean>(path)
-    .subscribe({
-      next: (data) => {
-        alert('Received confirmation popup state: ' + data);
-        if (data) {
-          this.triggerPopup();
-        }
-      },
-      error: (err) => {
-        console.error(this.currentUserId, this.buyerId, this.itemId);
-        console.error('Failed to load sale confirmation popup state', err);
+  const path = `${environment.apiBaseUrl}/api/sale-confirmation/${this.itemId}/${this.currentUserId === this.buyerId ? 'buyer-popup' : 'owner-popup'}`;
+  this.http.get<string>(path, { responseType: 'text' as 'json' })
+  .subscribe({
+    next: (status) => {
+      if (status === 'PENDING_YOU') {
+        this.triggerPopup();
+      } else if (status === 'BOTH_CONFIRMED') {
+        alert('Both parties have confirmed the transaction. It is complete!');
       }
-    });
-  }
+      // 'NONE' → do nothing
+    },
+    error: (err) => {
+      console.error(this.currentUserId, this.buyerId, this.itemId);
+      console.error('Failed to load sale confirmation popup state', err);
+    }
+  });
+}
 
   triggerPopup() {
     const message = "The other party has confirmed the transaction. Would you also like to confirmt the transaction?";
