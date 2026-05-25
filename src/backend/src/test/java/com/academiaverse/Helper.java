@@ -45,6 +45,9 @@ public class Helper {
     private ItemRepository itemRepository;
 
     @Autowired
+    private com.academiaverse.repository.SaleConfirmationRepository saleConfirmationRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     private String headerAuth = "Authorization";
@@ -80,6 +83,12 @@ public class Helper {
     }
 
     public void deleteItem(Item item) {
+        itemRepository.delete(item);
+    }
+
+    @Transactional
+    public void deleteItemWithConfirmation(Item item) {
+        saleConfirmationRepository.deleteByItem(item);
         itemRepository.delete(item);
     }
 

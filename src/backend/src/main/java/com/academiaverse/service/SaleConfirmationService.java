@@ -1,19 +1,21 @@
 package com.academiaverse.service;
+
 import com.academiaverse.entity.Item;
 import com.academiaverse.entity.SaleConfirmation;
-import com.academiaverse.entity.User;
 import com.academiaverse.repository.ItemRepository;
 import com.academiaverse.repository.SaleConfirmationRepository;
 import com.academiaverse.repository.TransactionRepository;
 import java.time.LocalDateTime;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
 public class SaleConfirmationService {
+
     private final SaleConfirmationRepository saleConfirmationRepository;
     private final ItemRepository itemRepository;
     private final TransactionRepository transactionRepository;
@@ -40,7 +42,7 @@ public class SaleConfirmationService {
         boolean ownerConfirmed = Boolean.TRUE.equals(confirmation.getOwnerConfirmed());
         boolean buyerConfirmed = Boolean.TRUE.equals(confirmation.getBuyerConfirmed());
         if (ownerConfirmed && buyerConfirmed) return "BOTH_CONFIRMED";
-        if (buyerConfirmed && !ownerConfirmed)  return "PENDING_YOU";
+        if (buyerConfirmed && !ownerConfirmed) return "PENDING_YOU";
         return "NONE";
     }
 
@@ -50,13 +52,13 @@ public class SaleConfirmationService {
         boolean ownerConfirmed = Boolean.TRUE.equals(confirmation.getOwnerConfirmed());
         boolean buyerConfirmed = Boolean.TRUE.equals(confirmation.getBuyerConfirmed());
         if (ownerConfirmed && buyerConfirmed) return "BOTH_CONFIRMED";
-        if (ownerConfirmed && !buyerConfirmed)  return "PENDING_YOU";
+        if (ownerConfirmed && !buyerConfirmed) return "PENDING_YOU";
         return "NONE";
     }
 
     private SaleConfirmation getOrCreateForItem(Long itemId) {
         Item item = itemRepository.findById(itemId)
-                .orElseThrow(() -> new RuntimeException("Item not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Item not found"));
         return saleConfirmationRepository.findByItem(item)
                 .orElseGet(() -> {
                     SaleConfirmation confirmation = new SaleConfirmation();
