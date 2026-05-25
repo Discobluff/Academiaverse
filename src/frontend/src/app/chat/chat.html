@@ -4,7 +4,8 @@
     <span class="header-title">CHAT</span>
   </div>
 
-  <div class="item-info-panel">
+<div class="item-info-panel">
+  <div class="item-info-left">
     <div class="info-row">
       <span class="info-label">Item:</span>
       <span class="info-value">{{ itemTitle }} (ID: {{ itemId }})</span>
@@ -22,6 +23,8 @@
       <span class="info-value">{{ buyerName }}</span>
     </div>
   </div>
+  <button class="confirm-btn">Confirm Transaction</button>
+</div>
 
   <div class="messages-panel">
     @if (messages.length === 0) {

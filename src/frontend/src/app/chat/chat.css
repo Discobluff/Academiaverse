@@ -13,9 +13,10 @@
 /* Header and info panels are fixed height */
 .chat-header,
 .item-info-panel {
-  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
-
 .chat-header {
   display: flex;
   align-items: center;
@@ -135,4 +136,22 @@
   border: none;
   border-radius: 20px;
   cursor: pointer;
+}
+
+
+.confirm-btn {
+  padding: 10px 16px;
+  background-color: #075e54;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.confirm-btn:hover {
+  background-color: #064d45;
 }

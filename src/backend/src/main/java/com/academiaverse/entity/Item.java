@@ -46,6 +46,10 @@ public class Item {
     private String digitalFileName;
     private String digitalFilePath;
 
+    @OneToOne(mappedBy = "item")
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private SaleConfirmation saleConfirmation;
+
     @ElementCollection
     private List<String> images;
 
