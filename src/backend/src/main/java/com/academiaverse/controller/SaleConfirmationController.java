@@ -1,6 +1,6 @@
 package com.academiaverse.controller;
 
-import com.academiaverse.model.SaleConfirmation;
+import com.academiaverse.entity.SaleConfirmation;
 import com.academiaverse.service.SaleConfirmationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
