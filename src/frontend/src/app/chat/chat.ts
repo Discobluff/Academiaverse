@@ -99,7 +99,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.http.get<boolean>(path)
     .subscribe({
       next: (data) => {
-        alert(data)
+        alert('Received confirmation popup state: ' + data);
         if (data) {
           this.triggerPopup();
         }
@@ -165,8 +165,12 @@ export class ChatComponent implements OnInit, OnDestroy {
 
 
 
+    const path = this.currentUserId === this.buyerId
+      ? `${environment.apiBaseUrl}/api/sale-confirmation/${this.itemId}/buyer-confirmed?confirmed=true`
+      : `${environment.apiBaseUrl}/api/sale-confirmation/${this.itemId}/owner-confirmed`;
+
     this.showConfirmDialog(message, () => {
-      this.http.put(`...`, {}).subscribe({
+      this.http.put(path, {}).subscribe({
         next: () => alert('Transaction confirmed. Thank you for using Academiaverse!'),
         error: (err) => alert('Failed to confirm transaction. Please try again.')
       });
