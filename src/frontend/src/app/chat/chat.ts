@@ -166,7 +166,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
 
     const path = this.currentUserId === this.buyerId
-      ? `${environment.apiBaseUrl}/api/sale-confirmation/${this.itemId}/buyer-confirmed?confirmed=true`
+      ? `${environment.apiBaseUrl}/api/sale-confirmation/${this.itemId}/buyer-confirmed`
       : `${environment.apiBaseUrl}/api/sale-confirmation/${this.itemId}/owner-confirmed`;
 
     this.showConfirmDialog(message, () => {

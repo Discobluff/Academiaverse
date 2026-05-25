@@ -29,9 +29,9 @@ public class SaleConfirmationService {
     }
 
     @Transactional
-    public SaleConfirmation setBuyerConfirmed(Long itemId, boolean confirmed) {
+    public SaleConfirmation setBuyerConfirmed(Long itemId) {
         SaleConfirmation confirmation = getOrCreateForItem(itemId);
-        confirmation.setBuyerConfirmed(confirmed);
+        confirmation.setBuyerConfirmed(true);
         confirmation.setUpdatedAt(LocalDateTime.now());
         return saleConfirmationRepository.save(confirmation);
     }

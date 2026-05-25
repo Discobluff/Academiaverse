@@ -20,9 +20,9 @@ public class SaleConfirmationController {
     }
 
     @PutMapping("/{id}/buyer-confirmed")
-    public ResponseEntity<SaleConfirmation> setBuyerConfirmed(@PathVariable Long id, @RequestParam boolean confirmed) {
-        SaleConfirmation saleConfirmation = saleConfirmationService.setBuyerConfirmed(id, confirmed);
-        return ResponseEntity.ok(saleConfirmation);
+    public ResponseEntity<SaleConfirmation> setBuyerConfirmed(@PathVariable Long id) {
+        SaleConfirmation confirmation = saleConfirmationService.setBuyerConfirmed(id);
+        return ResponseEntity.ok(confirmation);
     }
 
     @GetMapping("/{id}/owner-popup")
