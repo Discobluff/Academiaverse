@@ -130,6 +130,16 @@ export class ChatComponent implements OnInit, OnDestroy {
     });
   }
 
+  confirmTransaction() {
+    const buyerText = "Did you receive the item and pay the agreed upon amount? And do you agree to the terms agreed upon in the chat & item description?";
+    const sellerText = "Did you receive the payment and give the item to the buyer? And do you agree to the terms agreed upon in the chat & item description?";
+    const message = (this.currentUserId === this.buyerId ? buyerText : sellerText) + "<br/><br/><b> This action cannot be undone.</b>";
+
+    this.showConfirmDialog(message, () => {
+      console.log("Proceeding...");
+    });
+  }
+
   isMine(msg: ChatMessage): boolean {
     return msg.sender.id === this.currentUserId;
   }
@@ -137,4 +147,46 @@ export class ChatComponent implements OnInit, OnDestroy {
   goBack() {
     window.history.back();
   }
+
+  showConfirmDialog(message: string, onConfirm: () => void) {
+  const overlay = document.createElement("div");
+  overlay.style.cssText = `
+    position: fixed; inset: 0; background: rgba(0,0,0,0.45);
+    display: flex; align-items: center; justify-content: center; z-index: 1000;
+  `;
+
+  overlay.innerHTML = `
+    <div style="background: #fff; border-radius: 12px; border: 0.5px solid #e0e0e0;
+                padding: 1.75rem 1.5rem 1.5rem; max-width: 380px; width: 90%;">
+      <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 1rem;">
+        <div style="width: 36px; height: 36px; border-radius: 50%; background: #fff8e1;
+                    display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+          🛡️
+        </div>
+        <h2 style="font-size: 16px; font-weight: 500; margin: 0;">Confirm transaction</h2>
+      </div>
+      <p style="font-size: 14px; color: #555; line-height: 1.6; margin: 0 0 1.5rem;">${message}</p>
+      <div style="display: flex; gap: 8px; justify-content: flex-end;">
+        <button id="dialog-no" style="padding: 8px 20px; font-size: 14px; cursor: pointer;
+                border-radius: 8px; border: 1px solid #ccc; background: transparent;">No</button>
+        <button id="dialog-yes" style="padding: 8px 20px; font-size: 14px; cursor: pointer;
+                border-radius: 8px; border: 1px solid #a3d9a5; background: #f0faf0; color: #2e7d32;">Yes</button>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(overlay);
+
+  const yesButton = overlay.querySelector<HTMLButtonElement>("#dialog-yes");
+  const noButton = overlay.querySelector<HTMLButtonElement>("#dialog-no");
+
+  yesButton?.addEventListener("click", () => {
+    document.body.removeChild(overlay);
+    onConfirm();
+  });
+
+  noButton?.addEventListener("click", () => {
+    document.body.removeChild(overlay);
+  });
+}
 }
