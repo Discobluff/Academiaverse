@@ -1,35 +1,164 @@
-.login-panel {
-    border-radius: 8px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    padding: 24px;
-    border: 1px solid black;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: fit-content;
+/* ── GLOBAL FOUNDATION STYLES ─────────── */
+
+:root {
+  --bg:             #F8FAF7;
+  --surface:        #FFFFFF;
+  --surface-subtle: #F2F5F1;
+  --border:         #D9E2D6;
+  --text:           #172018;
+  --text-secondary: #5D6B61;
+  --text-muted:     #7E8B82;
+  --brand:          #2F7D4F;
+  --brand-dark:     #245F3B;
+  --brand-soft:     #DDEFE3;
+  --focus:          #5B8DEF;
+  --success:        #2F7D4F;
+  --warning:        #B7791F;
+  --error:          #B42318;
+  --info:           #2F6FDB;
+
+  --success-bg:     #EDFAF3;
+  --warning-bg:     #FEF9EC;
+  --error-bg:       #FFF0EF;
+  --info-bg:        #EEF4FF;
+
+  --s1:  4px;
+  --s2:  8px;
+  --s3:  12px;
+  --s4:  16px;
+  --s6:  24px;
+  --s8:  32px;
+  --s12: 48px;
+  --s16: 64px;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+
+  --font-sans: "DM Sans", "Söhne", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: "DM Mono", ui-monospace, "Fira Code", monospace;
+
+  --text-xs:   0.75rem;
+  --text-sm:   0.875rem;
+  --text-base: 1rem;
+  --text-lg:   1.125rem;
+  --text-xl:   1.25rem;
+  --text-2xl:  1.5rem;
+  --text-3xl:  1.875rem;
+
+  --leading-tight:  1.25;
+  --leading-normal: 1.5;
+  --leading-loose:  1.75;
+
+  --shadow-sm:  0 1px 2px 0 rgba(23, 32, 24, 0.06);
+  --shadow-md:  0 2px 8px 0 rgba(23, 32, 24, 0.08);
+  --transition: 150ms ease;
 }
 
-.login-input {
-    display: block;
-    color: black;
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-.login-button {
-    background-color: rgb(91, 182, 16);
-    border-radius: 8px;
-    border: 0px;
-    color: white;
-    padding: 5px;
-    cursor: pointer;
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
+
+body {
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  color: var(--text);
+  background: var(--bg);
+  min-height: 100vh;
+}
+
+a {
+  color: var(--brand);
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  transition: text-decoration-color var(--transition), color var(--transition);
+}
+a:hover {
+  color: var(--brand-dark);
+  text-decoration-color: currentColor;
+}
+
+img, video { display: block; max-width: 100%; }
+ul, ol { list-style: none; }
+button { cursor: pointer; font: inherit; }
+input, textarea, select { font: inherit; }
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* ── Legacy compat ────────────────────── */
 
 .error-message {
-    color: red;
+  font-size: var(--text-sm);
+  color: var(--error);
 }
 
 .success-message {
-    color: green;
+  font-size: var(--text-sm);
+  color: var(--success);
+}
+
+.login-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+  padding: var(--s6);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: fit-content;
+  box-shadow: var(--shadow-md);
+}
+
+.login-input {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  padding: var(--s2) var(--s3);
+  font-size: var(--text-sm);
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  transition: border-color var(--transition);
+}
+.login-input:focus {
+  outline: none;
+  border-color: var(--focus);
+  box-shadow: 0 0 0 3px rgba(91, 141, 239, 0.18);
+}
+
+.login-button {
+  background: var(--brand);
+  color: #fff;
+  border: 1px solid var(--brand);
+  border-radius: var(--radius-md);
+  padding: var(--s2) var(--s4);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  min-height: 44px;
+  cursor: pointer;
+  transition: background var(--transition);
+}
+.login-button:hover {
+  background: var(--brand-dark);
+  border-color: var(--brand-dark);
 }

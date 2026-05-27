@@ -1,0 +1,209 @@
+.home {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: var(--s8) var(--s6);
+}
+
+/* ── Header ──────────────────────────── */
+
+.home__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--s6);
+  margin-bottom: var(--s8);
+}
+
+.home__greeting {
+  font-size: var(--text-3xl);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: var(--leading-tight);
+  color: var(--text);
+}
+
+.home__email {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  margin-top: var(--s1);
+}
+
+.home__points-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  padding: var(--s3) var(--s4);
+  background: var(--brand-soft);
+  border: 1px solid #bde0cc;
+  border-radius: var(--radius-md);
+  flex-shrink: 0;
+}
+
+.home__points-label {
+  font-size: var(--text-xs);
+  font-weight: 500;
+  color: var(--brand-dark);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.home__points-value {
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  color: var(--brand-dark);
+  line-height: 1;
+}
+
+.home__points-unit {
+  font-size: var(--text-sm);
+  font-weight: 500;
+}
+
+/* ── Action cards ────────────────────── */
+
+.home__grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+}
+
+.home__card {
+  display: flex;
+  align-items: center;
+  gap: var(--s4);
+  padding: var(--s4) var(--s6);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  text-decoration: none;
+  color: var(--text);
+  transition: box-shadow var(--transition), border-color var(--transition), transform var(--transition);
+}
+
+.home__card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: #b0c4b0;
+  transform: translateY(-1px);
+  color: var(--text);
+}
+
+.home__card-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  flex-shrink: 0;
+}
+
+.home__card--sell .home__card-icon {
+  background: var(--brand-soft);
+  color: var(--brand-dark);
+}
+
+.home__card--browse .home__card-icon {
+  background: var(--info-bg);
+  color: var(--info);
+}
+
+.home__card--chats .home__card-icon {
+  background: var(--warning-bg);
+  color: var(--warning);
+}
+
+.home__card-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.home__card-title {
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+
+.home__card-desc {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  line-height: var(--leading-normal);
+}
+
+.home__card-arrow {
+  font-size: var(--text-xl);
+  color: var(--text-muted);
+  flex-shrink: 0;
+  transition: transform var(--transition), color var(--transition);
+}
+
+.home__card:hover .home__card-arrow {
+  transform: translateX(3px);
+  color: var(--brand);
+}
+
+/* ── Quick links ─────────────────────── */
+
+.home__quick {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s3);
+  margin-top: var(--s8);
+  padding-top: var(--s6);
+  border-top: 1px solid var(--border);
+}
+
+.home__quick-link {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: var(--s1) var(--s2);
+  border-radius: var(--radius-sm);
+  transition: background var(--transition), color var(--transition);
+}
+
+.home__quick-link:hover {
+  background: var(--surface-subtle);
+  color: var(--brand);
+}
+
+.home__dot {
+  width: 3px;
+  height: 3px;
+  background: var(--text-muted);
+  border-radius: 50%;
+}
+
+/* ── Admin ────────────────────────────── */
+
+.home__admin {
+  margin-top: var(--s6);
+  padding: var(--s3) var(--s4);
+  background: var(--info-bg);
+  border: 1px solid #b3cef5;
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  color: #1a4caa;
+}
+
+/* ── Responsive ──────────────────────── */
+
+@media (max-width: 600px) {
+  .home {
+    padding: var(--s6) var(--s4);
+  }
+
+  .home__header {
+    flex-direction: column;
+    gap: var(--s4);
+  }
+
+  .home__points-card {
+    align-items: flex-start;
+    width: 100%;
+  }
+}
