@@ -51,15 +51,13 @@ dependency_scan:backend:
   stage: dependency_scan
   image: gradle:8-jdk21
   script:
-    - ./gradlew build -x test -x check
     - ./gradlew dependencies --write-locks
+    - ./gradlew clean
     - curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
     - trivy fs --scanners vuln --exit-code 1 .
   before_script:
     - cd src/backend
     - chmod +x gradlew
-  after_script:
-    - ./gradlew clean
 
 dependency_scan:frontend:
   stage: dependency_scan
