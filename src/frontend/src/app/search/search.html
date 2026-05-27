@@ -1,35 +1,53 @@
-<div>
-  <input list="courseSuggestions" [(ngModel)]="query" (input)="onInput()" (keyup.enter)="search()" placeholder="Search courses..." />
-  <datalist id="courseSuggestions">
-    @for (suggestion of suggestions; track suggestion) {
-      <option [value]="suggestion"></option>
-    }
-  </datalist>
-  <button (click)="search()">Search</button>
+<div class="search">
+  <h1 class="search__title" i18n="@@translation_search_courses">Search Courses</h1>
 
-  <!-- Search results first, with a clear title -->
-  @if (results.length) {
-    <h3>Search Results</h3>
-  }
-  <ul>
-    @for (course of results; track course.id) {
-      <li>
-        <a href="#" (click)="goToCourse(course.id); $event.preventDefault()">{{ course.name }} ({{ course.code }})</a>
-      </li>
-    }
-  </ul>
-
-  <!-- Recent searches below -->
-  @if (authService.isAuthenticated() && recentSearches.length) {
-    <div>
-      <h4>Recent searches:</h4>
-      <ul>
-        @for (item of recentSearches; track item) {
-          <li>
-            <a href="#" (click)="useRecentSearch(item); $event.preventDefault()">{{ item }}</a>
-          </li>
+  <div class="search__bar">
+    <div class="search__input-wrap">
+      <svg class="search__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input
+        class="search__input"
+        list="courseSuggestions"
+        [(ngModel)]="query"
+        (input)="onInput()"
+        (keyup.enter)="search()"
+        placeholder="Course name or code..."
+      />
+      <datalist id="courseSuggestions">
+        @for (suggestion of suggestions; track suggestion) {
+          <option [value]="suggestion"></option>
         }
-      </ul>
+      </datalist>
+    </div>
+    <button class="search__btn" (click)="search()">
+      <span i18n="@@translation_search_btn">Search</span>
+    </button>
+  </div>
+
+  @if (results.length) {
+    <div class="search__section">
+      <h2 class="search__section-title">Search Results</h2>
+      <div class="search__results">
+        @for (course of results; track course.id) {
+          <a class="search__result-card" href="#" (click)="goToCourse(course.id); $event.preventDefault()">
+            <div class="search__result-body">
+              <p class="search__result-name">{{ course.name }}</p>
+              <span class="search__result-code">{{ course.code }}</span>
+            </div>
+            <span class="search__result-arrow">&rarr;</span>
+          </a>
+        }
+      </div>
+    </div>
+  }
+
+  @if (authService.isAuthenticated() && recentSearches.length) {
+    <div class="search__section search__recent">
+      <h2 class="search__section-title">Recent searches</h2>
+      <div class="search__recent-list">
+        @for (item of recentSearches; track item) {
+          <button class="search__recent-chip" (click)="useRecentSearch(item)">{{ item }}</button>
+        }
+      </div>
     </div>
   }
 </div>

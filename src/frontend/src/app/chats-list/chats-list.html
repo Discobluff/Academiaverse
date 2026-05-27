@@ -1,18 +1,32 @@
-<div class="chats-container">
-  <h2>My Chats</h2>
+<div class="chats">
+  <h1 class="chats__title" i18n="@@translation_chats">My Chats</h1>
 
   @if (conversations.length === 0) {
-    <p class="no-chats">You haven't chatted about any items yet.</p>
+    <div class="chats__empty">
+      <svg class="chats__empty-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+      </svg>
+      <p class="chats__empty-title">No conversations yet</p>
+      <p class="chats__empty-body">When you chat about an item, it will appear here.</p>
+    </div>
   }
 
-  <div class="chats-list">
+  <div class="chats__list">
     @for (conv of conversations; track conv.itemId + '-' + conv.buyerId) {
-      <div class="chat-card" tabindex="0" role="button"
-           (click)="openChat(conv.itemId, conv.buyerId)"
-           (keydown.enter)="openChat(conv.itemId, conv.buyerId)">
-        <h3>{{ conv.itemTitle }}</h3>
-        <p>Buyer: {{ conv.buyerName }}</p>
-      </div>
+      <a class="chats__card" tabindex="0" role="button"
+         (click)="openChat(conv.itemId, conv.buyerId)"
+         (keydown.enter)="openChat(conv.itemId, conv.buyerId)">
+        <div class="chats__card-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+        </div>
+        <div class="chats__card-body">
+          <p class="chats__card-title">{{ conv.itemTitle }}</p>
+          <p class="chats__card-sub">{{ conv.buyerName }}</p>
+        </div>
+        <span class="chats__card-arrow">&rarr;</span>
+      </a>
     }
   </div>
 </div>

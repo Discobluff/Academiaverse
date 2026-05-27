@@ -1,79 +1,132 @@
 @if (item) {
-<div class="item-detail-container">
-  <h2 class="item-title">{{ item.title }}</h2>
-  <p class="item-description"><strong>Description:</strong> {{ item.description }}</p>
-  <p class="item-notes"><strong>Notes:</strong> {{ item.notes }}</p>
-  <p class="item-price"><strong>Price:</strong> {{ item.price | number:'1.2-2' }} {{ item.paymentMethod === 'points' ? 'points' : '€' }}
-  </p>
-  <p class="item-type"><strong>Type:</strong> {{ item.type }}</p>
-  <p class="item-payment"><strong>Payment Method:</strong> {{ item.paymentMethod }}</p>
-  <p class="item-status"><strong>Status:</strong> {{ item.status || 'Available' }}</p>
-  <p><strong>Availability:</strong> {{ item.availability || 'Available' }}</p>
-  @if (item.availability === 'Unavailable' && item.availableUntil) {
-    <p><strong>Available until:</strong> {{ item.availableUntil | date:'mediumDate' }}</p>
-  }
-
-  @if (!item.isDigital && item.digitalFilePath && item.digitalFileName) {
-    <div class="item-image">
-      <p><strong>Image:</strong> {{ item.digitalFileName }}</p>
-      <button class="view-image-btn" (click)="viewImage(item.digitalFilePath)">View Image</button>
+<div class="detail">
+  <div class="detail__card">
+    <!-- Header -->
+    <div class="detail__header">
+      <h1 class="detail__title">{{ item.title }}</h1>
+      <div class="detail__price-tag">
+        {{ item.price | number:'1.2-2' }}
+        <span class="detail__price-unit">{{ item.paymentMethod === 'points' ? 'pts' : '€' }}</span>
+      </div>
     </div>
-  }
 
-  @if (item.isDigital) {
-    <div class="digital-info">
-      <p><strong>File:</strong> {{ item.digitalFileName }}</p>
-      @if (!hasBought) {
-        <p><em>Available after purchase</em></p>
+    <!-- Info rows -->
+    <div class="detail__info">
+      <div class="detail__row">
+        <span class="detail__label">Description</span>
+        <p class="detail__value">{{ item.description }}</p>
+      </div>
+
+      @if (item.notes) {
+        <div class="detail__row">
+          <span class="detail__label">Notes</span>
+          <p class="detail__value">{{ item.notes }}</p>
+        </div>
       }
-      @if (hasBought) {
-        <button class="download-btn" (click)="downloadFile()">Download</button>
-      }
-    </div>
-  }
 
-  <!-- Show Interest button only if the user is not the owner and hasn't bought -->
-  @if (!isOwner() && !hasBought) {
-    <button class="interest-btn" (click)="expressInterest()" [disabled]="alreadyInterested">
-      {{ alreadyInterested ? 'Already Interested' : 'Interested' }}
-    </button>
-  }
+      <div class="detail__meta-grid">
+        <div class="detail__meta-item">
+          <span class="detail__label">Type</span>
+          <span class="detail__meta-value">{{ item.type }}</span>
+        </div>
+        <div class="detail__meta-item">
+          <span class="detail__label">Payment</span>
+          <span class="detail__meta-value">{{ item.paymentMethod }}</span>
+        </div>
+        <div class="detail__meta-item">
+          <span class="detail__label">Status</span>
+          <span class="detail__meta-value">{{ item.status || 'Available' }}</span>
+        </div>
+        <div class="detail__meta-item">
+          <span class="detail__label">Availability</span>
+          <span class="detail__meta-value">{{ item.availability || 'Available' }}</span>
+        </div>
+      </div>
 
-  <!-- Show Chat with Seller button only for buyers (not the owner) -->
-  @if (!isOwner()) {
-  <button class="chat-btn" (click)="startChat()">Chat with Seller</button>
-  }
-
-  <!-- Show Buy-with-Points button only for points items, not the owner, and not already sold -->
-    @if (!isOwner() && item.paymentMethod === 'points' && !hasBought) {
-  <button class="buy-points-btn" (click)="buyWithPoints()">Buy with Points</button>
-  }
-
-  <!-- Report button – always visible to any logged-in user -->
-  <!-- Report button – only visible to non-owners -->
-  @if (!isOwner()) {
-  <button class="report-btn" (click)="reportItem()">Report</button>
-  }
-
-  @if (hasBought) {
-    <div role="radiogroup" aria-label="Star rating" class="star-rating">
-      @for (i of range(starsNumber); track i) {
-          <span role="radio" tabindex="0" [attr.aria-checked]="starsSelected === i + 1" (click)="rateItem(i + 1)"
-            (mouseenter)="starsHovered = i + 1" (mouseleave)="starsHovered = 0" (keydown.enter)="rateItem(i + 1)"
-            [class.filled]="i < starsSelected || i < starsHovered">
-            ★
-          </span>
+      @if (item.availability === 'Unavailable' && item.availableUntil) {
+        <div class="detail__row">
+          <span class="detail__label">Available until</span>
+          <p class="detail__value">{{ item.availableUntil | date:'mediumDate' }}</p>
+        </div>
       }
     </div>
-  }
-  @if (starsAverage !== 0.0) {
-    <span>Average rating: {{ starsAverage | number:'1.2-2' }}</span>
-    <span class="star-average">★</span>
-  }
 
+    <!-- Image -->
+    @if (!item.isDigital && item.digitalFilePath && item.digitalFileName) {
+      <div class="detail__section">
+        <span class="detail__label">Image</span>
+        <div class="detail__file-row">
+          <span class="detail__file-name">{{ item.digitalFileName }}</span>
+          <button class="detail__btn detail__btn--secondary" (click)="viewImage(item.digitalFilePath)">View Image</button>
+        </div>
+      </div>
+    }
+
+    <!-- Digital file -->
+    @if (item.isDigital) {
+      <div class="detail__section detail__digital">
+        <span class="detail__badge detail__badge--digital">Digital item</span>
+        <span class="detail__file-name">{{ item.digitalFileName }}</span>
+        @if (!hasBought) {
+          <p class="detail__hint">Available after purchase</p>
+        }
+        @if (hasBought) {
+          <button class="detail__btn detail__btn--info" (click)="downloadFile()">Download</button>
+        }
+      </div>
+    }
+
+    <!-- Actions -->
+    <div class="detail__actions">
+      @if (!isOwner() && item.paymentMethod === 'points' && !hasBought) {
+        <button class="detail__btn detail__btn--primary" (click)="buyWithPoints()">Buy with Points</button>
+      }
+
+      @if (!isOwner() && !hasBought) {
+        <button class="detail__btn detail__btn--secondary" (click)="expressInterest()" [disabled]="alreadyInterested">
+          {{ alreadyInterested ? 'Already Interested' : 'Interested' }}
+        </button>
+      }
+
+      @if (!isOwner()) {
+        <button class="detail__btn detail__btn--secondary" (click)="startChat()">Chat with Seller</button>
+      }
+
+      @if (!isOwner()) {
+        <button class="detail__btn detail__btn--danger" (click)="reportItem()">Report</button>
+      }
+    </div>
+
+    <!-- Rating -->
+    @if (hasBought) {
+      <div class="detail__rating-section">
+        <span class="detail__label">Your rating</span>
+        <div role="radiogroup" aria-label="Star rating" class="detail__stars">
+          @for (i of range(starsNumber); track i) {
+            <span role="radio" tabindex="0"
+              [attr.aria-checked]="starsSelected === i + 1"
+              (click)="rateItem(i + 1)"
+              (mouseenter)="starsHovered = i + 1"
+              (mouseleave)="starsHovered = 0"
+              (keydown.enter)="rateItem(i + 1)"
+              [class.filled]="i < starsSelected || i < starsHovered">
+              ★
+            </span>
+          }
+        </div>
+      </div>
+    }
+
+    @if (starsAverage !== 0.0) {
+      <div class="detail__avg-rating">
+        <span class="detail__avg-star">★</span>
+        <span>{{ starsAverage | number:'1.2-2' }} average rating</span>
+      </div>
+    }
+  </div>
 </div>
 } @else {
-<div class="not-found">
-  Item not found.
+<div class="detail__not-found">
+  <p>Item not found.</p>
 </div>
 }

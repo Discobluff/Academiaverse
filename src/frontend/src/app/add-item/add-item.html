@@ -1,69 +1,101 @@
-<h2>Add New Item</h2>
-<form (ngSubmit)="onSubmit()">
-  <p>Title:</p>
-  <input [(ngModel)]="item.title" name="title" required />
+<div class="add-item">
+  <h1 class="add-item__title" i18n="@@translation_add_new_item">Add New Item</h1>
 
-  <p>Description:</p>
-  <textarea [(ngModel)]="item.description" name="description"></textarea>
+  <form class="add-item__card" (ngSubmit)="onSubmit()">
+    <!-- Title -->
+    <div class="add-item__group">
+      <label class="add-item__label" for="ai-title">Title</label>
+      <input class="add-item__input" id="ai-title" [(ngModel)]="item.title" name="title" required placeholder="e.g. Linear Algebra textbook" />
+    </div>
 
-  <p>Notes:</p>
-  <textarea [(ngModel)]="item.notes" name="notes"></textarea>
+    <!-- Description -->
+    <div class="add-item__group">
+      <label class="add-item__label" for="ai-desc">Description</label>
+      <textarea class="add-item__textarea" id="ai-desc" [(ngModel)]="item.description" name="description" placeholder="Condition, edition, any details..."></textarea>
+    </div>
 
-  <p>Course:</p>
-  <select [(ngModel)]="selectedCourseId" name="course" required>
-    <option [ngValue]="null" disabled>-- Select a course --</option>
-    @for (course of courses; track course.id) {
-      <option [ngValue]="course.id">{{ course.name }}</option>
-    }
-  </select>
+    <!-- Notes -->
+    <div class="add-item__group">
+      <label class="add-item__label" for="ai-notes">Notes</label>
+      <textarea class="add-item__textarea add-item__textarea--sm" id="ai-notes" [(ngModel)]="item.notes" name="notes" placeholder="Anything the buyer should know..."></textarea>
+    </div>
 
-  <p>Payment Method:</p>
-  @if (isDigital) {
-    <p>Points</p>
-    <small style="color: gray;">Digital items are purchased with points only.</small>
-  } @else {
-    <select [(ngModel)]="item.paymentMethod" name="paymentMethod">
-      <option value="cash">Cash</option>
-      <option value="points">Points</option>
-    </select>
-  }
+    <!-- Course -->
+    <div class="add-item__group">
+      <label class="add-item__label" for="ai-course">Course</label>
+      <select class="add-item__select" id="ai-course" [(ngModel)]="selectedCourseId" name="course" required>
+        <option [ngValue]="null" disabled>Select a course...</option>
+        @for (course of courses; track course.id) {
+          <option [ngValue]="course.id">{{ course.name }}</option>
+        }
+      </select>
+    </div>
 
-  <p>Price ({{ item.paymentMethod === 'points' ? 'points' : '€' }}):</p>
-  <input type="number" [(ngModel)]="item.price" name="price" required />
+    <!-- Two-column row: Payment + Price -->
+    <div class="add-item__row">
+      <div class="add-item__group">
+        <label class="add-item__label">Payment Method</label>
+        @if (isDigital) {
+          <div class="add-item__locked">
+            <span>Points</span>
+            <span class="add-item__hint">Digital items use points only</span>
+          </div>
+        } @else {
+          <select class="add-item__select" [(ngModel)]="item.paymentMethod" name="paymentMethod">
+            <option value="cash">Cash</option>
+            <option value="points">Points</option>
+          </select>
+        }
+      </div>
 
-  <p>Type:</p>
-  @if (isDigital) {
-    <p>Sale</p>
-    <small style="color: gray; margin-left: 8px;">Digital products are for sale only.</small>
-  } @else {
-    <select [(ngModel)]="item.type" name="type">
-      <option value="sale">For Sale</option>
-      <option value="rent">For Rent</option>
-    </select>
-  }
+      <div class="add-item__group">
+        <label class="add-item__label" for="ai-price">Price ({{ item.paymentMethod === 'points' ? 'points' : '€' }})</label>
+        <input class="add-item__input" id="ai-price" type="number" [(ngModel)]="item.price" name="price" required placeholder="0.00" />
+      </div>
+    </div>
 
-  <p>
-    <label>
+    <!-- Type -->
+    <div class="add-item__group">
+      <label class="add-item__label">Type</label>
+      @if (isDigital) {
+        <div class="add-item__locked">
+          <span>Sale</span>
+          <span class="add-item__hint">Digital items are for sale only</span>
+        </div>
+      } @else {
+        <select class="add-item__select" [(ngModel)]="item.type" name="type">
+          <option value="sale">For Sale</option>
+          <option value="rent">For Rent</option>
+        </select>
+      }
+    </div>
+
+    <!-- Digital toggle -->
+    <label class="add-item__checkbox">
       <input type="checkbox" [(ngModel)]="isDigital" name="isDigital" (change)="onDigitalChange()" />
-      This is a digital product (upload a file)
+      <span>This is a digital product (upload a file)</span>
     </label>
-  </p>
 
-  @if (isDigital) {
-    <p>Upload file (PDF, DOC, TXT, ZIP, PNG, JPG, JPEG, GIF, WEBP):</p>
-    <input type="file" (change)="onFileSelected($event)" name="file"
-           accept=".pdf,.doc,.docx,.txt,.zip,.rar,.png,.jpg,.jpeg,.gif,.webp" />
-    <small style="color: gray;">Accepted formats: PDF, DOC, TXT, ZIP, PNG, JPG, GIF, WEBP</small>
-  } @else {
-    <p>Upload image (optional):</p>
-    <input type="file" (change)="onFileSelected($event)" name="file"
-           accept="image/*" />
-    <small style="color: gray;">Accepted formats: JPG, PNG, GIF</small>
-  }
+    <!-- File upload -->
+    <div class="add-item__group">
+      <label class="add-item__label">{{ isDigital ? 'Upload file' : 'Upload image (optional)' }}</label>
+      @if (isDigital) {
+        <input class="add-item__file" type="file" (change)="onFileSelected($event)" name="file"
+               accept=".pdf,.doc,.docx,.txt,.zip,.rar,.png,.jpg,.jpeg,.gif,.webp" />
+        <span class="add-item__hint">PDF, DOC, TXT, ZIP, PNG, JPG, GIF, WEBP</span>
+      } @else {
+        <input class="add-item__file" type="file" (change)="onFileSelected($event)" name="file"
+               accept="image/*" />
+        <span class="add-item__hint">JPG, PNG, GIF</span>
+      }
+    </div>
 
-  @if (!isFormValid()) {
-    <p class="error-message">Please fill in a title, a price, and select a course.</p>
-  }
+    <!-- Validation -->
+    @if (!isFormValid()) {
+      <p class="add-item__error">Please fill in a title, a price, and select a course.</p>
+    }
 
-  <button type="submit" [disabled]="!isFormValid()">Create Item</button>
-</form>
+    <!-- Submit -->
+    <button class="add-item__submit" type="submit" [disabled]="!isFormValid()">Create Item</button>
+  </form>
+</div>

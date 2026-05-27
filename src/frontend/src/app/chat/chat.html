@@ -1,51 +1,58 @@
-<div class="chat-container">
-  <div class="chat-header">
-    <button class="back-btn" (click)="goBack()">← Back</button>
-    <span class="header-title">CHAT</span>
+<div class="chat">
+  <!-- Header -->
+  <div class="chat__header">
+    <button class="chat__back" (click)="goBack()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+      Back
+    </button>
+    <span class="chat__header-title">{{ itemTitle }}</span>
   </div>
 
-<div class="item-info-panel">
-  <div class="item-info-left">
-    <div class="info-row">
-      <span class="info-label">Item:</span>
-      <span class="info-value">{{ itemTitle }} (ID: {{ itemId }})</span>
-    </div>
-    <div class="info-row">
-      <span class="info-label">Course:</span>
-      <span class="info-value">{{ courseName }}</span>
-    </div>
-    <div class="info-row">
-      <span class="info-label">Seller:</span>
-      <span class="info-value">{{ sellerName }}</span>
-    </div>
-    <div class="info-row">
-      <span class="info-label">Buyer:</span>
-      <span class="info-value">{{ buyerName }}</span>
+  <!-- Info panel -->
+  <div class="chat__info">
+    <div class="chat__info-grid">
+      <div class="chat__info-item">
+        <span class="chat__info-label">Course</span>
+        <span class="chat__info-value">{{ courseName }}</span>
+      </div>
+      <div class="chat__info-item">
+        <span class="chat__info-label">Seller</span>
+        <span class="chat__info-value">{{ sellerName }}</span>
+      </div>
+      <div class="chat__info-item">
+        <span class="chat__info-label">Buyer</span>
+        <span class="chat__info-value">{{ buyerName }}</span>
+      </div>
+      <div class="chat__info-item chat__info-action">
+        @if (bothConfirmed) {
+          <span class="chat__confirmed">Both parties confirmed</span>
+        } @else {
+          <button class="chat__confirm-btn" (click)="confirmTransaction()">Confirm Transaction</button>
+        }
+      </div>
     </div>
   </div>
-  @if (bothConfirmed) {
-  <span class="confirmed-label">✅ Both parties confirmed</span>
-} @else {
-  <button class="confirm-btn" (click)="confirmTransaction()">Confirm Transaction</button>
-}
-</div>
 
-  <div class="messages-panel">
+  <!-- Messages -->
+  <div class="chat__messages">
     @if (messages.length === 0) {
-      <div class="no-messages">No messages yet. Start the conversation!</div>
+      <div class="chat__no-messages">No messages yet. Start the conversation!</div>
     }
     @for (msg of messages; track msg.id) {
-      <div class="message-row" [class.my-message]="isMine(msg)" [class.other-message]="!isMine(msg)">
-        <div class="bubble">
-          <div class="message-text">{{ msg.message }}</div>
-          <div class="message-time">{{ msg.createdAt | date:'shortTime' }}</div>
+      <div class="chat__row" [class.chat__row--mine]="isMine(msg)" [class.chat__row--other]="!isMine(msg)">
+        <div class="chat__bubble">
+          <p class="chat__bubble-text">{{ msg.message }}</p>
+          <span class="chat__bubble-time">{{ msg.createdAt | date:'shortTime' }}</span>
         </div>
       </div>
     }
   </div>
 
-  <div class="input-area">
-    <input [(ngModel)]="newMessage" placeholder="Type a message..." (keyup.enter)="sendMessage()" class="message-input" />
-    <button (click)="sendMessage()" class="send-btn">Send</button>
+  <!-- Input -->
+  <div class="chat__input-area">
+    <input class="chat__input" [(ngModel)]="newMessage" placeholder="Type a message..." (keyup.enter)="sendMessage()" />
+    <button class="chat__send" (click)="sendMessage()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+    </button>
   </div>
 </div>

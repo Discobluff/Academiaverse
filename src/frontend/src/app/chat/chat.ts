@@ -190,26 +190,27 @@ export class ChatComponent implements OnInit, OnDestroy {
   showConfirmDialog(message: string, onConfirm: () => void) {
     const overlay = document.createElement("div");
     overlay.style.cssText = `
-      position: fixed; inset: 0; background: rgba(0,0,0,0.45);
+      position: fixed; inset: 0; background: rgba(23,32,24,0.4);
       display: flex; align-items: center; justify-content: center; z-index: 1000;
     `;
 
     overlay.innerHTML = `
-      <div style="background: #fff; border-radius: 12px; border: 0.5px solid #e0e0e0;
-                  padding: 1.75rem 1.5rem 1.5rem; max-width: 380px; width: 90%;">
-        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 1rem;">
-          <div style="width: 36px; height: 36px; border-radius: 50%; background: #fff8e1;
-                      display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-            🛡️
+      <div style="background: #fff; border-radius: 16px; border: 1px solid #D9E2D6;
+                  padding: 24px; max-width: 400px; width: 90%; box-shadow: 0 2px 8px rgba(23,32,24,0.08);">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+          <div style="width: 36px; height: 36px; border-radius: 12px; background: #DDEFE3;
+                      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+                      color: #245F3B; font-size: 18px;">
+            &#x1f6e1;&#xfe0f;
           </div>
-          <h2 style="font-size: 16px; font-weight: 500; margin: 0;">Confirm transaction</h2>
+          <h2 style="font-size: 16px; font-weight: 600; margin: 0; color: #172018;">Confirm transaction</h2>
         </div>
-        <p style="font-size: 14px; color: #555; line-height: 1.6; margin: 0 0 1.5rem;">${message}</p>
+        <p style="font-size: 14px; color: #5D6B61; line-height: 1.65; margin: 0 0 24px;">${message}</p>
         <div style="display: flex; gap: 8px; justify-content: flex-end;">
-          <button id="dialog-no" style="padding: 8px 20px; font-size: 14px; cursor: pointer;
-                  border-radius: 8px; border: 1px solid #ccc; background: transparent;">No</button>
-          <button id="dialog-yes" style="padding: 8px 20px; font-size: 14px; cursor: pointer;
-                  border-radius: 8px; border: 1px solid #a3d9a5; background: #f0faf0; color: #2e7d32;">Yes</button>
+          <button id="dialog-no" style="padding: 8px 20px; font-size: 14px; font-weight: 500; cursor: pointer;
+                  border-radius: 12px; border: 1px solid #D9E2D6; background: #fff; color: #172018;">No</button>
+          <button id="dialog-yes" style="padding: 8px 20px; font-size: 14px; font-weight: 500; cursor: pointer;
+                  border-radius: 12px; border: 1px solid #2F7D4F; background: #2F7D4F; color: #fff;">Yes</button>
         </div>
       </div>
     `;
