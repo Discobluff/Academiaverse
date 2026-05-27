@@ -73,7 +73,9 @@ public class ItemService {
             try {
                 Path oldFile = Paths.get(UPLOAD_DIR, item.getDigitalFileName());
                 Files.deleteIfExists(oldFile);
-            } catch (IOException ignored) {}
+            } catch (IOException ignored) {
+                System.err.println("Failed to delete old file: " + item.getDigitalFileName());
+            }
         }
         saveFile(file, file.getOriginalFilename());
         item.setDigitalFileName(file.getOriginalFilename());

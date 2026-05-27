@@ -41,8 +41,12 @@ public class SaleConfirmationService {
         SaleConfirmation confirmation = getOrCreateForItem(itemId);
         boolean ownerConfirmed = Boolean.TRUE.equals(confirmation.getOwnerConfirmed());
         boolean buyerConfirmed = Boolean.TRUE.equals(confirmation.getBuyerConfirmed());
-        if (ownerConfirmed && buyerConfirmed) return "BOTH_CONFIRMED";
-        if (buyerConfirmed && !ownerConfirmed) return "PENDING_YOU";
+        if (ownerConfirmed && buyerConfirmed) {
+            return "BOTH_CONFIRMED";
+        }
+        if (buyerConfirmed && !ownerConfirmed) {
+            return "PENDING_YOU";
+        }
         return "NONE";
     }
 
@@ -51,8 +55,12 @@ public class SaleConfirmationService {
         SaleConfirmation confirmation = getOrCreateForItem(itemId);
         boolean ownerConfirmed = Boolean.TRUE.equals(confirmation.getOwnerConfirmed());
         boolean buyerConfirmed = Boolean.TRUE.equals(confirmation.getBuyerConfirmed());
-        if (ownerConfirmed && buyerConfirmed) return "BOTH_CONFIRMED";
-        if (ownerConfirmed && !buyerConfirmed) return "PENDING_YOU";
+        if (ownerConfirmed && buyerConfirmed) {
+            return "BOTH_CONFIRMED";
+        }
+        if (ownerConfirmed && !buyerConfirmed) {
+            return "PENDING_YOU";
+        }
         return "NONE";
     }
 
