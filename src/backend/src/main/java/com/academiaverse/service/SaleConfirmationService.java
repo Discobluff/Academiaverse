@@ -4,7 +4,6 @@ import com.academiaverse.entity.Item;
 import com.academiaverse.entity.SaleConfirmation;
 import com.academiaverse.repository.ItemRepository;
 import com.academiaverse.repository.SaleConfirmationRepository;
-import com.academiaverse.repository.TransactionRepository;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,7 +17,6 @@ public class SaleConfirmationService {
 
     private final SaleConfirmationRepository saleConfirmationRepository;
     private final ItemRepository itemRepository;
-    private final TransactionRepository transactionRepository;
 
     @Transactional
     public SaleConfirmation setOwnerConfirmed(Long itemId) {

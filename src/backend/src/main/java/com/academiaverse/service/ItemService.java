@@ -15,12 +15,14 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ItemService {
     private final ItemRepository itemRepository;
     private final ChatRepository chatRepository;
@@ -74,7 +76,9 @@ public class ItemService {
                 Path oldFile = Paths.get(UPLOAD_DIR, item.getDigitalFileName());
                 Files.deleteIfExists(oldFile);
             } catch (IOException ignored) {
-                System.err.println("Failed to delete old file: " + item.getDigitalFileName());
+                if (log.isErrorEnabled()) {
+                    log.error("Failed to delete old file: {}", item.getDigitalFileName(), ignored);
+                }
             }
         }
         saveFile(file, file.getOriginalFilename());
