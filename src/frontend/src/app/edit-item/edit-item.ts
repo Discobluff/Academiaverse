@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from '../../environments/environments';
+import { DialogService } from '../core/services/dialog.service';
 
 interface EditItemForm {
   title: string;
@@ -30,6 +31,7 @@ export class EditItemComponent implements OnInit {
   private http = inject(HttpClient);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private dialog = inject(DialogService);
 
   itemId: number | null = null;
   item: EditItemForm = {
@@ -73,8 +75,8 @@ export class EditItemComponent implements OnInit {
       },
       error: (err) => {
         console.error('Failed to load item', err);
-        alert('Item not found.');
-        this.router.navigate(['/seller-listings']);
+        this.dialog.alert('Item not found.', 'error')
+          .then(() => this.router.navigate(['/seller-listings']));
       }
     });
   }
@@ -107,7 +109,7 @@ export class EditItemComponent implements OnInit {
       },
       error: (err) => {
         console.error('Download failed', err);
-        alert('Download failed.');
+        this.dialog.alert('Download failed.', 'error');
       }
     });
   }
@@ -116,7 +118,6 @@ export class EditItemComponent implements OnInit {
     if (!this.isFormValid()) return;
 
     if (this.selectedFile) {
-      // Multipart upload with optional metadata
       const formData = new FormData();
       formData.append('title', this.item.title);
       formData.append('description', this.item.description);
@@ -134,16 +135,15 @@ export class EditItemComponent implements OnInit {
       this.http.put(`${environment.apiBaseUrl}/api/items/${this.itemId}/upload`, formData)
         .subscribe({
           next: () => {
-            alert('Item updated successfully!');
-            this.router.navigate(['/seller-listings']);
+            this.dialog.alert('Item updated successfully!', 'success')
+              .then(() => this.router.navigate(['/seller-listings']));
           },
           error: (err) => {
             console.error('Failed to update item', err);
-            alert('Failed to update item.');
+            this.dialog.alert('Failed to update item.', 'error');
           }
         });
     } else {
-      // JSON update without file change
       const body: Record<string, unknown> = { ...this.item };
       if (this.availableUntilDate && this.item.availability === 'Unavailable') {
         body['availableUntil'] = this.availableUntilDate + 'T00:00:00';
@@ -153,12 +153,12 @@ export class EditItemComponent implements OnInit {
       this.http.put(`${environment.apiBaseUrl}/api/items/${this.itemId}`, body)
         .subscribe({
           next: () => {
-            alert('Item updated successfully!');
-            this.router.navigate(['/seller-listings']);
+            this.dialog.alert('Item updated successfully!', 'success')
+              .then(() => this.router.navigate(['/seller-listings']));
           },
           error: (err) => {
             console.error('Failed to update item', err);
-            alert('Failed to update item.');
+            this.dialog.alert('Failed to update item.', 'error');
           }
         });
     }

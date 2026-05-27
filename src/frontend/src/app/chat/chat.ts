@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../environments/environments';
 import { AuthService } from '../core/services/auth.service';
+import { DialogService } from '../core/services/dialog.service';
 
 interface ChatMessage {
   id: number;
@@ -39,6 +40,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   private http = inject(HttpClient);
   private route = inject(ActivatedRoute);
   private authService = inject(AuthService);
+  private dialog = inject(DialogService);
 
   itemId: number | null = null;
   buyerId: number | null = null;
@@ -104,9 +106,8 @@ export class ChatComponent implements OnInit, OnDestroy {
           this.triggerPopup();
         } else if (status === 'BOTH_CONFIRMED') {
           this.bothConfirmed = true;
-          alert('Both parties have confirmed the transaction. It is complete!');
+          this.dialog.alert('Both parties have confirmed the transaction. It is complete!', 'success');
         }
-        // 'NONE' → do nothing
       },
       error: (err) => {
         console.error(this.currentUserId, this.buyerId, this.itemId);
@@ -115,16 +116,19 @@ export class ChatComponent implements OnInit, OnDestroy {
     });
   }
 
-  triggerPopup() {
-    const message = "The other party has confirmed the transaction. Would you also like to confirm the transaction?";
-    this.showConfirmDialog(message, () => {
+  async triggerPopup() {
+    const confirmed = await this.dialog.confirm(
+      'The other party has confirmed the transaction. Would you also like to confirm the transaction?',
+      'Confirm transaction'
+    );
+    if (confirmed) {
       this.confirmTransaction();
-    });
+    }
   }
 
   scrollToBottom() {
     setTimeout(() => {
-      const panel = document.querySelector('.messages-panel');
+      const panel = document.querySelector('.chat__messages');
       if (panel) {
         panel.scrollTop = panel.scrollHeight;
       }
@@ -155,27 +159,32 @@ export class ChatComponent implements OnInit, OnDestroy {
       },
       error: (err) => {
         console.error('Failed to send message', err);
-        alert('Could not send message. Please try again.');
+        this.dialog.alert('Could not send message. Please try again.', 'error');
       }
     });
   }
 
-  confirmTransaction() {
+  async confirmTransaction() {
     const buyerText = "Did you receive the item and pay the agreed upon amount? And do you agree to the terms agreed upon in the chat & item description?";
     const sellerText = "Did you receive the payment and give the item to the buyer? And do you agree to the terms agreed upon in the chat & item description?";
-    const message = (this.currentUserId === this.buyerId ? buyerText : sellerText) + "<br/><br/><b> This action cannot be undone.</b>";
+    const message = (this.currentUserId === this.buyerId ? buyerText : sellerText)
+      + "<br/><br/><b>This action cannot be undone.</b>";
 
     const path = this.currentUserId === this.buyerId
       ? `${environment.apiBaseUrl}/api/sale-confirmation/${this.itemId}/buyer-confirmed`
       : `${environment.apiBaseUrl}/api/sale-confirmation/${this.itemId}/owner-confirmed`;
 
-    this.showConfirmDialog(message, () => {
-      this.http.put(path, {}).subscribe({
-        next: () => {
-          alert('Transaction confirmed. Thank you for using Academiaverse!');
-        },
-        error: () => alert('Failed to confirm transaction. Please try again.')
-      });
+    const confirmed = await this.dialog.confirmHtml(message, 'Confirm transaction');
+    if (!confirmed) {
+      this.dialog.alert('Transaction not confirmed.', 'info');
+      return;
+    }
+
+    this.http.put(path, {}).subscribe({
+      next: () => {
+        this.dialog.alert('Transaction confirmed. Thank you for using Academiaverse!', 'success');
+      },
+      error: () => this.dialog.alert('Failed to confirm transaction. Please try again.', 'error')
     });
   }
 
@@ -185,49 +194,5 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   goBack() {
     window.history.back();
-  }
-
-  showConfirmDialog(message: string, onConfirm: () => void) {
-    const overlay = document.createElement("div");
-    overlay.style.cssText = `
-      position: fixed; inset: 0; background: rgba(23,32,24,0.4);
-      display: flex; align-items: center; justify-content: center; z-index: 1000;
-    `;
-
-    overlay.innerHTML = `
-      <div style="background: #fff; border-radius: 16px; border: 1px solid #D9E2D6;
-                  padding: 24px; max-width: 400px; width: 90%; box-shadow: 0 2px 8px rgba(23,32,24,0.08);">
-        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
-          <div style="width: 36px; height: 36px; border-radius: 12px; background: #DDEFE3;
-                      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-                      color: #245F3B; font-size: 18px;">
-            &#x1f6e1;&#xfe0f;
-          </div>
-          <h2 style="font-size: 16px; font-weight: 600; margin: 0; color: #172018;">Confirm transaction</h2>
-        </div>
-        <p style="font-size: 14px; color: #5D6B61; line-height: 1.65; margin: 0 0 24px;">${message}</p>
-        <div style="display: flex; gap: 8px; justify-content: flex-end;">
-          <button id="dialog-no" style="padding: 8px 20px; font-size: 14px; font-weight: 500; cursor: pointer;
-                  border-radius: 12px; border: 1px solid #D9E2D6; background: #fff; color: #172018;">No</button>
-          <button id="dialog-yes" style="padding: 8px 20px; font-size: 14px; font-weight: 500; cursor: pointer;
-                  border-radius: 12px; border: 1px solid #2F7D4F; background: #2F7D4F; color: #fff;">Yes</button>
-        </div>
-      </div>
-    `;
-
-    document.body.appendChild(overlay);
-
-    const yesButton = overlay.querySelector<HTMLButtonElement>("#dialog-yes");
-    const noButton = overlay.querySelector<HTMLButtonElement>("#dialog-no");
-
-    yesButton?.addEventListener("click", () => {
-      document.body.removeChild(overlay);
-      onConfirm();
-    });
-
-    noButton?.addEventListener("click", () => {
-      document.body.removeChild(overlay);
-      alert("Transaction not confirmed");
-    });
   }
 }

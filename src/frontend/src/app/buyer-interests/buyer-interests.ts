@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { environment } from '../../environments/environments';
 import { AuthService } from '../core/services/auth.service';
+import { DialogService } from '../core/services/dialog.service';
 
 interface InterestItem {
   id: number;
@@ -40,6 +41,7 @@ export class BuyerInterestsComponent implements OnInit {
   private http = inject(HttpClient);
   private router = inject(Router);
   private authService = inject(AuthService);
+  private dialog = inject(DialogService);
 
   interests: InterestItem[] = [];
   purchases: PurchaseItem[] = [];
@@ -76,27 +78,28 @@ export class BuyerInterestsComponent implements OnInit {
     this.router.navigate(['/item', id]);
   }
 
-  removeInterest(itemId: number, event: MouseEvent) {
+  async removeInterest(itemId: number, event: MouseEvent) {
     event.stopPropagation();
-    if (confirm('Remove this interest?')) {
-      this.http.delete(`${environment.apiBaseUrl}/api/interests/${itemId}`)
-        .subscribe({
-          next: () => {
-            this.interests = this.interests.filter(i => i.item.id !== itemId);
-          },
-          error: (err) => {
-            console.error('Failed to remove interest', err);
-            alert('Could not remove interest.');
-          }
-        });
-    }
+    const confirmed = await this.dialog.confirm('Remove this interest?', 'Remove interest');
+    if (!confirmed) return;
+
+    this.http.delete(`${environment.apiBaseUrl}/api/interests/${itemId}`)
+      .subscribe({
+        next: () => {
+          this.interests = this.interests.filter(i => i.item.id !== itemId);
+        },
+        error: (err) => {
+          console.error('Failed to remove interest', err);
+          this.dialog.alert('Could not remove interest.', 'error');
+        }
+      });
   }
 
   openChat(itemId: number, event: MouseEvent) {
     event.stopPropagation();
     const buyerId = this.authService.getUserId();
     if (!buyerId) {
-      alert('You must be logged in to start a chat.');
+      this.dialog.alert('You must be logged in to start a chat.', 'warning');
       return;
     }
     this.router.navigate(['/chat', itemId, buyerId]);
