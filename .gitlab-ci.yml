@@ -58,6 +58,8 @@ dependency_scan:backend:
   before_script:
     - cd src/backend
     - chmod +x gradlew
+  after_script:
+    - ./gradlew clean
 
 dependency_scan:frontend:
   stage: dependency_scan
