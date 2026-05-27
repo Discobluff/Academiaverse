@@ -19,10 +19,6 @@ build:backend:
   before_script:
     - cd src/backend
     - chmod +x gradlew
-  artifacts:
-    paths:
-      - src/backend/build/
-    expire_in: 1 hour
 
 build:frontend:
   stage: build
