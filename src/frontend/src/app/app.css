@@ -8,6 +8,34 @@
   flex: 1 1 auto;
 }
 
+/* ── Back button ─────────────────────── */
+
+.app-back-bar {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--s3) var(--s6) 0;
+}
+
+.app-back {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s2);
+  padding: var(--s1) var(--s3);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: none;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  transition: background var(--transition), color var(--transition), border-color var(--transition);
+}
+
+.app-back:hover {
+  background: var(--surface-subtle);
+  border-color: var(--border);
+  color: var(--text);
+}
+
 /* ── Footer ──────────────────────────── */
 
 .app-footer {
