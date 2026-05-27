@@ -1,2 +1,19 @@
-<app-navbar></app-navbar>
-<router-outlet />
+<div class="app-shell">
+  <app-navbar></app-navbar>
+  <main class="app-main">
+    <router-outlet />
+  </main>
+  <footer class="app-footer">
+    <div class="app-footer__inner">
+      <div class="app-footer__left">
+        <p class="app-footer__brand">Academiaverse</p>
+        <p class="app-footer__copy">&copy; 2026 Academiaverse. All rights reserved.</p>
+      </div>
+      <nav class="app-footer__links">
+        <a routerLink="/terms">Terms of Service</a>
+        <span class="app-footer__dot"></span>
+        <a href="mailto:wolfgang.slany@tugraz.at">Contact</a>
+      </nav>
+    </div>
+  </footer>
+</div>
