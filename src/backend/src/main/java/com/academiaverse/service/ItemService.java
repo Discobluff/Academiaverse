@@ -7,6 +7,7 @@ import com.academiaverse.repository.InterestRepository;
 import com.academiaverse.repository.ItemRepository;
 import com.academiaverse.repository.RatingRepository;
 import com.academiaverse.repository.ReportRepository;
+import com.academiaverse.repository.SaleConfirmationRepository;
 import com.academiaverse.repository.TransactionRepository;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -30,6 +31,7 @@ public class ItemService {
     private final TransactionRepository transactionRepository;
     private final RatingRepository ratingRepository;
     private final ReportRepository reportRepository;
+    private final SaleConfirmationRepository saleConfirmationRepository;
     private static final String UPLOAD_DIR = "uploads/";
 
     @Transactional
@@ -135,6 +137,7 @@ public class ItemService {
         transactionRepository.deleteByItem(existing);
         ratingRepository.deleteByItem(existing);
         reportRepository.deleteByItem(existing);
+        saleConfirmationRepository.deleteByItem(existing);
         itemRepository.delete(existing);
     }
 }
