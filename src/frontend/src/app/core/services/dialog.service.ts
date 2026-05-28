@@ -16,12 +16,14 @@ const COLORS: Record<AlertType, { icon: string; iconBg: string; btn: string; btn
   info:    { icon: '#1a4caa', iconBg: '#EEF4FF', btn: '#2F7D4F', btnBorder: '#2F7D4F', btnHover: '#245F3B' },
 };
 
-const TITLES: Record<AlertType, string> = {
-  success: 'Success',
-  error:   'Error',
-  warning: 'Warning',
-  info:    'Notice',
-};
+function titleFor(type: AlertType): string {
+  switch (type) {
+    case 'success': return $localize`:@@dialog_title_success:Success`;
+    case 'error':   return $localize`:@@dialog_title_error:Error`;
+    case 'warning': return $localize`:@@dialog_title_warning:Warning`;
+    case 'info':    return $localize`:@@dialog_title_info:Notice`;
+  }
+}
 
 @Injectable({ providedIn: 'root' })
 export class DialogService {
@@ -37,12 +39,12 @@ export class DialogService {
                       display:flex;align-items:center;justify-content:center;flex-shrink:0;color:${c.icon};">
             ${ICONS[type]}
           </div>
-          <h2 style="font-size:16px;font-weight:600;margin:0;color:#172018;">${TITLES[type]}</h2>
+          <h2 style="font-size:16px;font-weight:600;margin:0;color:#172018;">${this.escape(titleFor(type))}</h2>
         </div>
         <p style="font-size:14px;color:#5D6B61;line-height:1.65;margin:0 0 24px;">${this.escape(message)}</p>
         <div style="display:flex;justify-content:flex-end;">
           <button id="dlg-ok" style="padding:8px 24px;font-size:14px;font-weight:500;cursor:pointer;
-                  border-radius:12px;border:1px solid ${c.btnBorder};background:${c.btn};color:#fff;">OK</button>
+                  border-radius:12px;border:1px solid ${c.btnBorder};background:${c.btn};color:#fff;">${this.escape($localize`:@@dialog_btn_ok:OK`)}</button>
         </div>
       `;
 
@@ -54,10 +56,11 @@ export class DialogService {
     });
   }
 
-  confirm(message: string, title = 'Confirm'): Promise<boolean> {
+  confirm(message: string, title?: string): Promise<boolean> {
     return new Promise(resolve => {
       const { overlay, card } = this.createShell();
       const c = COLORS['info'];
+      const heading = title ?? $localize`:@@dialog_title_confirm:Confirm`;
 
       card.innerHTML = `
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
@@ -65,14 +68,14 @@ export class DialogService {
                       display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#245F3B;">
             &#x1f6e1;&#xfe0f;
           </div>
-          <h2 style="font-size:16px;font-weight:600;margin:0;color:#172018;">${this.escape(title)}</h2>
+          <h2 style="font-size:16px;font-weight:600;margin:0;color:#172018;">${this.escape(heading)}</h2>
         </div>
         <p style="font-size:14px;color:#5D6B61;line-height:1.65;margin:0 0 24px;">${this.escape(message)}</p>
         <div style="display:flex;gap:8px;justify-content:flex-end;">
           <button id="dlg-no" style="padding:8px 20px;font-size:14px;font-weight:500;cursor:pointer;
-                  border-radius:12px;border:1px solid #D9E2D6;background:#fff;color:#172018;">No</button>
+                  border-radius:12px;border:1px solid #D9E2D6;background:#fff;color:#172018;">${this.escape($localize`:@@dialog_btn_no:No`)}</button>
           <button id="dlg-yes" style="padding:8px 20px;font-size:14px;font-weight:500;cursor:pointer;
-                  border-radius:12px;border:1px solid ${c.btn};background:${c.btn};color:#fff;">Yes</button>
+                  border-radius:12px;border:1px solid ${c.btn};background:${c.btn};color:#fff;">${this.escape($localize`:@@dialog_btn_yes:Yes`)}</button>
         </div>
       `;
 
@@ -84,9 +87,11 @@ export class DialogService {
     });
   }
 
-  prompt(message: string, title = 'Input required'): Promise<string | null> {
+  prompt(message: string, title?: string): Promise<string | null> {
     return new Promise(resolve => {
       const { overlay, card } = this.createShell();
+      const heading = title ?? $localize`:@@dialog_title_input_required:Input required`;
+      const placeholder = $localize`:@@dialog_input_placeholder:Type here...`;
 
       card.innerHTML = `
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
@@ -94,19 +99,19 @@ export class DialogService {
                       display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#1a4caa;">
             ${ICONS['info']}
           </div>
-          <h2 style="font-size:16px;font-weight:600;margin:0;color:#172018;">${this.escape(title)}</h2>
+          <h2 style="font-size:16px;font-weight:600;margin:0;color:#172018;">${this.escape(heading)}</h2>
         </div>
         <p style="font-size:14px;color:#5D6B61;line-height:1.65;margin:0 0 12px;">${this.escape(message)}</p>
         <textarea id="dlg-input" rows="3"
           style="width:100%;padding:8px 12px;font-size:14px;font-family:inherit;color:#172018;
                  background:#fff;border:1px solid #D9E2D6;border-radius:12px;resize:vertical;
                  margin-bottom:16px;box-sizing:border-box;min-height:44px;"
-          placeholder="Type here..."></textarea>
+          placeholder="${this.escape(placeholder)}"></textarea>
         <div style="display:flex;gap:8px;justify-content:flex-end;">
           <button id="dlg-cancel" style="padding:8px 20px;font-size:14px;font-weight:500;cursor:pointer;
-                  border-radius:12px;border:1px solid #D9E2D6;background:#fff;color:#172018;">Cancel</button>
+                  border-radius:12px;border:1px solid #D9E2D6;background:#fff;color:#172018;">${this.escape($localize`:@@dialog_btn_cancel:Cancel`)}</button>
           <button id="dlg-submit" style="padding:8px 20px;font-size:14px;font-weight:500;cursor:pointer;
-                  border-radius:12px;border:1px solid #2F7D4F;background:#2F7D4F;color:#fff;">Submit</button>
+                  border-radius:12px;border:1px solid #2F7D4F;background:#2F7D4F;color:#fff;">${this.escape($localize`:@@dialog_btn_submit:Submit`)}</button>
         </div>
       `;
 
@@ -123,9 +128,10 @@ export class DialogService {
     });
   }
 
-  confirmHtml(html: string, title = 'Confirm'): Promise<boolean> {
+  confirmHtml(html: string, title?: string): Promise<boolean> {
     return new Promise(resolve => {
       const { overlay, card } = this.createShell();
+      const heading = title ?? $localize`:@@dialog_title_confirm:Confirm`;
 
       card.innerHTML = `
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
@@ -133,14 +139,14 @@ export class DialogService {
                       display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#245F3B;">
             &#x1f6e1;&#xfe0f;
           </div>
-          <h2 style="font-size:16px;font-weight:600;margin:0;color:#172018;">${this.escape(title)}</h2>
+          <h2 style="font-size:16px;font-weight:600;margin:0;color:#172018;">${this.escape(heading)}</h2>
         </div>
         <div style="font-size:14px;color:#5D6B61;line-height:1.65;margin:0 0 24px;">${html}</div>
         <div style="display:flex;gap:8px;justify-content:flex-end;">
           <button id="dlg-no" style="padding:8px 20px;font-size:14px;font-weight:500;cursor:pointer;
-                  border-radius:12px;border:1px solid #D9E2D6;background:#fff;color:#172018;">No</button>
+                  border-radius:12px;border:1px solid #D9E2D6;background:#fff;color:#172018;">${this.escape($localize`:@@dialog_btn_no:No`)}</button>
           <button id="dlg-yes" style="padding:8px 20px;font-size:14px;font-weight:500;cursor:pointer;
-                  border-radius:12px;border:1px solid #2F7D4F;background:#2F7D4F;color:#fff;">Yes</button>
+                  border-radius:12px;border:1px solid #2F7D4F;background:#2F7D4F;color:#fff;">${this.escape($localize`:@@dialog_btn_yes:Yes`)}</button>
         </div>
       `;
 

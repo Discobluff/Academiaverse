@@ -75,7 +75,7 @@ export class EditItemComponent implements OnInit {
       },
       error: (err) => {
         console.error('Failed to load item', err);
-        this.dialog.alert('Item not found.', 'error')
+        this.dialog.alert($localize`:@@msg_item_not_found:Item not found.`, 'error')
           .then(() => this.router.navigate(['/seller-listings']));
       }
     });
@@ -109,7 +109,7 @@ export class EditItemComponent implements OnInit {
       },
       error: (err) => {
         console.error('Download failed', err);
-        this.dialog.alert('Download failed.', 'error');
+        this.dialog.alert($localize`:@@msg_download_failed:Download failed.`, 'error');
       }
     });
   }
@@ -135,12 +135,12 @@ export class EditItemComponent implements OnInit {
       this.http.put(`${environment.apiBaseUrl}/api/items/${this.itemId}/upload`, formData)
         .subscribe({
           next: () => {
-            this.dialog.alert('Item updated successfully!', 'success')
+            this.dialog.alert($localize`:@@msg_item_updated:Item updated successfully!`, 'success')
               .then(() => this.router.navigate(['/seller-listings']));
           },
           error: (err) => {
             console.error('Failed to update item', err);
-            this.dialog.alert('Failed to update item.', 'error');
+            this.dialog.alert($localize`:@@msg_update_item_failed:Failed to update item.`, 'error');
           }
         });
     } else {
@@ -153,12 +153,12 @@ export class EditItemComponent implements OnInit {
       this.http.put(`${environment.apiBaseUrl}/api/items/${this.itemId}`, body)
         .subscribe({
           next: () => {
-            this.dialog.alert('Item updated successfully!', 'success')
+            this.dialog.alert($localize`:@@msg_item_updated:Item updated successfully!`, 'success')
               .then(() => this.router.navigate(['/seller-listings']));
           },
           error: (err) => {
             console.error('Failed to update item', err);
-            this.dialog.alert('Failed to update item.', 'error');
+            this.dialog.alert($localize`:@@msg_update_item_failed:Failed to update item.`, 'error');
           }
         });
     }

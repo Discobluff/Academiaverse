@@ -67,7 +67,7 @@
 
     @if (hasAdminRole()) {
       <div class="home__admin">
-        <p>Admin: {{ admin }}</p>
+        <p><ng-container i18n="@@translation_admin_label">Admin:</ng-container> {{ admin }}</p>
       </div>
     }
   } @else {

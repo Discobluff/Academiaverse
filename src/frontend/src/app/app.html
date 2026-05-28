@@ -5,7 +5,7 @@
       <div class="app-back-bar">
         <button class="app-back" (click)="goBack()">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
-          Back
+          <span i18n="@@translation_back">Back</span>
         </button>
       </div>
     }
@@ -15,12 +15,12 @@
     <div class="app-footer__inner">
       <div class="app-footer__left">
         <p class="app-footer__brand">Academiaverse</p>
-        <p class="app-footer__copy">&copy; 2026 Academiaverse. All rights reserved.</p>
+        <p class="app-footer__copy" i18n="@@translation_footer_copy">&copy; 2026 Academiaverse. All rights reserved.</p>
       </div>
       <nav class="app-footer__links">
-        <a routerLink="/terms">Terms of Service</a>
+        <a routerLink="/terms" i18n="@@translation_terms">Terms of Service</a>
         <span class="app-footer__dot"></span>
-        <a href="mailto:wolfgang.slany@tugraz.at">Contact</a>
+        <a href="mailto:wolfgang.slany@tugraz.at" i18n="@@translation_contact">Contact</a>
       </nav>
     </div>
   </footer>

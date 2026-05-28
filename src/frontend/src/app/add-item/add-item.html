@@ -4,27 +4,27 @@
   <form class="add-item__card" (ngSubmit)="onSubmit()">
     <!-- Title -->
     <div class="add-item__group">
-      <label class="add-item__label" for="ai-title">Title</label>
-      <input class="add-item__input" id="ai-title" [(ngModel)]="item.title" name="title" required placeholder="e.g. Linear Algebra textbook" />
+      <label class="add-item__label" for="ai-title" i18n="@@translation_title">Title</label>
+      <input class="add-item__input" id="ai-title" [(ngModel)]="item.title" name="title" required i18n-placeholder="@@translation_title_placeholder" placeholder="e.g. Linear Algebra textbook" />
     </div>
 
     <!-- Description -->
     <div class="add-item__group">
-      <label class="add-item__label" for="ai-desc">Description</label>
-      <textarea class="add-item__textarea" id="ai-desc" [(ngModel)]="item.description" name="description" placeholder="Condition, edition, any details..."></textarea>
+      <label class="add-item__label" for="ai-desc" i18n="@@translation_description">Description</label>
+      <textarea class="add-item__textarea" id="ai-desc" [(ngModel)]="item.description" name="description" i18n-placeholder="@@translation_description_placeholder" placeholder="Condition, edition, any details..."></textarea>
     </div>
 
     <!-- Notes -->
     <div class="add-item__group">
-      <label class="add-item__label" for="ai-notes">Notes</label>
-      <textarea class="add-item__textarea add-item__textarea--sm" id="ai-notes" [(ngModel)]="item.notes" name="notes" placeholder="Anything the buyer should know..."></textarea>
+      <label class="add-item__label" for="ai-notes" i18n="@@translation_notes">Notes</label>
+      <textarea class="add-item__textarea add-item__textarea--sm" id="ai-notes" [(ngModel)]="item.notes" name="notes" i18n-placeholder="@@translation_notes_placeholder" placeholder="Anything the buyer should know..."></textarea>
     </div>
 
     <!-- Course -->
     <div class="add-item__group">
-      <label class="add-item__label" for="ai-course">Course</label>
+      <label class="add-item__label" for="ai-course" i18n="@@translation_course">Course</label>
       <select class="add-item__select" id="ai-course" [(ngModel)]="selectedCourseId" name="course" required>
-        <option [ngValue]="null" disabled>Select a course...</option>
+        <option [ngValue]="null" disabled i18n="@@translation_select_course">Select a course...</option>
         @for (course of courses; track course.id) {
           <option [ngValue]="course.id">{{ course.name }}</option>
         }
@@ -34,38 +34,41 @@
     <!-- Two-column row: Payment + Price -->
     <div class="add-item__row">
       <div class="add-item__group">
-        <label class="add-item__label">Payment Method</label>
+        <label class="add-item__label" i18n="@@translation_payment_method">Payment Method</label>
         @if (isDigital) {
           <div class="add-item__locked">
-            <span>Points</span>
-            <span class="add-item__hint">Digital items use points only</span>
+            <span i18n="@@translation_points">Points</span>
+            <span class="add-item__hint" i18n="@@translation_digital_points_only">Digital items use points only</span>
           </div>
         } @else {
           <select class="add-item__select" [(ngModel)]="item.paymentMethod" name="paymentMethod">
-            <option value="cash">Cash</option>
-            <option value="points">Points</option>
+            <option value="cash" i18n="@@translation_cash">Cash</option>
+            <option value="points" i18n="@@translation_points">Points</option>
           </select>
         }
       </div>
 
       <div class="add-item__group">
-        <label class="add-item__label" for="ai-price">Price ({{ item.paymentMethod === 'points' ? 'points' : '€' }})</label>
+        <label class="add-item__label" for="ai-price">
+          <ng-container i18n="@@translation_price">Price</ng-container>
+          ({{ item.paymentMethod === 'points' ? 'points' : '€' }})
+        </label>
         <input class="add-item__input" id="ai-price" type="number" [(ngModel)]="item.price" name="price" required placeholder="0.00" />
       </div>
     </div>
 
     <!-- Type -->
     <div class="add-item__group">
-      <label class="add-item__label">Type</label>
+      <label class="add-item__label" i18n="@@translation_type">Type</label>
       @if (isDigital) {
         <div class="add-item__locked">
-          <span>Sale</span>
-          <span class="add-item__hint">Digital items are for sale only</span>
+          <span i18n="@@translation_sale">Sale</span>
+          <span class="add-item__hint" i18n="@@translation_digital_sale_only">Digital items are for sale only</span>
         </div>
       } @else {
         <select class="add-item__select" [(ngModel)]="item.type" name="type">
-          <option value="sale">For Sale</option>
-          <option value="rent">For Rent</option>
+          <option value="sale" i18n="@@translation_for_sale">For Sale</option>
+          <option value="rent" i18n="@@translation_for_rent">For Rent</option>
         </select>
       }
     </div>
@@ -73,29 +76,30 @@
     <!-- Digital toggle -->
     <label class="add-item__checkbox">
       <input type="checkbox" [(ngModel)]="isDigital" name="isDigital" (change)="onDigitalChange()" />
-      <span>This is a digital product (upload a file)</span>
+      <span i18n="@@translation_digital_product_checkbox">This is a digital product (upload a file)</span>
     </label>
 
     <!-- File upload -->
     <div class="add-item__group">
-      <label class="add-item__label">{{ isDigital ? 'Upload file' : 'Upload image (optional)' }}</label>
       @if (isDigital) {
+        <label class="add-item__label" i18n="@@translation_upload_file">Upload file</label>
         <input class="add-item__file" type="file" (change)="onFileSelected($event)" name="file"
                accept=".pdf,.doc,.docx,.txt,.zip,.rar,.png,.jpg,.jpeg,.gif,.webp" />
-        <span class="add-item__hint">PDF, DOC, TXT, ZIP, PNG, JPG, GIF, WEBP</span>
+        <span class="add-item__hint" i18n="@@translation_upload_file_hint">PDF, DOC, TXT, ZIP, PNG, JPG, GIF, WEBP</span>
       } @else {
+        <label class="add-item__label" i18n="@@translation_upload_image">Upload image (optional)</label>
         <input class="add-item__file" type="file" (change)="onFileSelected($event)" name="file"
                accept="image/*" />
-        <span class="add-item__hint">JPG, PNG, GIF</span>
+        <span class="add-item__hint" i18n="@@translation_upload_image_hint">JPG, PNG, GIF</span>
       }
     </div>
 
     <!-- Validation -->
     @if (!isFormValid()) {
-      <p class="add-item__error">Please fill in a title, a price, and select a course.</p>
+      <p class="add-item__error" i18n="@@translation_add_item_validation">Please fill in a title, a price, and select a course.</p>
     }
 
     <!-- Submit -->
-    <button class="add-item__submit" type="submit" [disabled]="!isFormValid()">Create Item</button>
+    <button class="add-item__submit" type="submit" [disabled]="!isFormValid()" i18n="@@translation_create_item">Create Item</button>
   </form>
 </div>

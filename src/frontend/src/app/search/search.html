@@ -10,6 +10,7 @@
         [(ngModel)]="query"
         (input)="onInput()"
         (keyup.enter)="search()"
+        i18n-placeholder="@@translation_course_name_or_code"
         placeholder="Course name or code..."
       />
       <datalist id="courseSuggestions">
@@ -25,7 +26,7 @@
 
   @if (results.length) {
     <div class="search__section">
-      <h2 class="search__section-title">Search Results</h2>
+      <h2 class="search__section-title" i18n="@@translation_search_results">Search Results</h2>
       <div class="search__results">
         @for (course of results; track course.id) {
           <a class="search__result-card" href="#" (click)="goToCourse(course.id); $event.preventDefault()">
@@ -42,7 +43,7 @@
 
   @if (authService.isAuthenticated() && recentSearches.length) {
     <div class="search__section search__recent">
-      <h2 class="search__section-title">Recent searches</h2>
+      <h2 class="search__section-title" i18n="@@translation_recent_searches">Recent searches</h2>
       <div class="search__recent-list">
         @for (item of recentSearches; track item) {
           <button class="search__recent-chip" (click)="useRecentSearch(item)">{{ item }}</button>

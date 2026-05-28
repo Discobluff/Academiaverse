@@ -1,13 +1,13 @@
 <div class="chats">
-  <h1 class="chats__title" i18n="@@translation_chats">My Chats</h1>
+  <h1 class="chats__title" i18n="@@translation_my_chats">My Chats</h1>
 
   @if (conversations.length === 0) {
     <div class="chats__empty">
       <svg class="chats__empty-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
       </svg>
-      <p class="chats__empty-title">No conversations yet</p>
-      <p class="chats__empty-body">When you chat about an item, it will appear here.</p>
+      <p class="chats__empty-title" i18n="@@translation_no_conversations">No conversations yet</p>
+      <p class="chats__empty-body" i18n="@@translation_no_conversations_body">When you chat about an item, it will appear here.</p>
     </div>
   }
 

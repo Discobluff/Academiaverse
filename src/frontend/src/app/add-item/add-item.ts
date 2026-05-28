@@ -96,7 +96,7 @@ export class AddItem implements OnInit {
     }
 
     if (this.isDigital && !this.selectedFile) {
-      this.dialog.alert('Please select a file for the digital product.', 'warning');
+      this.dialog.alert($localize`:@@msg_select_file_digital:Please select a file for the digital product.`, 'warning');
       return;
     }
 
@@ -122,24 +122,26 @@ export class AddItem implements OnInit {
       this.http.post(`${environment.apiBaseUrl}/api/items/upload`, formData).subscribe({
         next: () => {
           this.dialog.alert(
-            this.isDigital ? 'Digital item created successfully!' : 'Item created successfully!',
+            this.isDigital
+              ? $localize`:@@msg_digital_item_created:Digital item created successfully!`
+              : $localize`:@@msg_item_created:Item created successfully!`,
             'success'
           ).then(() => this.router.navigate(['/']));
         },
         error: (err) => {
           console.error(err);
-          this.dialog.alert('Failed to create item.', 'error');
+          this.dialog.alert($localize`:@@msg_create_item_failed:Failed to create item.`, 'error');
         }
       });
     } else {
       this.http.post(`${environment.apiBaseUrl}/api/items`, body).subscribe({
         next: () => {
-          this.dialog.alert('Item created successfully!', 'success')
+          this.dialog.alert($localize`:@@msg_item_created:Item created successfully!`, 'success')
             .then(() => this.router.navigate(['/']));
         },
         error: (err) => {
           console.error(err);
-          this.dialog.alert('Failed to create item. Make sure you are logged in.', 'error');
+          this.dialog.alert($localize`:@@msg_create_item_failed_login:Failed to create item. Make sure you are logged in.`, 'error');
         }
       });
     }

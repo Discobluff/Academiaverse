@@ -33,19 +33,19 @@ export class Register implements OnInit {
 
   register() {
     if (this.password != this.passwordConfirmation) {
-      this.errorMessage = "The passwords are differents."
+      this.errorMessage = $localize`:@@msg_passwords_differ:The passwords are differents.`;
       return;
     }
     if (!this.acceptedTerms) {
-      this.errorMessage = "You must accept the terms of service to register."
+      this.errorMessage = $localize`:@@msg_must_accept_terms:You must accept the terms of service to register.`;
       return;
     }
     if (!this.email) {
-      this.errorMessage = "Email is required."
+      this.errorMessage = $localize`:@@msg_email_required:Email is required.`;
       return;
     }
     if (!this.password) {
-      this.errorMessage = "Password is required."
+      this.errorMessage = $localize`:@@msg_password_required:Password is required.`;
       return;
     }
 
@@ -62,9 +62,9 @@ export class Register implements OnInit {
       },
       error: (error) => {
         if (error.status === 409) {
-          this.errorMessage = "Email already exists.";
+          this.errorMessage = $localize`:@@msg_email_exists:Email already exists.`;
         } else {
-          this.errorMessage = "Error with the registration.";
+          this.errorMessage = $localize`:@@msg_registration_error:Error with the registration.`;
         }
       }
     });

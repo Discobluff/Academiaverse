@@ -13,39 +13,39 @@
     <!-- Info rows -->
     <div class="detail__info">
       <div class="detail__row">
-        <span class="detail__label">Description</span>
+        <span class="detail__label" i18n="@@translation_description">Description</span>
         <p class="detail__value">{{ item.description }}</p>
       </div>
 
       @if (item.notes) {
         <div class="detail__row">
-          <span class="detail__label">Notes</span>
+          <span class="detail__label" i18n="@@translation_notes">Notes</span>
           <p class="detail__value">{{ item.notes }}</p>
         </div>
       }
 
       <div class="detail__meta-grid">
         <div class="detail__meta-item">
-          <span class="detail__label">Type</span>
+          <span class="detail__label" i18n="@@translation_type">Type</span>
           <span class="detail__meta-value">{{ item.type }}</span>
         </div>
         <div class="detail__meta-item">
-          <span class="detail__label">Payment</span>
+          <span class="detail__label" i18n="@@translation_payment">Payment</span>
           <span class="detail__meta-value">{{ item.paymentMethod }}</span>
         </div>
         <div class="detail__meta-item">
-          <span class="detail__label">Status</span>
+          <span class="detail__label" i18n="@@translation_status">Status</span>
           <span class="detail__meta-value">{{ item.status || 'Available' }}</span>
         </div>
         <div class="detail__meta-item">
-          <span class="detail__label">Availability</span>
+          <span class="detail__label" i18n="@@translation_availability">Availability</span>
           <span class="detail__meta-value">{{ item.availability || 'Available' }}</span>
         </div>
       </div>
 
       @if (item.availability === 'Unavailable' && item.availableUntil) {
         <div class="detail__row">
-          <span class="detail__label">Available until</span>
+          <span class="detail__label" i18n="@@translation_available_until">Available until</span>
           <p class="detail__value">{{ item.availableUntil | date:'mediumDate' }}</p>
         </div>
       }
@@ -54,10 +54,10 @@
     <!-- Image -->
     @if (!item.isDigital && item.digitalFilePath && item.digitalFileName) {
       <div class="detail__section">
-        <span class="detail__label">Image</span>
+        <span class="detail__label" i18n="@@translation_image">Image</span>
         <div class="detail__file-row">
           <span class="detail__file-name">{{ item.digitalFileName }}</span>
-          <button class="detail__btn detail__btn--secondary" (click)="viewImage(item.digitalFilePath)">View Image</button>
+          <button class="detail__btn detail__btn--secondary" (click)="viewImage(item.digitalFilePath)" i18n="@@translation_view_image">View Image</button>
         </div>
       </div>
     }
@@ -65,13 +65,13 @@
     <!-- Digital file -->
     @if (item.isDigital) {
       <div class="detail__section detail__digital">
-        <span class="detail__badge detail__badge--digital">Digital item</span>
+        <span class="detail__badge detail__badge--digital" i18n="@@translation_digital_item">Digital item</span>
         <span class="detail__file-name">{{ item.digitalFileName }}</span>
         @if (!hasBought) {
-          <p class="detail__hint">Available after purchase</p>
+          <p class="detail__hint" i18n="@@translation_available_after_purchase">Available after purchase</p>
         }
         @if (hasBought) {
-          <button class="detail__btn detail__btn--info" (click)="downloadFile()">Download</button>
+          <button class="detail__btn detail__btn--info" (click)="downloadFile()" i18n="@@translation_download">Download</button>
         }
       </div>
     }
@@ -79,29 +79,33 @@
     <!-- Actions -->
     <div class="detail__actions">
       @if (!isOwner() && item.paymentMethod === 'points' && !hasBought) {
-        <button class="detail__btn detail__btn--primary" (click)="buyWithPoints()">Buy with Points</button>
+        <button class="detail__btn detail__btn--primary" (click)="buyWithPoints()" i18n="@@translation_buy_with_points">Buy with Points</button>
       }
 
       @if (!isOwner() && !hasBought) {
         <button class="detail__btn detail__btn--secondary" (click)="expressInterest()" [disabled]="alreadyInterested">
-          {{ alreadyInterested ? 'Already Interested' : 'Interested' }}
+          @if (alreadyInterested) {
+            <ng-container i18n="@@translation_already_interested">Already Interested</ng-container>
+          } @else {
+            <ng-container i18n="@@translation_interested">Interested</ng-container>
+          }
         </button>
       }
 
       @if (!isOwner()) {
-        <button class="detail__btn detail__btn--secondary" (click)="startChat()">Chat with Seller</button>
+        <button class="detail__btn detail__btn--secondary" (click)="startChat()" i18n="@@translation_chat_with_seller">Chat with Seller</button>
       }
 
       @if (!isOwner()) {
-        <button class="detail__btn detail__btn--danger" (click)="reportItem()">Report</button>
+        <button class="detail__btn detail__btn--danger" (click)="reportItem()" i18n="@@translation_report">Report</button>
       }
     </div>
 
     <!-- Rating -->
     @if (hasBought) {
       <div class="detail__rating-section">
-        <span class="detail__label">Your rating</span>
-        <div role="radiogroup" aria-label="Star rating" class="detail__stars">
+        <span class="detail__label" i18n="@@translation_your_rating">Your rating</span>
+        <div role="radiogroup" aria-label="Star rating" i18n-aria-label="@@translation_star_rating_aria" class="detail__stars">
           @for (i of range(starsNumber); track i) {
             <span role="radio" tabindex="0"
               [attr.aria-checked]="starsSelected === i + 1"
@@ -120,13 +124,13 @@
     @if (starsAverage !== 0.0) {
       <div class="detail__avg-rating">
         <span class="detail__avg-star">★</span>
-        <span>{{ starsAverage | number:'1.2-2' }} average rating</span>
+        <span>{{ starsAverage | number:'1.2-2' }} <ng-container i18n="@@translation_average_rating">average rating</ng-container></span>
       </div>
     }
   </div>
 </div>
 } @else {
 <div class="detail__not-found">
-  <p>Item not found.</p>
+  <p i18n="@@translation_item_not_found">Item not found.</p>
 </div>
 }

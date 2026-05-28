@@ -1,37 +1,40 @@
 <div class="edit-item">
-  <h1 class="edit-item__title">Edit Item</h1>
+  <h1 class="edit-item__title" i18n="@@translation_edit_item">Edit Item</h1>
 
   <form class="edit-item__card" (ngSubmit)="onSubmit()">
     <!-- Title -->
     <div class="edit-item__group">
-      <label class="edit-item__label" for="ei-title">Title</label>
+      <label class="edit-item__label" for="ei-title" i18n="@@translation_title">Title</label>
       <input class="edit-item__input" id="ei-title" [(ngModel)]="item.title" name="title" required />
     </div>
 
     <!-- Description -->
     <div class="edit-item__group">
-      <label class="edit-item__label" for="ei-desc">Description</label>
+      <label class="edit-item__label" for="ei-desc" i18n="@@translation_description">Description</label>
       <textarea class="edit-item__textarea" id="ei-desc" [(ngModel)]="item.description" name="description"></textarea>
     </div>
 
     <!-- Notes -->
     <div class="edit-item__group">
-      <label class="edit-item__label" for="ei-notes">Notes</label>
+      <label class="edit-item__label" for="ei-notes" i18n="@@translation_notes">Notes</label>
       <textarea class="edit-item__textarea edit-item__textarea--sm" id="ei-notes" [(ngModel)]="item.notes" name="notes"></textarea>
     </div>
 
     <!-- Two-column row: Payment + Price -->
     <div class="edit-item__row">
       <div class="edit-item__group">
-        <label class="edit-item__label" for="ei-payment">Payment Method</label>
+        <label class="edit-item__label" for="ei-payment" i18n="@@translation_payment_method">Payment Method</label>
         <select class="edit-item__select" id="ei-payment" [(ngModel)]="item.paymentMethod" name="paymentMethod">
-          <option value="cash">Cash</option>
-          <option value="points">Points</option>
+          <option value="cash" i18n="@@translation_cash">Cash</option>
+          <option value="points" i18n="@@translation_points">Points</option>
         </select>
       </div>
 
       <div class="edit-item__group">
-        <label class="edit-item__label" for="ei-price">Price ({{ item.paymentMethod === 'points' ? 'points' : '€' }})</label>
+        <label class="edit-item__label" for="ei-price">
+          <ng-container i18n="@@translation_price">Price</ng-container>
+          ({{ item.paymentMethod === 'points' ? 'points' : '€' }})
+        </label>
         <input class="edit-item__input" id="ei-price" type="number" [(ngModel)]="item.price" name="price" required />
       </div>
     </div>
@@ -39,18 +42,18 @@
     <!-- Two-column row: Type + Availability -->
     <div class="edit-item__row">
       <div class="edit-item__group">
-        <label class="edit-item__label" for="ei-type">Type</label>
+        <label class="edit-item__label" for="ei-type" i18n="@@translation_type">Type</label>
         <select class="edit-item__select" id="ei-type" [(ngModel)]="item.type" name="type">
-          <option value="sale">For Sale</option>
-          <option value="rent">For Rent</option>
+          <option value="sale" i18n="@@translation_for_sale">For Sale</option>
+          <option value="rent" i18n="@@translation_for_rent">For Rent</option>
         </select>
       </div>
 
       <div class="edit-item__group">
-        <label class="edit-item__label" for="ei-avail">Availability</label>
+        <label class="edit-item__label" for="ei-avail" i18n="@@translation_availability">Availability</label>
         <select class="edit-item__select" id="ei-avail" [(ngModel)]="item.availability" name="availability">
-          <option value="Available">Available</option>
-          <option value="Unavailable">Unavailable</option>
+          <option value="Available" i18n="@@translation_available">Available</option>
+          <option value="Unavailable" i18n="@@translation_unavailable">Unavailable</option>
         </select>
       </div>
     </div>
@@ -58,7 +61,7 @@
     <!-- Available until (conditional) -->
     @if (item.availability === 'Unavailable') {
       <div class="edit-item__group">
-        <label class="edit-item__label" for="ei-until">Available again on</label>
+        <label class="edit-item__label" for="ei-until" i18n="@@translation_available_again_on">Available again on</label>
         <input class="edit-item__input" id="ei-until" type="date" [(ngModel)]="availableUntilDate" name="availableUntil" [min]="minDate" />
       </div>
     }
@@ -66,13 +69,13 @@
     <!-- Digital file section -->
     @if (isDigital) {
       <div class="edit-item__digital">
-        <span class="edit-item__digital-badge">Digital item</span>
+        <span class="edit-item__digital-badge" i18n="@@translation_digital_item">Digital item</span>
         <div class="edit-item__digital-file">
           <span class="edit-item__file-name">{{ digitalFileName }}</span>
-          <button type="button" class="edit-item__btn edit-item__btn--info" (click)="downloadFile()">Download</button>
+          <button type="button" class="edit-item__btn edit-item__btn--info" (click)="downloadFile()" i18n="@@translation_download">Download</button>
         </div>
         <div class="edit-item__group">
-          <label class="edit-item__label">Replace file (optional)</label>
+          <label class="edit-item__label" i18n="@@translation_replace_file">Replace file (optional)</label>
           <input class="edit-item__file" type="file" (change)="onFileSelected($event)" name="file"
                  accept=".pdf,.doc,.docx,.txt,.zip,.rar,.png,.jpg,.jpeg,.gif,.webp" />
         </div>
@@ -81,10 +84,10 @@
 
     <!-- Validation -->
     @if (!isFormValid()) {
-      <p class="edit-item__error">Please fill in a title and a price.</p>
+      <p class="edit-item__error" i18n="@@translation_edit_item_validation">Please fill in a title and a price.</p>
     }
 
     <!-- Submit -->
-    <button class="edit-item__submit" type="submit" [disabled]="!isFormValid()">Save Changes</button>
+    <button class="edit-item__submit" type="submit" [disabled]="!isFormValid()" i18n="@@translation_save_changes">Save Changes</button>
   </form>
 </div>

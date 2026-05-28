@@ -80,7 +80,7 @@ export class BuyerInterestsComponent implements OnInit {
 
   async removeInterest(itemId: number, event: MouseEvent) {
     event.stopPropagation();
-    const confirmed = await this.dialog.confirm('Remove this interest?', 'Remove interest');
+    const confirmed = await this.dialog.confirm($localize`:@@msg_remove_interest_q:Remove this interest?`, $localize`:@@msg_remove_interest_title:Remove interest`);
     if (!confirmed) return;
 
     this.http.delete(`${environment.apiBaseUrl}/api/interests/${itemId}`)
@@ -90,7 +90,7 @@ export class BuyerInterestsComponent implements OnInit {
         },
         error: (err) => {
           console.error('Failed to remove interest', err);
-          this.dialog.alert('Could not remove interest.', 'error');
+          this.dialog.alert($localize`:@@msg_remove_interest_failed:Could not remove interest.`, 'error');
         }
       });
   }
@@ -99,7 +99,7 @@ export class BuyerInterestsComponent implements OnInit {
     event.stopPropagation();
     const buyerId = this.authService.getUserId();
     if (!buyerId) {
-      this.dialog.alert('You must be logged in to start a chat.', 'warning');
+      this.dialog.alert($localize`:@@msg_must_login_chat:You must be logged in to start a chat.`, 'warning');
       return;
     }
     this.router.navigate(['/chat', itemId, buyerId]);

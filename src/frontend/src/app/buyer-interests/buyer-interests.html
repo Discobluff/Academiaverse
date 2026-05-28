@@ -1,17 +1,17 @@
 <div class="interests-container">
-  <h2>Buyer Listings</h2>
+  <h2 i18n="@@translation_buyer_listings">Buyer Listings</h2>
 
   <div class="tabs">
     <button class="tab-btn" [class.active]="activeTab === 'interests'"
-            (click)="setTab('interests')">My Interests</button>
+            (click)="setTab('interests')" i18n="@@translation_my_interests">My Interests</button>
     <button class="tab-btn" [class.active]="activeTab === 'purchases'"
-            (click)="setTab('purchases')">My Purchases</button>
+            (click)="setTab('purchases')" i18n="@@translation_my_purchases">My Purchases</button>
   </div>
 
   <!-- My Interests tab -->
   @if (activeTab === 'interests') {
     @if (interests.length === 0) {
-      <p class="no-items">You haven't expressed interest in any items yet.</p>
+      <p class="no-items" i18n="@@translation_no_interests">You haven't expressed interest in any items yet.</p>
     }
     <div class="list">
       @for (interest of interests; track interest.id) {
@@ -20,14 +20,14 @@
              (keydown.enter)="viewItem(interest.item.id)">
           <h3>{{ interest.item.title }}</h3>
           <p>{{ interest.item.description }}</p>
-          <p><strong>Price:</strong> {{ interest.item.price | number:'1.2-2' }} {{ interest.item.paymentMethod === 'points' ? 'points' : '€' }}</p>
-          <p><strong>Type:</strong> {{ interest.item.type }}</p>
-          <p><strong>Payment:</strong> {{ interest.item.paymentMethod }}</p>
+          <p><strong i18n="@@translation_price_label">Price:</strong> {{ interest.item.price | number:'1.2-2' }} {{ interest.item.paymentMethod === 'points' ? 'points' : '€' }}</p>
+          <p><strong i18n="@@translation_type_label">Type:</strong> {{ interest.item.type }}</p>
+          <p><strong i18n="@@translation_payment_label">Payment:</strong> {{ interest.item.paymentMethod }}</p>
           @if (interest.item.isDigital) {
-            <span class="digital-badge">Digital</span>
+            <span class="digital-badge" i18n="@@translation_digital">Digital</span>
           }
-          <button class="remove-btn" (click)="removeInterest(interest.item.id, $event)">Remove</button>
-          <button class="chat-btn" (click)="openChat(interest.item.id, $event)">Chat</button>
+          <button class="remove-btn" (click)="removeInterest(interest.item.id, $event)" i18n="@@translation_remove">Remove</button>
+          <button class="chat-btn" (click)="openChat(interest.item.id, $event)" i18n="@@translation_chat">Chat</button>
         </div>
       }
     </div>
@@ -36,7 +36,7 @@
   <!-- My Purchases tab -->
   @if (activeTab === 'purchases') {
     @if (purchases.length === 0) {
-      <p class="no-items">You haven't purchased any items yet.</p>
+      <p class="no-items" i18n="@@translation_no_purchases">You haven't purchased any items yet.</p>
     }
     <div class="list">
       @for (item of purchases; track item.id) {
@@ -45,13 +45,13 @@
              (keydown.enter)="viewItem(item.id)">
           <h3>{{ item.title }}</h3>
           <p>{{ item.description }}</p>
-          <p><strong>Price:</strong> {{ item.price | number:'1.2-2' }} {{ item.paymentMethod === 'points' ? 'points' : '€' }}</p>
-          <p><strong>Type:</strong> {{ item.type }}</p>
-          <p><strong>Payment:</strong> {{ item.paymentMethod }}</p>
+          <p><strong i18n="@@translation_price_label">Price:</strong> {{ item.price | number:'1.2-2' }} {{ item.paymentMethod === 'points' ? 'points' : '€' }}</p>
+          <p><strong i18n="@@translation_type_label">Type:</strong> {{ item.type }}</p>
+          <p><strong i18n="@@translation_payment_label">Payment:</strong> {{ item.paymentMethod }}</p>
           @if (item.isDigital) {
-            <span class="digital-badge">Digital</span>
+            <span class="digital-badge" i18n="@@translation_digital">Digital</span>
           }
-          <button class="chat-btn" (click)="openChat(item.id, $event)">Chat</button>
+          <button class="chat-btn" (click)="openChat(item.id, $event)" i18n="@@translation_chat">Chat</button>
         </div>
       }
     </div>

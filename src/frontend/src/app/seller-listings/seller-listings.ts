@@ -66,7 +66,7 @@ export class SellerListings implements OnInit {
   }
 
   async deleteItem(id: number) {
-    const confirmed = await this.dialog.confirm('Are you sure you want to delete this item?', 'Delete item');
+    const confirmed = await this.dialog.confirm($localize`:@@msg_delete_item_q:Are you sure you want to delete this item?`, $localize`:@@msg_delete_item_title:Delete item`);
     if (!confirmed) return;
 
     this.http.delete(`${environment.apiBaseUrl}/api/items/${id}`)
@@ -76,7 +76,7 @@ export class SellerListings implements OnInit {
         },
         error: (err) => {
           console.error('Delete failed', err);
-          this.dialog.alert('Could not delete item.', 'error');
+          this.dialog.alert($localize`:@@msg_delete_item_failed:Could not delete item.`, 'error');
         }
       });
   }

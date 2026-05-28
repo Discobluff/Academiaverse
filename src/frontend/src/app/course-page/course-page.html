@@ -1,6 +1,10 @@
 <div class="course">
   <div class="course__header">
-    <h1 class="course__title">{{ courseName || 'Course Items' }}</h1>
+    @if (courseName) {
+      <h1 class="course__title">{{ courseName }}</h1>
+    } @else {
+      <h1 class="course__title" i18n="@@translation_course_items">Course Items</h1>
+    }
   </div>
 
   @if (items.length === 0) {
@@ -10,8 +14,8 @@
         <path d="M13 21l2-2 4 4"/>
         <path d="M17 17l4 4"/>
       </svg>
-      <p class="course__empty-title">No items yet</p>
-      <p class="course__empty-body">No items available for this course.</p>
+      <p class="course__empty-title" i18n="@@translation_no_items_yet">No items yet</p>
+      <p class="course__empty-body" i18n="@@translation_no_items_for_course">No items available for this course.</p>
     </div>
   }
 
@@ -25,7 +29,7 @@
         <div class="course__card-top">
           <p class="course__card-title">{{ item.title }}</p>
           @if (item.isDigital) {
-            <span class="course__badge course__badge--digital">Digital</span>
+            <span class="course__badge course__badge--digital" i18n="@@translation_digital">Digital</span>
           }
         </div>
         <p class="course__card-desc">{{ item.description }}</p>
