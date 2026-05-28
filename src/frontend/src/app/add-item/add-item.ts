@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environments';
+import { DialogService } from '../core/services/dialog.service';
 
 interface CourseOption {
   id: number;
@@ -52,6 +53,7 @@ export class AddItem implements OnInit {
 
   private http = inject(HttpClient);
   private router = inject(Router);
+  private dialog = inject(DialogService);
 
   ngOnInit() {
     this.loadCourses();
@@ -93,9 +95,8 @@ export class AddItem implements OnInit {
       return;
     }
 
-    // Prevent digital item without a file
     if (this.isDigital && !this.selectedFile) {
-      alert('Please select a file for the digital product.');
+      this.dialog.alert('Please select a file for the digital product.', 'warning');
       return;
     }
 
@@ -105,7 +106,6 @@ export class AddItem implements OnInit {
     }
 
     if (this.selectedFile) {
-      // Multipart upload (digital or physical image)
       const formData = new FormData();
       formData.append('title', this.item.title);
       formData.append('description', this.item.description);
@@ -121,24 +121,25 @@ export class AddItem implements OnInit {
 
       this.http.post(`${environment.apiBaseUrl}/api/items/upload`, formData).subscribe({
         next: () => {
-          alert(this.isDigital ? 'Digital item created successfully!' : 'Item created successfully!');
-          this.router.navigate(['/']);
+          this.dialog.alert(
+            this.isDigital ? 'Digital item created successfully!' : 'Item created successfully!',
+            'success'
+          ).then(() => this.router.navigate(['/']));
         },
         error: (err) => {
           console.error(err);
-          alert('Failed to create item.');
+          this.dialog.alert('Failed to create item.', 'error');
         }
       });
     } else {
-      // JSON for non‑digital items without an image
       this.http.post(`${environment.apiBaseUrl}/api/items`, body).subscribe({
         next: () => {
-          alert('Item created successfully!');
-          this.router.navigate(['/']);
+          this.dialog.alert('Item created successfully!', 'success')
+            .then(() => this.router.navigate(['/']));
         },
         error: (err) => {
           console.error(err);
-          alert('Failed to create item. Make sure you are logged in.');
+          this.dialog.alert('Failed to create item. Make sure you are logged in.', 'error');
         }
       });
     }

@@ -3,6 +3,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { environment } from '../../environments/environments';
+import { DialogService } from '../core/services/dialog.service';
 
 interface InterestResponse {
   user: {
@@ -33,6 +34,7 @@ export class SellerListings implements OnInit {
 
   http: HttpClient = inject(HttpClient);
   router: Router = inject(Router);
+  private dialog = inject(DialogService);
 
   items: Item[] = [];
 
@@ -63,18 +65,19 @@ export class SellerListings implements OnInit {
     this.router.navigate(['/edit-item', id]);
   }
 
-  deleteItem(id: number) {
-    if (confirm('Are you sure you want to delete this item?')) {
-      this.http.delete(`${environment.apiBaseUrl}/api/items/${id}`)
-        .subscribe({
-          next: () => {
-            this.items = this.items.filter(i => i.id !== id);
-          },
-          error: (err) => {
-            console.error('Delete failed', err);
-            alert('Could not delete item.');
-          }
-        });
-    }
+  async deleteItem(id: number) {
+    const confirmed = await this.dialog.confirm('Are you sure you want to delete this item?', 'Delete item');
+    if (!confirmed) return;
+
+    this.http.delete(`${environment.apiBaseUrl}/api/items/${id}`)
+      .subscribe({
+        next: () => {
+          this.items = this.items.filter(i => i.id !== id);
+        },
+        error: (err) => {
+          console.error('Delete failed', err);
+          this.dialog.alert('Could not delete item.', 'error');
+        }
+      });
   }
 }

@@ -3,13 +3,14 @@ import { Component, inject, OnInit } from '@angular/core';
 import { environment } from '../../environments/environments';
 import { AuthService } from '../core/services/auth.service';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule],
-  templateUrl: './home.html'
+  imports: [CommonModule, RouterLink],
+  templateUrl: './home.html',
+  styleUrl: './home.css'
 })
 export class Home implements OnInit {
 
@@ -19,6 +20,7 @@ export class Home implements OnInit {
 
   email = "";
   admin = "";
+  userPoints: number | null = null;
 
   ngOnInit(){
     if (!this.authService.isAuthenticated()) {
@@ -26,6 +28,7 @@ export class Home implements OnInit {
     }
     this.getTest();
     this.isAdmin();
+    this.loadPoints();
   }
 
   hasAdminRole() {
@@ -33,7 +36,6 @@ export class Home implements OnInit {
   }
 
   getTest() {
-    console.log(this.authService.getUserId());
     this.http.get(`${environment.apiUrl}/test`, { responseType: 'text' }).subscribe({
       next: (data) => {
         this.email = data;
@@ -53,5 +55,15 @@ export class Home implements OnInit {
         console.error('Error fetching admin:', error);
       }
     });
+  }
+
+  loadPoints() {
+    const userId = this.authService.getUserId();
+    if (!userId) return;
+    this.http.get<{ points: number }>(`${environment.apiUrl}/users/${userId}`)
+      .subscribe({
+        next: (user) => this.userPoints = user.points,
+        error: () => this.userPoints = null
+      });
   }
 }

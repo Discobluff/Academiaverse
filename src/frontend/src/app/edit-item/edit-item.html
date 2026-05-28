@@ -1,53 +1,90 @@
-<h2>Edit Item</h2>
-<form (ngSubmit)="onSubmit()">
-  <p>Title:</p>
-  <input [(ngModel)]="item.title" name="title" required />
+<div class="edit-item">
+  <h1 class="edit-item__title">Edit Item</h1>
 
-  <p>Description:</p>
-  <textarea [(ngModel)]="item.description" name="description"></textarea>
-
-  <p>Notes:</p>
-  <textarea [(ngModel)]="item.notes" name="notes"></textarea>
-
-  <p>Payment Method:</p>
-  <select [(ngModel)]="item.paymentMethod" name="paymentMethod">
-    <option value="cash">Cash</option>
-    <option value="points">Points</option>
-  </select>
-
-  <p>Price ({{ item.paymentMethod === 'points' ? 'points' : '€' }}):</p>
-  <input type="number" [(ngModel)]="item.price" name="price" required />
-
-  <p>Type:</p>
-  <select [(ngModel)]="item.type" name="type">
-    <option value="sale">For Sale</option>
-    <option value="rent">For Rent</option>
-  </select>
-
-  <p>Availability:</p>
-  <select [(ngModel)]="item.availability" name="availability">
-    <option value="Available">Available</option>
-    <option value="Unavailable">Unavailable</option>
-  </select>
-
-  @if (item.availability === 'Unavailable') {
-    <p>Available again on:</p>
-    <input type="date" [(ngModel)]="availableUntilDate" name="availableUntil" [min]="minDate" />
-  }
-
-  @if (isDigital) {
-    <div class="digital-info">
-      <p>Current file: {{ digitalFileName }}</p>
-      <button type="button" class="download-btn" (click)="downloadFile()">Download</button>
-      <p>Replace file (optional):</p>
-      <input type="file" (change)="onFileSelected($event)" name="file"
-             accept=".pdf,.doc,.docx,.txt,.zip,.rar,.png,.jpg,.jpeg,.gif,.webp" />
+  <form class="edit-item__card" (ngSubmit)="onSubmit()">
+    <!-- Title -->
+    <div class="edit-item__group">
+      <label class="edit-item__label" for="ei-title">Title</label>
+      <input class="edit-item__input" id="ei-title" [(ngModel)]="item.title" name="title" required />
     </div>
-  }
 
-  @if (!isFormValid()) {
-    <p class="error-message">Please fill in a title and a price.</p>
-  }
+    <!-- Description -->
+    <div class="edit-item__group">
+      <label class="edit-item__label" for="ei-desc">Description</label>
+      <textarea class="edit-item__textarea" id="ei-desc" [(ngModel)]="item.description" name="description"></textarea>
+    </div>
 
-  <button type="submit" [disabled]="!isFormValid()">Save Changes</button>
-</form>
+    <!-- Notes -->
+    <div class="edit-item__group">
+      <label class="edit-item__label" for="ei-notes">Notes</label>
+      <textarea class="edit-item__textarea edit-item__textarea--sm" id="ei-notes" [(ngModel)]="item.notes" name="notes"></textarea>
+    </div>
+
+    <!-- Two-column row: Payment + Price -->
+    <div class="edit-item__row">
+      <div class="edit-item__group">
+        <label class="edit-item__label" for="ei-payment">Payment Method</label>
+        <select class="edit-item__select" id="ei-payment" [(ngModel)]="item.paymentMethod" name="paymentMethod">
+          <option value="cash">Cash</option>
+          <option value="points">Points</option>
+        </select>
+      </div>
+
+      <div class="edit-item__group">
+        <label class="edit-item__label" for="ei-price">Price ({{ item.paymentMethod === 'points' ? 'points' : '€' }})</label>
+        <input class="edit-item__input" id="ei-price" type="number" [(ngModel)]="item.price" name="price" required />
+      </div>
+    </div>
+
+    <!-- Two-column row: Type + Availability -->
+    <div class="edit-item__row">
+      <div class="edit-item__group">
+        <label class="edit-item__label" for="ei-type">Type</label>
+        <select class="edit-item__select" id="ei-type" [(ngModel)]="item.type" name="type">
+          <option value="sale">For Sale</option>
+          <option value="rent">For Rent</option>
+        </select>
+      </div>
+
+      <div class="edit-item__group">
+        <label class="edit-item__label" for="ei-avail">Availability</label>
+        <select class="edit-item__select" id="ei-avail" [(ngModel)]="item.availability" name="availability">
+          <option value="Available">Available</option>
+          <option value="Unavailable">Unavailable</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Available until (conditional) -->
+    @if (item.availability === 'Unavailable') {
+      <div class="edit-item__group">
+        <label class="edit-item__label" for="ei-until">Available again on</label>
+        <input class="edit-item__input" id="ei-until" type="date" [(ngModel)]="availableUntilDate" name="availableUntil" [min]="minDate" />
+      </div>
+    }
+
+    <!-- Digital file section -->
+    @if (isDigital) {
+      <div class="edit-item__digital">
+        <span class="edit-item__digital-badge">Digital item</span>
+        <div class="edit-item__digital-file">
+          <span class="edit-item__file-name">{{ digitalFileName }}</span>
+          <button type="button" class="edit-item__btn edit-item__btn--info" (click)="downloadFile()">Download</button>
+        </div>
+        <div class="edit-item__group">
+          <label class="edit-item__label">Replace file (optional)</label>
+          <input class="edit-item__file" type="file" (change)="onFileSelected($event)" name="file"
+                 accept=".pdf,.doc,.docx,.txt,.zip,.rar,.png,.jpg,.jpeg,.gif,.webp" />
+        </div>
+      </div>
+    }
+
+    <!-- Validation -->
+    @if (!isFormValid()) {
+      <p class="edit-item__error">Please fill in a title and a price.</p>
+    }
+
+    <!-- Submit -->
+    <button class="edit-item__submit" type="submit" [disabled]="!isFormValid()">Save Changes</button>
+  </form>
+</div>

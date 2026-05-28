@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { environment } from '../../environments/environments';
 
@@ -26,6 +26,7 @@ interface CourseItem {
 export class CoursePageComponent implements OnInit {
     private http = inject(HttpClient);
     private route = inject(ActivatedRoute);
+    private router = inject(Router);
 
     items: CourseItem[] = [];
     courseName = '';
@@ -54,6 +55,6 @@ export class CoursePageComponent implements OnInit {
     }
 
     viewItem(id: number) {
-        window.location.href = `/item/${id}`;
+        this.router.navigate(['/item', id]);
     }
 }
