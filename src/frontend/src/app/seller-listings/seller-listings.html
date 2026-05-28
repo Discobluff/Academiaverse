@@ -25,10 +25,25 @@
 
         <!-- Meta -->
         <div class="listings__card-meta">
-          <span class="listings__badge">{{ item.type }}</span>
-          <span class="listings__badge">{{ item.paymentMethod }}</span>
+          <span class="listings__badge">
+            @switch (item.type) {
+              @case ('sale') { <ng-container i18n="@@translation_sale">Sale</ng-container> }
+              @case ('rent') { <ng-container i18n="@@translation_rent">Rent</ng-container> }
+              @default { {{ item.type }} }
+            }
+          </span>
+          <span class="listings__badge">
+            @switch (item.paymentMethod) {
+              @case ('cash') { <ng-container i18n="@@translation_cash">Cash</ng-container> }
+              @case ('points') { <ng-container i18n="@@translation_points">Points</ng-container> }
+              @default { {{ item.paymentMethod }} }
+            }
+          </span>
           <span class="listings__badge" [class.listings__badge--warn]="item.availability === 'Unavailable'">
-            {{ item.availability || 'Available' }}
+            @switch (item.availability) {
+              @case ('Unavailable') { <ng-container i18n="@@translation_unavailable">Unavailable</ng-container> }
+              @default { <ng-container i18n="@@translation_available">Available</ng-container> }
+            }
           </span>
         </div>
 
