@@ -147,6 +147,9 @@
       <trans-unit id="translation_sale" datatype="html">
         <target>بيع</target>
       </trans-unit>
+      <trans-unit id="translation_rent" datatype="html">
+        <target>إيجار</target>
+      </trans-unit>
       <trans-unit id="translation_digital_sale_only" datatype="html">
         <target>العناصر الرقمية للبيع فقط</target>
       </trans-unit>
@@ -176,6 +179,12 @@
       </trans-unit>
       <trans-unit id="translation_create_item" datatype="html">
         <target>إنشاء عنصر</target>
+      </trans-unit>
+      <trans-unit id="translation_choose_file" datatype="html">
+        <target>اختر ملفًا</target>
+      </trans-unit>
+      <trans-unit id="translation_no_file_selected" datatype="html">
+        <target>لم يتم اختيار ملف</target>
       </trans-unit>
 
       <!-- Edit item page -->

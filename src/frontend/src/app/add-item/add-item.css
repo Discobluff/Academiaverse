@@ -156,12 +156,25 @@
 
 /* ── File input ──────────────────────── */
 
-.add-item__file {
-  font-size: var(--text-sm);
-  color: var(--text-secondary);
+.add-item__file-native {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
 }
 
-.add-item__file::file-selector-button {
+.add-item__file-row {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  flex-wrap: wrap;
+}
+
+.add-item__file-btn {
   display: inline-flex;
   align-items: center;
   min-height: 36px;
@@ -173,12 +186,27 @@
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   cursor: pointer;
-  margin-right: var(--s3);
   transition: background var(--transition);
 }
 
-.add-item__file::file-selector-button:hover {
+.add-item__file-btn:hover {
   background: var(--surface-subtle);
+}
+
+.add-item__file-native:focus + .add-item__file-btn {
+  outline: none;
+  border-color: var(--focus);
+  box-shadow: 0 0 0 3px rgba(91, 141, 239, 0.18);
+}
+
+.add-item__file-name {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  word-break: break-all;
+}
+
+.add-item__file-name--empty {
+  color: var(--text-muted);
 }
 
 /* ── Error ────────────────────────────── */

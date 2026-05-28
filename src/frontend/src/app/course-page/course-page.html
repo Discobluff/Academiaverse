@@ -39,9 +39,21 @@
             {{ item.paymentMethod === 'points' ? 'pts' : '€' }}
           </span>
           <span class="course__card-dot"></span>
-          <span class="course__card-type">{{ item.type }}</span>
+          <span class="course__card-type">
+            @switch (item.type) {
+              @case ('sale') { <ng-container i18n="@@translation_sale">Sale</ng-container> }
+              @case ('rent') { <ng-container i18n="@@translation_rent">Rent</ng-container> }
+              @default { {{ item.type }} }
+            }
+          </span>
           <span class="course__card-dot"></span>
-          <span class="course__card-payment">{{ item.paymentMethod }}</span>
+          <span class="course__card-payment">
+            @switch (item.paymentMethod) {
+              @case ('cash') { <ng-container i18n="@@translation_cash">Cash</ng-container> }
+              @case ('points') { <ng-container i18n="@@translation_points">Points</ng-container> }
+              @default { {{ item.paymentMethod }} }
+            }
+          </span>
         </div>
       </div>
     }

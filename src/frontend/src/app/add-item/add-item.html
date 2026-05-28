@@ -82,14 +82,30 @@
     <!-- File upload -->
     <div class="add-item__group">
       @if (isDigital) {
-        <label class="add-item__label" i18n="@@translation_upload_file">Upload file</label>
-        <input class="add-item__file" type="file" (change)="onFileSelected($event)" name="file"
-               accept=".pdf,.doc,.docx,.txt,.zip,.rar,.png,.jpg,.jpeg,.gif,.webp" />
+        <label class="add-item__label" for="ai-file" i18n="@@translation_upload_file">Upload file</label>
+        <div class="add-item__file-row">
+          <input id="ai-file" class="add-item__file-native" type="file" (change)="onFileSelected($event)" name="file"
+                 accept=".pdf,.doc,.docx,.txt,.zip,.rar,.png,.jpg,.jpeg,.gif,.webp" />
+          <label for="ai-file" class="add-item__file-btn" i18n="@@translation_choose_file">Choose file</label>
+          @if (selectedFile) {
+            <span class="add-item__file-name">{{ selectedFile.name }}</span>
+          } @else {
+            <span class="add-item__file-name add-item__file-name--empty" i18n="@@translation_no_file_selected">No file selected</span>
+          }
+        </div>
         <span class="add-item__hint" i18n="@@translation_upload_file_hint">PDF, DOC, TXT, ZIP, PNG, JPG, GIF, WEBP</span>
       } @else {
-        <label class="add-item__label" i18n="@@translation_upload_image">Upload image (optional)</label>
-        <input class="add-item__file" type="file" (change)="onFileSelected($event)" name="file"
-               accept="image/*" />
+        <label class="add-item__label" for="ai-file" i18n="@@translation_upload_image">Upload image (optional)</label>
+        <div class="add-item__file-row">
+          <input id="ai-file" class="add-item__file-native" type="file" (change)="onFileSelected($event)" name="file"
+                 accept="image/*" />
+          <label for="ai-file" class="add-item__file-btn" i18n="@@translation_choose_file">Choose file</label>
+          @if (selectedFile) {
+            <span class="add-item__file-name">{{ selectedFile.name }}</span>
+          } @else {
+            <span class="add-item__file-name add-item__file-name--empty" i18n="@@translation_no_file_selected">No file selected</span>
+          }
+        </div>
         <span class="add-item__hint" i18n="@@translation_upload_image_hint">JPG, PNG, GIF</span>
       }
     </div>
