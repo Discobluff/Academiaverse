@@ -1,0 +1,40 @@
+package com.academiaverse.controller;
+
+import com.academiaverse.entity.SaleConfirmation;
+import com.academiaverse.service.SaleConfirmationService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/sale-confirmation")
+public class SaleConfirmationController {
+    @Autowired
+    private SaleConfirmationService saleConfirmationService;
+
+    @PutMapping("/{id}/owner-confirmed")
+    public ResponseEntity<SaleConfirmation> setOwnerConfirmed(@PathVariable Long id) {
+        SaleConfirmation confirmation = saleConfirmationService.setOwnerConfirmed(id);
+        return ResponseEntity.ok(confirmation);
+    }
+
+    @PutMapping("/{id}/buyer-confirmed")
+    public ResponseEntity<SaleConfirmation> setBuyerConfirmed(@PathVariable Long id) {
+        SaleConfirmation confirmation = saleConfirmationService.setBuyerConfirmed(id);
+        return ResponseEntity.ok(confirmation);
+    }
+
+    @GetMapping("/{id}/owner-popup")
+    public ResponseEntity<String> getOwnerPopupStatus(@PathVariable Long id) {
+        return ResponseEntity.ok(saleConfirmationService.getOwnerPopupStatus(id));
+    }
+
+    @GetMapping("/{id}/buyer-popup")
+    public ResponseEntity<String> getBuyerPopupStatus(@PathVariable Long id) {
+        return ResponseEntity.ok(saleConfirmationService.getBuyerPopupStatus(id));
+    }
+}

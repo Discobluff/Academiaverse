@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -45,6 +46,10 @@ public class Item {
     private Boolean isDigital = false;
     private String digitalFileName;
     private String digitalFilePath;
+
+    @OneToOne(mappedBy = "item")
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private SaleConfirmation saleConfirmation;
 
     @ElementCollection
     private List<String> images;

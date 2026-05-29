@@ -32,10 +32,10 @@ export class Login implements OnInit{
       next: () => this.router.navigate(['/home']),
       error: (error) => {
         if (error.status === 401) {
-          this.errorMessage = "Wrong password.";
-        } 
+          this.errorMessage = $localize`:@@msg_wrong_password:Wrong password.`;
+        }
         if (error.status === 404) {
-          this.errorMessage = "User not found.";
+          this.errorMessage = $localize`:@@msg_user_not_found:User not found.`;
         }
       },
     });

@@ -7,6 +7,7 @@ import com.academiaverse.repository.InterestRepository;
 import com.academiaverse.repository.ItemRepository;
 import com.academiaverse.repository.RatingRepository;
 import com.academiaverse.repository.ReportRepository;
+import com.academiaverse.repository.SaleConfirmationRepository;
 import com.academiaverse.repository.TransactionRepository;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -15,12 +16,14 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ItemService {
     private final ItemRepository itemRepository;
     private final ChatRepository chatRepository;
@@ -28,6 +31,7 @@ public class ItemService {
     private final TransactionRepository transactionRepository;
     private final RatingRepository ratingRepository;
     private final ReportRepository reportRepository;
+    private final SaleConfirmationRepository saleConfirmationRepository;
     private static final String UPLOAD_DIR = "uploads/";
 
     @Transactional
@@ -73,7 +77,11 @@ public class ItemService {
             try {
                 Path oldFile = Paths.get(UPLOAD_DIR, item.getDigitalFileName());
                 Files.deleteIfExists(oldFile);
-            } catch (IOException ignored) {}
+            } catch (IOException ignored) {
+                if (log.isErrorEnabled()) {
+                    log.error("Failed to delete old file: {}", item.getDigitalFileName(), ignored);
+                }
+            }
         }
         saveFile(file, file.getOriginalFilename());
         item.setDigitalFileName(file.getOriginalFilename());
@@ -129,6 +137,7 @@ public class ItemService {
         transactionRepository.deleteByItem(existing);
         ratingRepository.deleteByItem(existing);
         reportRepository.deleteByItem(existing);
+        saleConfirmationRepository.deleteByItem(existing);
         itemRepository.delete(existing);
     }
 }

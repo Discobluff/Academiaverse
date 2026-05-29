@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../environments/environments';
 import { AuthService } from '../core/services/auth.service';
+import { DialogService } from '../core/services/dialog.service';
 
 interface ChatMessage {
   id: number;
@@ -39,6 +40,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   private http = inject(HttpClient);
   private route = inject(ActivatedRoute);
   private authService = inject(AuthService);
+  private dialog = inject(DialogService);
 
   itemId: number | null = null;
   buyerId: number | null = null;
@@ -47,10 +49,11 @@ export class ChatComponent implements OnInit, OnDestroy {
   currentUserId: number | null = null;
   private polling: ReturnType<typeof setInterval> | null = null;
 
-  itemTitle = 'Loading...';
+  itemTitle = $localize`:@@msg_loading:Loading...`;
   sellerName = '';
   buyerName = '';
-  courseName = 'Not assigned';
+  courseName = $localize`:@@msg_not_assigned:Not assigned`;
+  bothConfirmed = false;
 
   ngOnInit() {
     this.currentUserId = this.authService.getUserId();
@@ -61,6 +64,7 @@ export class ChatComponent implements OnInit, OnDestroy {
       this.loadBuyerName();
       this.loadMessages();
       this.polling = setInterval(() => this.loadMessages(), 3000);
+      this.tryRequestConfirmation();
     });
   }
 
@@ -73,12 +77,12 @@ export class ChatComponent implements OnInit, OnDestroy {
     .subscribe({
       next: (item) => {
         this.itemTitle = item.title;
-        this.sellerName = item.owner ? `${item.owner.firstname} ${item.owner.lastname}` : 'Unknown seller';
-        this.courseName = item.course?.name || 'Not assigned';
+        this.sellerName = item.owner ? `${item.owner.firstname} ${item.owner.lastname}` : $localize`:@@msg_unknown_seller:Unknown seller`;
+        this.courseName = item.course?.name || $localize`:@@msg_not_assigned:Not assigned`;
       },
       error: () => {
-        this.itemTitle = 'Unknown item';
-        this.sellerName = 'Unknown seller';
+        this.itemTitle = $localize`:@@msg_unknown_item:Unknown item`;
+        this.sellerName = $localize`:@@msg_unknown_seller:Unknown seller`;
       }
     });
   }
@@ -87,13 +91,44 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.http.get<UserDetail>(`${environment.apiBaseUrl}/v1/users/${this.buyerId}`)
     .subscribe({
       next: (user) => this.buyerName = `${user.firstname} ${user.lastname}`,
-      error: () => this.buyerName = 'Unknown buyer'
+      error: () => this.buyerName = $localize`:@@msg_unknown_buyer:Unknown buyer`
     });
+  }
+
+  tryRequestConfirmation(): void {
+    if (!this.itemId) return;
+
+    const path = `${environment.apiBaseUrl}/api/sale-confirmation/${this.itemId}/${this.currentUserId === this.buyerId ? 'buyer-popup' : 'owner-popup'}`;
+    this.http.get<string>(path, { responseType: 'text' as 'json' })
+    .subscribe({
+      next: (status) => {
+        if (status === 'PENDING_YOU') {
+          this.triggerPopup();
+        } else if (status === 'BOTH_CONFIRMED') {
+          this.bothConfirmed = true;
+          this.dialog.alert($localize`:@@msg_both_confirmed_complete:Both parties have confirmed the transaction. It is complete!`, 'success');
+        }
+      },
+      error: (err) => {
+        console.error(this.currentUserId, this.buyerId, this.itemId);
+        console.error('Failed to load sale confirmation popup state', err);
+      }
+    });
+  }
+
+  async triggerPopup() {
+    const confirmed = await this.dialog.confirm(
+      $localize`:@@msg_other_party_confirmed:The other party has confirmed the transaction. Would you also like to confirm the transaction?`,
+      $localize`:@@msg_confirm_transaction_title:Confirm transaction`
+    );
+    if (confirmed) {
+      this.confirmTransaction();
+    }
   }
 
   scrollToBottom() {
     setTimeout(() => {
-      const panel = document.querySelector('.messages-panel');
+      const panel = document.querySelector('.chat__messages');
       if (panel) {
         panel.scrollTop = panel.scrollHeight;
       }
@@ -108,7 +143,6 @@ export class ChatComponent implements OnInit, OnDestroy {
       },
       error: (err) => {
         console.error('Failed to load messages', err);
-        // Keep old messages visible even if the request fails
       }
     });
   }
@@ -125,8 +159,33 @@ export class ChatComponent implements OnInit, OnDestroy {
       },
       error: (err) => {
         console.error('Failed to send message', err);
-        alert('Could not send message. Please try again.');
+        this.dialog.alert($localize`:@@msg_send_failed:Could not send message. Please try again.`, 'error');
       }
+    });
+  }
+
+  async confirmTransaction() {
+    const buyerText = $localize`:@@msg_buyer_confirm_text:Did you receive the item and pay the agreed upon amount? And do you agree to the terms agreed upon in the chat & item description?`;
+    const sellerText = $localize`:@@msg_seller_confirm_text:Did you receive the payment and give the item to the buyer? And do you agree to the terms agreed upon in the chat & item description?`;
+    const undoneNote = $localize`:@@msg_action_cannot_be_undone:This action cannot be undone.`;
+    const message = (this.currentUserId === this.buyerId ? buyerText : sellerText)
+      + `<br/><br/><b>${undoneNote}</b>`;
+
+    const path = this.currentUserId === this.buyerId
+      ? `${environment.apiBaseUrl}/api/sale-confirmation/${this.itemId}/buyer-confirmed`
+      : `${environment.apiBaseUrl}/api/sale-confirmation/${this.itemId}/owner-confirmed`;
+
+    const confirmed = await this.dialog.confirmHtml(message, $localize`:@@msg_confirm_transaction_title:Confirm transaction`);
+    if (!confirmed) {
+      this.dialog.alert($localize`:@@msg_transaction_not_confirmed:Transaction not confirmed.`, 'info');
+      return;
+    }
+
+    this.http.put(path, {}).subscribe({
+      next: () => {
+        this.dialog.alert($localize`:@@msg_transaction_confirmed:Transaction confirmed. Thank you for using Academiaverse!`, 'success');
+      },
+      error: () => this.dialog.alert($localize`:@@msg_transaction_confirm_failed:Failed to confirm transaction. Please try again.`, 'error')
     });
   }
 

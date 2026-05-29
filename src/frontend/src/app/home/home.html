@@ -1,11 +1,76 @@
-@if (authService.isAuthenticated()){
-    <p>You are logged in!</p>
-    <p>User email : {{email}}</p>
-}
-@else {
-    <p i18n="@@translation_logged_out">You are logged out!</p>
-}
+<div class="home">
+  @if (authService.isAuthenticated()) {
+    <!-- Header -->
+    <div class="home__header">
+      <div>
+        <h1 class="home__greeting" i18n="@@translation_welcome">Welcome back</h1>
+        <p class="home__email">{{ email }}</p>
+      </div>
+      <div class="home__points-card">
+        <span class="home__points-label" i18n="@@translation_your_balance">Your balance</span>
+        <span class="home__points-value">
+          @if (userPoints !== null) {
+            {{ userPoints | number:'1.2-2' }}
+          } @else {
+            &hellip;
+          }
+          <span class="home__points-unit">pts</span>
+        </span>
+      </div>
+    </div>
 
-@if (hasAdminRole()) {
-    <p>You are admin, admin message: {{admin}}</p>
-}
+    <!-- Action cards -->
+    <div class="home__grid">
+      <!-- List an item -->
+      <a routerLink="/add-item" class="home__card home__card--sell">
+        <div class="home__card-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </div>
+        <div class="home__card-body">
+          <p class="home__card-title" i18n="@@translation_list_an_item">List an item</p>
+          <p class="home__card-desc" i18n="@@translation_list_desc">Sell textbooks, notes, or supplies for cash or points.</p>
+        </div>
+        <span class="home__card-arrow">&rarr;</span>
+      </a>
+
+      <!-- Browse listings -->
+      <a routerLink="/search" class="home__card home__card--browse">
+        <div class="home__card-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </div>
+        <div class="home__card-body">
+          <p class="home__card-title" i18n="@@translation_browse_listings">Browse listings</p>
+          <p class="home__card-desc" i18n="@@translation_browse_desc">Find great deals from other students on your courses.</p>
+        </div>
+        <span class="home__card-arrow">&rarr;</span>
+      </a>
+
+      <!-- Chats -->
+      <a routerLink="/chats" class="home__card home__card--chats">
+        <div class="home__card-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <div class="home__card-body">
+          <p class="home__card-title" i18n="@@translation_your_chats">Your chats</p>
+          <p class="home__card-desc" i18n="@@translation_chats_desc">Pick up where you left off with buyers and sellers.</p>
+        </div>
+        <span class="home__card-arrow">&rarr;</span>
+      </a>
+    </div>
+
+    <!-- Quick links -->
+    <div class="home__quick">
+      <a routerLink="/seller-listings" class="home__quick-link" i18n="@@translation_seller_listings">Seller Listings</a>
+      <span class="home__dot"></span>
+      <a routerLink="/buyer-interests" class="home__quick-link" i18n="@@translation_buyer_interests">Buyer Listings</a>
+    </div>
+
+    @if (hasAdminRole()) {
+      <div class="home__admin">
+        <p><ng-container i18n="@@translation_admin_label">Admin:</ng-container> {{ admin }}</p>
+      </div>
+    }
+  } @else {
+    <p i18n="@@translation_logged_out">You are logged out!</p>
+  }
+</div>

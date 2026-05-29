@@ -19,10 +19,6 @@ build:backend:
   before_script:
     - cd src/backend
     - chmod +x gradlew
-  artifacts:
-    paths:
-      - src/backend/build/
-    expire_in: 1 hour
 
 build:frontend:
   stage: build
@@ -56,6 +52,7 @@ dependency_scan:backend:
   image: gradle:8-jdk21
   script:
     - ./gradlew dependencies --write-locks
+    - ./gradlew clean
     - curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
     - trivy fs --scanners vuln --exit-code 1 .
   before_script:

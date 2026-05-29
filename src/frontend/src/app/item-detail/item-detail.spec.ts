@@ -77,18 +77,18 @@ describe('ItemDetailComponent', () => {
 
   it('should display item details', () => {
     const el = fixture.nativeElement;
-    expect(el.querySelector('.item-title').textContent).toContain('Test Book');
-    expect(el.querySelector('.item-description').textContent).toContain('A great book');
-    expect(el.querySelector('.item-notes').textContent).toContain('Some notes');
-    expect(el.querySelector('.item-price').textContent).toContain('15');
-    expect(el.querySelector('.item-type').textContent).toContain('sale');
-    expect(el.querySelector('.item-payment').textContent).toContain('cash');
-    expect(el.querySelector('.item-status').textContent).toContain('Available');
+    expect(el.querySelector('.detail__title').textContent).toContain('Test Book');
+    expect(el.querySelector('.detail__card').textContent).toContain('A great book');
+    expect(el.querySelector('.detail__card').textContent).toContain('Some notes');
+    expect(el.querySelector('.detail__price-tag').textContent).toContain('15');
+    expect(el.querySelector('.detail__meta-grid').textContent).toContain('sale');
+    expect(el.querySelector('.detail__meta-grid').textContent).toContain('cash');
+    expect(el.querySelector('.detail__meta-grid').textContent).toContain('Available');
   });
 
   it('should not show digital file info for non-digital item', () => {
     const el = fixture.nativeElement;
-    expect(el.querySelector('.digital-info')).toBeNull();
+    expect(el.querySelector('.detail__digital')).toBeNull();
   });
 
   it('should show digital file name and no download link for digital item when not bought', async () => {
@@ -110,15 +110,15 @@ describe('ItemDetailComponent', () => {
     fixture.detectChanges();
 
     const el = fixture.nativeElement;
-    expect(el.querySelector('.digital-info').textContent).toContain('notes.pdf');
-    expect(el.querySelector('.digital-info').textContent).toContain('Available after purchase');
+    expect(el.querySelector('.detail__digital').textContent).toContain('notes.pdf');
+    expect(el.querySelector('.detail__digital').textContent).toContain('Available after purchase');
     // No download button because not bought
-    expect(el.querySelector('.download-btn')).toBeNull();
+    expect(el.querySelector('.detail__btn--info')).toBeNull();
   });
 
   it('should show Interested button when user is not owner', () => {
     const el = fixture.nativeElement;
-    const btn = el.querySelector('.interest-btn');
+    const btn = el.querySelector('.detail__actions .detail__btn--secondary');
     expect(btn).toBeTruthy();
     expect(btn.textContent).toContain('Interested');
   });
@@ -130,6 +130,9 @@ describe('ItemDetailComponent', () => {
     fixture.detectChanges();
 
     const el = fixture.nativeElement;
-    expect(el.querySelector('.interest-btn')).toBeNull();
+    const buttons = (el as HTMLElement).querySelectorAll('.detail__actions .detail__btn--secondary');
+    let found = false;
+    buttons.forEach((b: Element) => { if (b.textContent?.includes('Interested')) found = true; });
+    expect(found).toBe(false);
   });
 });

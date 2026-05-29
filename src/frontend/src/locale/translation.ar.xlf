@@ -55,6 +55,333 @@
         <target>المحادثات</target>
       </trans-unit>
 
+      <!-- Home page -->
+      <trans-unit id="translation_welcome" datatype="html">
+        <target>مرحبًا بعودتك</target>
+      </trans-unit>
+      <trans-unit id="translation_your_balance" datatype="html">
+        <target>رصيدك</target>
+      </trans-unit>
+      <trans-unit id="translation_list_an_item" datatype="html">
+        <target>أضف عنصرًا</target>
+      </trans-unit>
+      <trans-unit id="translation_list_desc" datatype="html">
+        <target>قم ببيع الكتب الدراسية أو الملاحظات أو المستلزمات مقابل المال أو النقاط.</target>
+      </trans-unit>
+      <trans-unit id="translation_browse_listings" datatype="html">
+        <target>تصفح القوائم</target>
+      </trans-unit>
+      <trans-unit id="translation_browse_desc" datatype="html">
+        <target>اعثر على عروض رائعة من طلاب آخرين في دوراتك.</target>
+      </trans-unit>
+      <trans-unit id="translation_your_chats" datatype="html">
+        <target>محادثاتك</target>
+      </trans-unit>
+      <trans-unit id="translation_chats_desc" datatype="html">
+        <target>تابع من حيث توقفت مع المشترين والبائعين.</target>
+      </trans-unit>
+      <trans-unit id="translation_admin_label" datatype="html">
+        <target>المسؤول:</target>
+      </trans-unit>
+
+      <!-- Search page -->
+      <trans-unit id="translation_course_name_or_code" datatype="html">
+        <target>اسم الدورة أو رمزها...</target>
+      </trans-unit>
+      <trans-unit id="translation_search_btn" datatype="html">
+        <target>بحث</target>
+      </trans-unit>
+      <trans-unit id="translation_search_results" datatype="html">
+        <target>نتائج البحث</target>
+      </trans-unit>
+      <trans-unit id="translation_recent_searches" datatype="html">
+        <target>عمليات البحث الأخيرة</target>
+      </trans-unit>
+
+      <!-- Add item page -->
+      <trans-unit id="translation_add_new_item" datatype="html">
+        <target>إضافة عنصر جديد</target>
+      </trans-unit>
+      <trans-unit id="translation_title" datatype="html">
+        <target>العنوان</target>
+      </trans-unit>
+      <trans-unit id="translation_title_placeholder" datatype="html">
+        <target>مثال: كتاب الجبر الخطي</target>
+      </trans-unit>
+      <trans-unit id="translation_description" datatype="html">
+        <target>الوصف</target>
+      </trans-unit>
+      <trans-unit id="translation_description_placeholder" datatype="html">
+        <target>الحالة، الإصدار، أي تفاصيل...</target>
+      </trans-unit>
+      <trans-unit id="translation_notes" datatype="html">
+        <target>ملاحظات</target>
+      </trans-unit>
+      <trans-unit id="translation_notes_placeholder" datatype="html">
+        <target>أي شيء يجب أن يعرفه المشتري...</target>
+      </trans-unit>
+      <trans-unit id="translation_course" datatype="html">
+        <target>الدورة</target>
+      </trans-unit>
+      <trans-unit id="translation_select_course" datatype="html">
+        <target>اختر دورة...</target>
+      </trans-unit>
+      <trans-unit id="translation_payment_method" datatype="html">
+        <target>طريقة الدفع</target>
+      </trans-unit>
+      <trans-unit id="translation_points" datatype="html">
+        <target>النقاط</target>
+      </trans-unit>
+      <trans-unit id="translation_digital_points_only" datatype="html">
+        <target>العناصر الرقمية تستخدم النقاط فقط</target>
+      </trans-unit>
+      <trans-unit id="translation_cash" datatype="html">
+        <target>نقدًا</target>
+      </trans-unit>
+      <trans-unit id="translation_price" datatype="html">
+        <target>السعر</target>
+      </trans-unit>
+      <trans-unit id="translation_type" datatype="html">
+        <target>النوع</target>
+      </trans-unit>
+      <trans-unit id="translation_sale" datatype="html">
+        <target>بيع</target>
+      </trans-unit>
+      <trans-unit id="translation_rent" datatype="html">
+        <target>إيجار</target>
+      </trans-unit>
+      <trans-unit id="translation_digital_sale_only" datatype="html">
+        <target>العناصر الرقمية للبيع فقط</target>
+      </trans-unit>
+      <trans-unit id="translation_for_sale" datatype="html">
+        <target>للبيع</target>
+      </trans-unit>
+      <trans-unit id="translation_for_rent" datatype="html">
+        <target>للإيجار</target>
+      </trans-unit>
+      <trans-unit id="translation_digital_product_checkbox" datatype="html">
+        <target>هذا منتج رقمي (تحميل ملف)</target>
+      </trans-unit>
+      <trans-unit id="translation_upload_file" datatype="html">
+        <target>تحميل الملف</target>
+      </trans-unit>
+      <trans-unit id="translation_upload_file_hint" datatype="html">
+        <target>PDF، DOC، TXT، ZIP، PNG، JPG، GIF، WEBP</target>
+      </trans-unit>
+      <trans-unit id="translation_upload_image" datatype="html">
+        <target>تحميل صورة (اختياري)</target>
+      </trans-unit>
+      <trans-unit id="translation_upload_image_hint" datatype="html">
+        <target>JPG، PNG، GIF</target>
+      </trans-unit>
+      <trans-unit id="translation_add_item_validation" datatype="html">
+        <target>يرجى ملء العنوان والسعر واختيار دورة.</target>
+      </trans-unit>
+      <trans-unit id="translation_create_item" datatype="html">
+        <target>إنشاء عنصر</target>
+      </trans-unit>
+      <trans-unit id="translation_choose_file" datatype="html">
+        <target>اختر ملفًا</target>
+      </trans-unit>
+      <trans-unit id="translation_no_file_selected" datatype="html">
+        <target>لم يتم اختيار ملف</target>
+      </trans-unit>
+
+      <!-- Edit item page -->
+      <trans-unit id="translation_edit_item" datatype="html">
+        <target>تعديل العنصر</target>
+      </trans-unit>
+      <trans-unit id="translation_availability" datatype="html">
+        <target>التوفر</target>
+      </trans-unit>
+      <trans-unit id="translation_available" datatype="html">
+        <target>متاح</target>
+      </trans-unit>
+      <trans-unit id="translation_unavailable" datatype="html">
+        <target>غير متاح</target>
+      </trans-unit>
+      <trans-unit id="translation_available_again_on" datatype="html">
+        <target>متاح مرة أخرى في</target>
+      </trans-unit>
+      <trans-unit id="translation_digital_item" datatype="html">
+        <target>عنصر رقمي</target>
+      </trans-unit>
+      <trans-unit id="translation_download" datatype="html">
+        <target>تنزيل</target>
+      </trans-unit>
+      <trans-unit id="translation_replace_file" datatype="html">
+        <target>استبدال الملف (اختياري)</target>
+      </trans-unit>
+      <trans-unit id="translation_edit_item_validation" datatype="html">
+        <target>يرجى ملء العنوان والسعر.</target>
+      </trans-unit>
+      <trans-unit id="translation_save_changes" datatype="html">
+        <target>حفظ التغييرات</target>
+      </trans-unit>
+
+      <!-- Item detail page -->
+      <trans-unit id="translation_payment" datatype="html">
+        <target>الدفع</target>
+      </trans-unit>
+      <trans-unit id="translation_status" datatype="html">
+        <target>الحالة</target>
+      </trans-unit>
+      <trans-unit id="translation_available_until" datatype="html">
+        <target>متاح حتى</target>
+      </trans-unit>
+      <trans-unit id="translation_image" datatype="html">
+        <target>صورة</target>
+      </trans-unit>
+      <trans-unit id="translation_view_image" datatype="html">
+        <target>عرض الصورة</target>
+      </trans-unit>
+      <trans-unit id="translation_available_after_purchase" datatype="html">
+        <target>متاح بعد الشراء</target>
+      </trans-unit>
+      <trans-unit id="translation_buy_with_points" datatype="html">
+        <target>الشراء بالنقاط</target>
+      </trans-unit>
+      <trans-unit id="translation_interested" datatype="html">
+        <target>مهتم</target>
+      </trans-unit>
+      <trans-unit id="translation_already_interested" datatype="html">
+        <target>مهتم بالفعل</target>
+      </trans-unit>
+      <trans-unit id="translation_chat_with_seller" datatype="html">
+        <target>الدردشة مع البائع</target>
+      </trans-unit>
+      <trans-unit id="translation_report" datatype="html">
+        <target>الإبلاغ</target>
+      </trans-unit>
+      <trans-unit id="translation_your_rating" datatype="html">
+        <target>تقييمك</target>
+      </trans-unit>
+      <trans-unit id="translation_star_rating_aria" datatype="html">
+        <target>تقييم بالنجوم</target>
+      </trans-unit>
+      <trans-unit id="translation_average_rating" datatype="html">
+        <target>متوسط التقييم</target>
+      </trans-unit>
+      <trans-unit id="translation_item_not_found" datatype="html">
+        <target>العنصر غير موجود.</target>
+      </trans-unit>
+
+      <!-- Course page -->
+      <trans-unit id="translation_course_items" datatype="html">
+        <target>عناصر الدورة</target>
+      </trans-unit>
+      <trans-unit id="translation_no_items_yet" datatype="html">
+        <target>لا توجد عناصر بعد</target>
+      </trans-unit>
+      <trans-unit id="translation_no_items_for_course" datatype="html">
+        <target>لا توجد عناصر متاحة لهذه الدورة.</target>
+      </trans-unit>
+
+      <!-- Buyer interests page -->
+      <trans-unit id="translation_buyer_listings" datatype="html">
+        <target>قوائم المشتري</target>
+      </trans-unit>
+      <trans-unit id="translation_my_interests" datatype="html">
+        <target>اهتماماتي</target>
+      </trans-unit>
+      <trans-unit id="translation_my_purchases" datatype="html">
+        <target>مشترياتي</target>
+      </trans-unit>
+      <trans-unit id="translation_no_interests" datatype="html">
+        <target>لم تُبدِ اهتمامك بأي عناصر بعد.</target>
+      </trans-unit>
+      <trans-unit id="translation_no_purchases" datatype="html">
+        <target>لم تشترِ أي عناصر بعد.</target>
+      </trans-unit>
+      <trans-unit id="translation_price_label" datatype="html">
+        <target>السعر:</target>
+      </trans-unit>
+      <trans-unit id="translation_type_label" datatype="html">
+        <target>النوع:</target>
+      </trans-unit>
+      <trans-unit id="translation_payment_label" datatype="html">
+        <target>الدفع:</target>
+      </trans-unit>
+      <trans-unit id="translation_digital" datatype="html">
+        <target>رقمي</target>
+      </trans-unit>
+      <trans-unit id="translation_remove" datatype="html">
+        <target>إزالة</target>
+      </trans-unit>
+      <trans-unit id="translation_chat" datatype="html">
+        <target>دردشة</target>
+      </trans-unit>
+
+      <!-- Seller listings page -->
+      <trans-unit id="translation_no_listings_yet" datatype="html">
+        <target>لا توجد قوائم بعد</target>
+      </trans-unit>
+      <trans-unit id="translation_no_listings_body" datatype="html">
+        <target>ستظهر هنا العناصر التي تعرضها للبيع.</target>
+      </trans-unit>
+      <trans-unit id="translation_interested_label" datatype="html">
+        <target>المهتمون:</target>
+      </trans-unit>
+      <trans-unit id="translation_view" datatype="html">
+        <target>عرض</target>
+      </trans-unit>
+      <trans-unit id="translation_edit" datatype="html">
+        <target>تعديل</target>
+      </trans-unit>
+      <trans-unit id="translation_delete" datatype="html">
+        <target>حذف</target>
+      </trans-unit>
+
+      <!-- Chats list page -->
+      <trans-unit id="translation_my_chats" datatype="html">
+        <target>محادثاتي</target>
+      </trans-unit>
+      <trans-unit id="translation_no_conversations" datatype="html">
+        <target>لا توجد محادثات بعد</target>
+      </trans-unit>
+      <trans-unit id="translation_no_conversations_body" datatype="html">
+        <target>عندما تبدأ محادثة حول عنصر، ستظهر هنا.</target>
+      </trans-unit>
+
+      <!-- Chat page -->
+      <trans-unit id="translation_back" datatype="html">
+        <target>رجوع</target>
+      </trans-unit>
+      <trans-unit id="translation_seller" datatype="html">
+        <target>البائع</target>
+      </trans-unit>
+      <trans-unit id="translation_buyer" datatype="html">
+        <target>المشتري</target>
+      </trans-unit>
+      <trans-unit id="translation_both_confirmed" datatype="html">
+        <target>تم تأكيد الطرفين</target>
+      </trans-unit>
+      <trans-unit id="translation_confirm_transaction" datatype="html">
+        <target>تأكيد المعاملة</target>
+      </trans-unit>
+      <trans-unit id="translation_no_messages" datatype="html">
+        <target>لا توجد رسائل بعد. ابدأ المحادثة!</target>
+      </trans-unit>
+      <trans-unit id="translation_type_message" datatype="html">
+        <target>اكتب رسالة...</target>
+      </trans-unit>
+      <trans-unit id="translation_send_aria" datatype="html">
+        <target>إرسال</target>
+      </trans-unit>
+
+      <!-- Logout page -->
+      <trans-unit id="translation_logging_out" datatype="html">
+        <target>جارٍ تسجيل الخروج</target>
+      </trans-unit>
+
+      <!-- App footer -->
+      <trans-unit id="translation_footer_copy" datatype="html">
+        <target>&copy; 2026 Academiaverse. جميع الحقوق محفوظة.</target>
+      </trans-unit>
+      <trans-unit id="translation_contact" datatype="html">
+        <target>اتصل بنا</target>
+      </trans-unit>
+
       <trans-unit id="terms_page_title" datatype="html">
         <target>شروط الخدمة | Academiaverse</target>
       </trans-unit>
@@ -141,6 +468,210 @@
       </trans-unit>
       <trans-unit id="terms_footer" datatype="html">
         <target>&copy; 2026 Academiaverse. جميع الحقوق محفوظة.</target>
+      </trans-unit>
+
+      <!-- Dialog service -->
+      <trans-unit id="dialog_title_success" datatype="html">
+        <target>تم بنجاح</target>
+      </trans-unit>
+      <trans-unit id="dialog_title_error" datatype="html">
+        <target>خطأ</target>
+      </trans-unit>
+      <trans-unit id="dialog_title_warning" datatype="html">
+        <target>تحذير</target>
+      </trans-unit>
+      <trans-unit id="dialog_title_info" datatype="html">
+        <target>تنبيه</target>
+      </trans-unit>
+      <trans-unit id="dialog_title_confirm" datatype="html">
+        <target>تأكيد</target>
+      </trans-unit>
+      <trans-unit id="dialog_title_input_required" datatype="html">
+        <target>إدخال مطلوب</target>
+      </trans-unit>
+      <trans-unit id="dialog_btn_ok" datatype="html">
+        <target>موافق</target>
+      </trans-unit>
+      <trans-unit id="dialog_btn_yes" datatype="html">
+        <target>نعم</target>
+      </trans-unit>
+      <trans-unit id="dialog_btn_no" datatype="html">
+        <target>لا</target>
+      </trans-unit>
+      <trans-unit id="dialog_btn_cancel" datatype="html">
+        <target>إلغاء</target>
+      </trans-unit>
+      <trans-unit id="dialog_btn_submit" datatype="html">
+        <target>إرسال</target>
+      </trans-unit>
+      <trans-unit id="dialog_input_placeholder" datatype="html">
+        <target>اكتب هنا...</target>
+      </trans-unit>
+
+      <!-- Chat messages -->
+      <trans-unit id="msg_loading" datatype="html">
+        <target>جارٍ التحميل...</target>
+      </trans-unit>
+      <trans-unit id="msg_not_assigned" datatype="html">
+        <target>غير محدد</target>
+      </trans-unit>
+      <trans-unit id="msg_unknown_seller" datatype="html">
+        <target>بائع غير معروف</target>
+      </trans-unit>
+      <trans-unit id="msg_unknown_buyer" datatype="html">
+        <target>مشترٍ غير معروف</target>
+      </trans-unit>
+      <trans-unit id="msg_unknown_item" datatype="html">
+        <target>عنصر غير معروف</target>
+      </trans-unit>
+      <trans-unit id="msg_both_confirmed_complete" datatype="html">
+        <target>تم تأكيد المعاملة من كلا الطرفين. لقد اكتملت!</target>
+      </trans-unit>
+      <trans-unit id="msg_other_party_confirmed" datatype="html">
+        <target>قام الطرف الآخر بتأكيد المعاملة. هل تريد أيضًا تأكيد المعاملة؟</target>
+      </trans-unit>
+      <trans-unit id="msg_confirm_transaction_title" datatype="html">
+        <target>تأكيد المعاملة</target>
+      </trans-unit>
+      <trans-unit id="msg_send_failed" datatype="html">
+        <target>تعذر إرسال الرسالة. يرجى المحاولة مرة أخرى.</target>
+      </trans-unit>
+      <trans-unit id="msg_buyer_confirm_text" datatype="html">
+        <target>هل استلمت العنصر ودفعت المبلغ المتفق عليه؟ وهل توافق على الشروط المتفق عليها في الدردشة ووصف العنصر؟</target>
+      </trans-unit>
+      <trans-unit id="msg_seller_confirm_text" datatype="html">
+        <target>هل استلمت الدفعة وسلّمت العنصر إلى المشتري؟ وهل توافق على الشروط المتفق عليها في الدردشة ووصف العنصر؟</target>
+      </trans-unit>
+      <trans-unit id="msg_action_cannot_be_undone" datatype="html">
+        <target>لا يمكن التراجع عن هذا الإجراء.</target>
+      </trans-unit>
+      <trans-unit id="msg_transaction_not_confirmed" datatype="html">
+        <target>لم يتم تأكيد المعاملة.</target>
+      </trans-unit>
+      <trans-unit id="msg_transaction_confirmed" datatype="html">
+        <target>تم تأكيد المعاملة. شكرًا لاستخدامك Academiaverse!</target>
+      </trans-unit>
+      <trans-unit id="msg_transaction_confirm_failed" datatype="html">
+        <target>فشل تأكيد المعاملة. يرجى المحاولة مرة أخرى.</target>
+      </trans-unit>
+
+      <!-- Buyer interests -->
+      <trans-unit id="msg_remove_interest_q" datatype="html">
+        <target>هل تريد إزالة هذا الاهتمام؟</target>
+      </trans-unit>
+      <trans-unit id="msg_remove_interest_title" datatype="html">
+        <target>إزالة الاهتمام</target>
+      </trans-unit>
+      <trans-unit id="msg_remove_interest_failed" datatype="html">
+        <target>تعذر إزالة الاهتمام.</target>
+      </trans-unit>
+      <trans-unit id="msg_must_login_chat" datatype="html">
+        <target>يجب تسجيل الدخول لبدء محادثة.</target>
+      </trans-unit>
+
+      <!-- Edit item -->
+      <trans-unit id="msg_item_not_found" datatype="html">
+        <target>العنصر غير موجود.</target>
+      </trans-unit>
+      <trans-unit id="msg_download_failed" datatype="html">
+        <target>فشل التنزيل.</target>
+      </trans-unit>
+      <trans-unit id="msg_item_updated" datatype="html">
+        <target>تم تحديث العنصر بنجاح!</target>
+      </trans-unit>
+      <trans-unit id="msg_update_item_failed" datatype="html">
+        <target>فشل تحديث العنصر.</target>
+      </trans-unit>
+
+      <!-- Add item -->
+      <trans-unit id="msg_select_file_digital" datatype="html">
+        <target>يرجى اختيار ملف للمنتج الرقمي.</target>
+      </trans-unit>
+      <trans-unit id="msg_digital_item_created" datatype="html">
+        <target>تم إنشاء العنصر الرقمي بنجاح!</target>
+      </trans-unit>
+      <trans-unit id="msg_item_created" datatype="html">
+        <target>تم إنشاء العنصر بنجاح!</target>
+      </trans-unit>
+      <trans-unit id="msg_create_item_failed" datatype="html">
+        <target>فشل إنشاء العنصر.</target>
+      </trans-unit>
+      <trans-unit id="msg_create_item_failed_login" datatype="html">
+        <target>فشل إنشاء العنصر. تأكد من تسجيل الدخول.</target>
+      </trans-unit>
+
+      <!-- Item detail -->
+      <trans-unit id="msg_rating_failed" datatype="html">
+        <target>تعذر إرسال التقييم.</target>
+      </trans-unit>
+      <trans-unit id="msg_interest_expressed" datatype="html">
+        <target>تم تسجيل اهتمامك بنجاح!</target>
+      </trans-unit>
+      <trans-unit id="msg_already_interested" datatype="html">
+        <target>لقد أبديت اهتمامك بهذا العنصر من قبل.</target>
+      </trans-unit>
+      <trans-unit id="msg_express_interest_failed" datatype="html">
+        <target>تعذر تسجيل الاهتمام.</target>
+      </trans-unit>
+      <trans-unit id="msg_item_purchased" datatype="html">
+        <target>تم شراء العنصر بالنقاط!</target>
+      </trans-unit>
+      <trans-unit id="msg_purchase_failed_points" datatype="html">
+        <target>فشل الشراء. قد لا يكون لديك نقاط كافية.</target>
+      </trans-unit>
+      <trans-unit id="msg_report_prompt" datatype="html">
+        <target>يرجى وصف المشكلة في هذا العنصر:</target>
+      </trans-unit>
+      <trans-unit id="msg_report_title" datatype="html">
+        <target>الإبلاغ عن العنصر</target>
+      </trans-unit>
+      <trans-unit id="msg_report_submitted" datatype="html">
+        <target>تم إرسال البلاغ. شكرًا لك.</target>
+      </trans-unit>
+      <trans-unit id="msg_report_failed" datatype="html">
+        <target>تعذر إرسال البلاغ.</target>
+      </trans-unit>
+      <trans-unit id="msg_download_failed_purchase" datatype="html">
+        <target>فشل التنزيل. تأكد من شراء هذا العنصر ومن تسجيل الدخول.</target>
+      </trans-unit>
+
+      <!-- Seller listings -->
+      <trans-unit id="msg_delete_item_q" datatype="html">
+        <target>هل أنت متأكد أنك تريد حذف هذا العنصر؟</target>
+      </trans-unit>
+      <trans-unit id="msg_delete_item_title" datatype="html">
+        <target>حذف العنصر</target>
+      </trans-unit>
+      <trans-unit id="msg_delete_item_failed" datatype="html">
+        <target>تعذر حذف العنصر.</target>
+      </trans-unit>
+
+      <!-- Login -->
+      <trans-unit id="msg_wrong_password" datatype="html">
+        <target>كلمة المرور غير صحيحة.</target>
+      </trans-unit>
+      <trans-unit id="msg_user_not_found" datatype="html">
+        <target>المستخدم غير موجود.</target>
+      </trans-unit>
+
+      <!-- Register -->
+      <trans-unit id="msg_passwords_differ" datatype="html">
+        <target>كلمتا المرور غير متطابقتين.</target>
+      </trans-unit>
+      <trans-unit id="msg_must_accept_terms" datatype="html">
+        <target>يجب قبول شروط الخدمة للتسجيل.</target>
+      </trans-unit>
+      <trans-unit id="msg_email_required" datatype="html">
+        <target>البريد الإلكتروني مطلوب.</target>
+      </trans-unit>
+      <trans-unit id="msg_password_required" datatype="html">
+        <target>كلمة المرور مطلوبة.</target>
+      </trans-unit>
+      <trans-unit id="msg_email_exists" datatype="html">
+        <target>البريد الإلكتروني مستخدم بالفعل.</target>
+      </trans-unit>
+      <trans-unit id="msg_registration_error" datatype="html">
+        <target>حدث خطأ أثناء التسجيل.</target>
       </trans-unit>
 
       <trans-unit id="translation_">

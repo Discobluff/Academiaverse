@@ -1,39 +1,69 @@
-<div class="listings-container">
-    <h2 i18n="@@translation_seller_listings">Seller Listings</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>Item</th>
-                <th>Price</th>
-                <th>Type</th>
-                <th>Status</th>
-                <th>Payment</th>
-                <th>Interested Users</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @for (item of items; track item) {
-            <tr>
-                <td>{{ item.title }}</td>
-                <td>{{ item.price | number:'1.2-2' }} {{ item.paymentMethod === 'points' ? 'points' : '€' }}</td>
-                <td>{{ item.type }}</td>
-                <td>{{ item.availability || 'Available' }}</td>
-                <td>{{ item.paymentMethod }}</td>
-                <td>
-                    <ul class="interested-list">
-                        @for (user of item.interestedUsers; track user) {
-                            <li>{{ user }}</li>
-                        }
-                    </ul>
-                </td>
-                <td>
-                    <button class="view-btn" (click)="viewItem(item.id)">View</button>
-                    <button class="edit-btn" (click)="editItem(item.id)">Edit</button>
-                    <button class="delete-btn" (click)="deleteItem(item.id)">Delete</button>
-                </td>
-            </tr>
+<div class="listings">
+  <h1 class="listings__title" i18n="@@translation_seller_listings">Seller Listings</h1>
+
+  @if (items.length === 0) {
+    <div class="listings__empty">
+      <svg class="listings__empty-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 3h-8l-2 4h12z"/>
+      </svg>
+      <p class="listings__empty-title" i18n="@@translation_no_listings_yet">No listings yet</p>
+      <p class="listings__empty-body" i18n="@@translation_no_listings_body">Items you list for sale will appear here.</p>
+    </div>
+  }
+
+  <div class="listings__grid">
+    @for (item of items; track item) {
+      <div class="listings__card">
+        <!-- Header -->
+        <div class="listings__card-header">
+          <p class="listings__card-title">{{ item.title }}</p>
+          <span class="listings__card-price">
+            {{ item.price | number:'1.2-2' }}
+            {{ item.paymentMethod === 'points' ? 'pts' : '€' }}
+          </span>
+        </div>
+
+        <!-- Meta -->
+        <div class="listings__card-meta">
+          <span class="listings__badge">
+            @switch (item.type) {
+              @case ('sale') { <ng-container i18n="@@translation_sale">Sale</ng-container> }
+              @case ('rent') { <ng-container i18n="@@translation_rent">Rent</ng-container> }
+              @default { {{ item.type }} }
             }
-        </tbody>
-    </table>
+          </span>
+          <span class="listings__badge">
+            @switch (item.paymentMethod) {
+              @case ('cash') { <ng-container i18n="@@translation_cash">Cash</ng-container> }
+              @case ('points') { <ng-container i18n="@@translation_points">Points</ng-container> }
+              @default { {{ item.paymentMethod }} }
+            }
+          </span>
+          <span class="listings__badge" [class.listings__badge--warn]="item.availability === 'Unavailable'">
+            @switch (item.availability) {
+              @case ('Unavailable') { <ng-container i18n="@@translation_unavailable">Unavailable</ng-container> }
+              @default { <ng-container i18n="@@translation_available">Available</ng-container> }
+            }
+          </span>
+        </div>
+
+        <!-- Interested users -->
+        @if (item.interestedUsers && item.interestedUsers.length) {
+          <div class="listings__interested">
+            <span class="listings__interested-label" i18n="@@translation_interested_label">Interested:</span>
+            @for (user of item.interestedUsers; track user) {
+              <span class="listings__interested-name">{{ user }}</span>
+            }
+          </div>
+        }
+
+        <!-- Actions -->
+        <div class="listings__card-actions">
+          <button class="listings__btn listings__btn--secondary" (click)="viewItem(item.id)" i18n="@@translation_view">View</button>
+          <button class="listings__btn listings__btn--secondary" (click)="editItem(item.id)" i18n="@@translation_edit">Edit</button>
+          <button class="listings__btn listings__btn--danger" (click)="deleteItem(item.id)" i18n="@@translation_delete">Delete</button>
+        </div>
+      </div>
+    }
+  </div>
 </div>

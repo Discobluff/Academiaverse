@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { environment } from '../../environments/environments';
 import { AuthService } from '../core/services/auth.service';
+import { DialogService } from '../core/services/dialog.service';
 
 interface Item {
   id: number;
@@ -40,6 +41,7 @@ export class ItemDetailComponent implements OnInit {
   route = inject(ActivatedRoute);
   router = inject(Router);
   authService = inject(AuthService);
+  private dialog = inject(DialogService);
 
   item: Item | null = null;
   alreadyInterested = false;
@@ -63,7 +65,6 @@ export class ItemDetailComponent implements OnInit {
     }).subscribe({
       next: (average) => {
         this.starsAverage = average;
-        console.log(average)
       },
       error: (err) => console.error(err)
     });
@@ -115,13 +116,12 @@ export class ItemDetailComponent implements OnInit {
     this.http.post(`${environment.apiBaseUrl}/api/ratings`, { itemId: this.item.id, ratingValue: stars })
       .subscribe({
         next: () => {
-          console.log(stars, this.starsSelected);
           this.starsSelected = stars;
           this.getStarsAverage(this.item!.id);
         },
         error: (err) => {
           console.error(err);
-          alert('Could not submit rating.');
+          this.dialog.alert($localize`:@@msg_rating_failed:Could not submit rating.`, 'error');
         }
       });
   }
@@ -149,17 +149,17 @@ export class ItemDetailComponent implements OnInit {
     this.http.post(`${environment.apiBaseUrl}/api/interests`, { itemId: this.item.id })
       .subscribe({
         next: () => {
-          alert('Interest expressed successfully!');
+          this.dialog.alert($localize`:@@msg_interest_expressed:Interest expressed successfully!`, 'success');
           this.alreadyInterested = true;
           this.loadItem();
         },
         error: (err) => {
           console.error(err);
           if (err.status === 409 || err.error?.message?.includes('already')) {
-            alert('You have already expressed interest in this item.');
+            this.dialog.alert($localize`:@@msg_already_interested:You have already expressed interest in this item.`, 'info');
             this.alreadyInterested = true;
           } else {
-            alert('Could not express interest.');
+            this.dialog.alert($localize`:@@msg_express_interest_failed:Could not express interest.`, 'error');
           }
         }
       });
@@ -169,7 +169,7 @@ export class ItemDetailComponent implements OnInit {
     if (!this.item) return;
     const buyerId = this.authService.getUserId();
     if (!buyerId) {
-      alert('You must be logged in to start a chat.');
+      this.dialog.alert($localize`:@@msg_must_login_chat:You must be logged in to start a chat.`, 'warning');
       return;
     }
     this.router.navigate(['/chat', this.item.id, buyerId]);
@@ -180,36 +180,36 @@ export class ItemDetailComponent implements OnInit {
     this.http.post(`${environment.apiBaseUrl}/api/items/${this.item.id}/buy-with-points`, {})
       .subscribe({
         next: () => {
-          alert('Item purchased with points!');
-          this.loadItem(); // refresh status
+          this.dialog.alert($localize`:@@msg_item_purchased:Item purchased with points!`, 'success');
+          this.loadItem();
         },
         error: (err) => {
           console.error(err);
-          alert('Purchase failed. You may not have enough points.');
+          this.dialog.alert($localize`:@@msg_purchase_failed_points:Purchase failed. You may not have enough points.`, 'error');
         }
       });
   }
 
-  reportItem() {
+  async reportItem() {
     if (!this.item) return;
-    const reason = prompt('Please describe the issue with this item:');
-    if (!reason || !reason.trim()) return;
+    const reason = await this.dialog.prompt($localize`:@@msg_report_prompt:Please describe the issue with this item:`, $localize`:@@msg_report_title:Report item`);
+    if (!reason) return;
 
     this.http.post(`${environment.apiBaseUrl}/api/reports`, {
       itemId: this.item.id,
       reason: reason.trim()
     }).subscribe({
-      next: () => alert('Report submitted. Thank you.'),
+      next: () => this.dialog.alert($localize`:@@msg_report_submitted:Report submitted. Thank you.`, 'success'),
       error: (err) => {
         console.error('Report failed', err);
-        alert('Could not submit report.');
+        this.dialog.alert($localize`:@@msg_report_failed:Could not submit report.`, 'error');
       }
     });
   }
 
   viewImage(path: string) {
     window.open(`${environment.apiBaseUrl}${path}`, '_blank');
-  } 
+  }
 
   downloadFile() {
     if (!this.item) return;
@@ -228,7 +228,7 @@ export class ItemDetailComponent implements OnInit {
       },
       error: (err) => {
         console.error('Download failed', err);
-        alert('Download failed. Make sure you purchased this item and are logged in.');
+        this.dialog.alert($localize`:@@msg_download_failed_purchase:Download failed. Make sure you purchased this item and are logged in.`, 'error');
       }
     });
   }

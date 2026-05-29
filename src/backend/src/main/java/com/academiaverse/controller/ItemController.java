@@ -160,13 +160,27 @@ public class ItemController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         // Update metadata if provided
-        if (title != null) existing.setTitle(title);
-        if (description != null) existing.setDescription(description);
-        if (notes != null) existing.setNotes(notes);
-        if (price != null) existing.setPrice(price);
-        if (type != null) existing.setType(type);
-        if (paymentMethod != null) existing.setPaymentMethod(paymentMethod);
-        if (availability != null) existing.setAvailability(availability);
+        if (title != null) {
+            existing.setTitle(title);
+        }
+        if (description != null) {
+            existing.setDescription(description);
+        }
+        if (notes != null) {
+            existing.setNotes(notes);
+        }
+        if (price != null) {
+            existing.setPrice(price);
+        }
+        if (type != null) {
+            existing.setType(type);
+        }
+        if (paymentMethod != null) {
+            existing.setPaymentMethod(paymentMethod);
+        }
+        if (availability != null) {
+            existing.setAvailability(availability);
+        }
         if (availableUntil != null && !availableUntil.isEmpty()) {
             existing.setAvailableUntil(java.time.LocalDateTime.parse(availableUntil));
         } else if (availableUntil != null) {
