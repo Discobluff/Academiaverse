@@ -348,7 +348,7 @@ it('Story 14 (API): Express interest records interest without changing item stat
 
   it('UI Smoke: Course page loads', () => {
     cy.visit('/course/1');
-    cy.get('.item-card', { timeout: 15000 }).should('have.length.at.least', 1);
+    cy.get('.course__card', { timeout: 15000 }).should('have.length.at.least', 1);
   });
 
   it('UI Smoke: Registration page loads', () => {
